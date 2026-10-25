@@ -1,0 +1,484 @@
+{
+ "_说明": "两条路小样 新增美术接口（pixel2d/two_paths/tools/generate_two_paths.py 生成，别手改）。所有 file 路径相对本文件所在目录 pixel2d/two_paths/output/；map_px 是区域一地图像素（左上角 0,0，每格 32）；in_frame 是图片内像素。",
+ "characters": {
+  "mouse": {
+   "foot_anchor_in_frame": [
+    16,
+    30
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "idle": {
+    "first_column": 0,
+    "fps": 2,
+    "frames": 2
+   },
+   "name": "瓦匠老周 · 灰老鼠",
+   "note": "same layout as every pixel2d character sheet (rabbit.png etc.); a small mouse - the head is 2-3 px lower than the other characters on purpose",
+   "portrait": "characters/portraits/mouse.png",
+   "portrait_size": [
+    64,
+    64
+   ],
+   "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+   ],
+   "sheet_meta": "characters/sprites/mouse.json",
+   "sheet_size": [
+    192,
+    128
+   ],
+   "sprite_sheet": "characters/sprites/mouse.png",
+   "suggested_dir": "down",
+   "suggested_map_tile": [
+    8,
+    29
+   ],
+   "walk": {
+    "first_column": 2,
+    "fps": 8,
+    "frames": 4
+   },
+   "walk_preview": "characters/walk/mouse.gif"
+  }
+ },
+ "exterior": {
+  "dorm_roof_fixed": {
+   "change": "宿舍前排长屋：东门东边（第 7 间）屋顶的破洞被老周用新瓦补上（新瓦颜色略浅）；其他旧痕不变",
+   "file": "exterior/dorm_roof_fixed.png",
+   "map_px": [
+    160,
+    768
+   ],
+   "replaces": {
+    "area": "dorm",
+    "note": "the entry in game2d/assets/map/map_data.json objects with this area/x/y (obj_30.png for the dorm front house, obj_31.png for the kitchen at the time of writing); swap only its texture - size, sort_y and colliders are identical",
+    "type": "building",
+    "x": 160,
+    "y": 768
+   },
+   "size": [
+    288,
+    160
+   ],
+   "sort_y": 928
+  },
+  "food_stall": {
+   "collision_in_frame": [
+    1,
+    48,
+    58,
+    14
+   ],
+   "collision_map_px": [
+    1569,
+    1008,
+    58,
+    14
+   ],
+   "file": "exterior/food_stall.png",
+   "foot_anchor_in_frame": [
+    32,
+    62
+   ],
+   "interact_point_map_px": [
+    1600,
+    1030
+   ],
+   "map_px": [
+    1568,
+    960
+   ],
+   "map_tile": [
+    49,
+    30
+   ],
+   "note": "厨房门口东侧（门在格 47,28；水缸在 48-49,29；水井在 45,30）- the doorway column stays free. Shown only after the kitchen repair. Contains a soft shadow (alpha < 255).",
+   "size": [
+    64,
+    64
+   ],
+   "sort_y": 1022
+  },
+  "kitchen_fixed": {
+   "change": "厨房：屋顶整片重新铺好（旧补丁没了）、钉窗的木板拆了换新窗纸、墙上的补丁抹平",
+   "file": "exterior/kitchen_fixed.png",
+   "map_px": [
+    1440,
+    768
+   ],
+   "replaces": {
+    "area": "kitchen",
+    "note": "the entry in game2d/assets/map/map_data.json objects with this area/x/y (obj_30.png for the dorm front house, obj_31.png for the kitchen at the time of writing); swap only its texture - size, sort_y and colliders are identical",
+    "type": "building",
+    "x": 1440,
+    "y": 768
+   },
+   "size": [
+    224,
+    160
+   ],
+   "sort_y": 928
+  }
+ },
+ "files": [
+  "characters/portraits/mouse.png",
+  "characters/sprites/mouse.json",
+  "characters/sprites/mouse.png",
+  "characters/walk/mouse.gif",
+  "exterior/before_after.png",
+  "exterior/dorm_roof_fixed.png",
+  "exterior/food_stall.png",
+  "exterior/kitchen_fixed.png",
+  "interiors/before_after.png",
+  "interiors/dorm_main_fixed.png",
+  "interiors/dorm_main_fixed_labeled.png",
+  "interiors/dorm_old_clean.png",
+  "interiors/dorm_old_clean_labeled.png",
+  "interiors/game/dorm_main_fixed.png",
+  "interiors/game/dorm_main_fixed_front.png",
+  "interiors/game/dorm_main_fixed_light.png",
+  "interiors/game/dorm_main_fixed_over.png",
+  "interiors/game/dorm_old_clean.png",
+  "interiors/game/dorm_old_clean_front.png",
+  "interiors/game/dorm_old_clean_light.png",
+  "interiors/game/dorm_old_clean_over.png",
+  "interiors/game/kitchen_fixed.png",
+  "interiors/game/kitchen_fixed_front.png",
+  "interiors/game/kitchen_fixed_light.png",
+  "interiors/game/kitchen_fixed_over.png",
+  "interiors/game/rooms_fixed.json",
+  "interiors/kitchen_fixed.png",
+  "interiors/kitchen_fixed_labeled.png",
+  "manifest.json",
+  "overview.png",
+  "trial/dummy_spin.png",
+  "trial/plum_pole.png",
+  "trial/trial_sign.png",
+  "ui/coin.png",
+  "ui/coin_32.png",
+  "ui/medals.png"
+ ],
+ "interiors": {
+  "rooms": {
+   "dorm_main_fixed": {
+    "base": "interiors/game/dorm_main_fixed.png",
+    "base_id": "dorm_main",
+    "change": "no leak holes / drips / wall stains, no bucket, no puddle (drips = [], water = {}), 师兄's pillow dry",
+    "concept": "interiors/dorm_main_fixed.png",
+    "front": "interiors/game/dorm_main_fixed_front.png",
+    "light": "interiors/game/dorm_main_fixed_light.png",
+    "note": "same format and meaning as pixel2d/interiors/output/game/<base_id>*; doors, size, start and interact anchors are unchanged, colliders/furniture/variants/drips/water/lights are the repaired ones - read them from rooms_fixed.json",
+    "over": "interiors/game/dorm_main_fixed_over.png",
+    "size": [
+     480,
+     256
+    ]
+   },
+   "dorm_old_clean": {
+    "base": "interiors/game/dorm_old_clean.png",
+    "base_id": "dorm_old",
+    "change": "clean floor and walls, no cobwebs / dust / mouse tracks / weeds / litter, 5 made beds, lit oil lamp on a table (new oil_lamp light), window un-boarded, not dim",
+    "concept": "interiors/dorm_old_clean.png",
+    "front": "interiors/game/dorm_old_clean_front.png",
+    "light": "interiors/game/dorm_old_clean_light.png",
+    "note": "same format and meaning as pixel2d/interiors/output/game/<base_id>*; doors, size, start and interact anchors are unchanged, colliders/furniture/variants/drips/water/lights are the repaired ones - read them from rooms_fixed.json",
+    "over": "interiors/game/dorm_old_clean_over.png",
+    "size": [
+     480,
+     256
+    ]
+   },
+   "kitchen_fixed": {
+    "base": "interiors/game/kitchen_fixed.png",
+    "base_id": "kitchen",
+    "change": "stove rebuilt (both fires lit, new stove_fire light), ash gone, west window un-boarded, steamer stack",
+    "concept": "interiors/kitchen_fixed.png",
+    "front": "interiors/game/kitchen_fixed_front.png",
+    "light": "interiors/game/kitchen_fixed_light.png",
+    "note": "same format and meaning as pixel2d/interiors/output/game/<base_id>*; doors, size, start and interact anchors are unchanged, colliders/furniture/variants/drips/water/lights are the repaired ones - read them from rooms_fixed.json",
+    "over": "interiors/game/kitchen_fixed_over.png",
+    "size": [
+     480,
+     256
+    ]
+   }
+  },
+  "rooms_json": "interiors/game/rooms_fixed.json"
+ },
+ "regenerate": "cd pixel2d && .venv/bin/python two_paths/tools/generate_two_paths.py [--check]",
+ "tile": 32,
+ "trial": {
+  "dummy_spin": {
+   "angle_of_frame_deg": "k * 22.5 (0 = arm pointing east/right, increasing CLOCKWISE on screen, y down); the two arms are opposite, so the picture repeats every 180 deg (frames k and k+8 differ only in which tip is in front)",
+   "arm_height_px": 30,
+   "arm_length_px": 40,
+   "arm_pivot_in_frame": [
+    48,
+    52
+   ],
+   "file": "trial/dummy_spin.png",
+   "foot_anchor_in_frame": [
+    48,
+    82
+   ],
+   "frame_for_angle": "k = round(a_deg / 22.5) mod 16",
+   "frame_size": [
+    96,
+    128
+   ],
+   "frames": 16,
+   "hit_test": "ground plane: two segments from the foot anchor at angle a and a+180 deg, length 40 px, half-width 4 px, against the player's foot point/box. The dark ground shadow drawn in every frame is exactly this area (it shows the player where it hurts).",
+   "note": "frames are pre-rendered (crisp pixels, correct arm-behind/in-front order) - pick the frame from the current angle instead of rotating a texture. Soft shadow alpha < 255.",
+   "post_collision_in_frame": [
+    43,
+    74,
+    10,
+    8
+   ],
+   "size": [
+    1536,
+    128
+   ]
+  },
+  "plum_pole": {
+   "collision": null,
+   "file": "trial/plum_pole.png",
+   "frame_size": [
+    32,
+    32
+   ],
+   "frames": {
+    "done": 5,
+    "idle": 0,
+    "lit_0": 1,
+    "lit_1": 2,
+    "lit_2": 3,
+    "lit_3": 4
+   },
+   "ground_center_in_frame": [
+    16,
+    26
+   ],
+   "lit_loop": {
+    "fps": 8,
+    "frames": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   "note": "draw the frame with its top-left at the pole's position; contains a soft ground shadow / glow (alpha < 255). idle = not yet lit, lit_* = the current target (pulse), done = already stepped.",
+   "size": [
+    192,
+    32
+   ],
+   "step_trigger": {
+    "center_in_frame": [
+     16,
+     20
+    ],
+    "note": "player foot point inside this circle = standing on the pole",
+    "radius": 12
+   },
+   "top_center_in_frame": [
+    16,
+    8
+   ]
+  },
+  "suggested_layout": {
+   "dummy_foot_tiles_center": [
+    [
+     29,
+     29
+    ],
+    [
+     34,
+     30
+    ]
+   ],
+   "dummy_frame_topleft_px": [
+    [
+     896,
+     862
+    ],
+    [
+     1056,
+     894
+    ]
+   ],
+   "note": "suggestion only (route is a code decision). Yard dirt area = tiles x 20..42, y 25..34; existing map objects to avoid: stakes (21..23, 30..32), dummies (40,29) (41,31), stone weights (38,33) (39,33), racks/drums on row 24. Every pole is >= 2 tiles from a dummy foot, the sweep radius is 1.25 tiles, so poles are safe spots and the paths between them cross the sweeps.",
+   "pole_frame_topleft_px": [
+    [
+     800,
+     864
+    ],
+    [
+     864,
+     832
+    ],
+    [
+     960,
+     832
+    ],
+    [
+     1024,
+     864
+    ],
+    [
+     992,
+     960
+    ],
+    [
+     896,
+     992
+    ],
+    [
+     832,
+     960
+    ],
+    [
+     864,
+     1056
+    ],
+    [
+     992,
+     1056
+    ],
+    [
+     1088,
+     1056
+    ],
+    [
+     1152,
+     992
+    ],
+    [
+     1152,
+     864
+    ]
+   ],
+   "pole_tiles": [
+    [
+     25,
+     27
+    ],
+    [
+     27,
+     26
+    ],
+    [
+     30,
+     26
+    ],
+    [
+     32,
+     27
+    ],
+    [
+     31,
+     30
+    ],
+    [
+     28,
+     31
+    ],
+    [
+     26,
+     30
+    ],
+    [
+     27,
+     33
+    ],
+    [
+     31,
+     33
+    ],
+    [
+     34,
+     33
+    ],
+    [
+     36,
+     31
+    ],
+    [
+     36,
+     27
+    ]
+   ],
+   "sign_foot_px": [
+    904,
+    821
+   ],
+   "sign_frame_topleft_px": [
+    880,
+    776
+   ]
+  },
+  "trial_sign": {
+   "collision_in_frame": [
+    8,
+    40,
+    32,
+    6
+   ],
+   "file": "trial/trial_sign.png",
+   "foot_anchor_in_frame": [
+    24,
+    45
+   ],
+   "interact_point_in_frame": [
+    24,
+    52
+   ],
+   "size": [
+    48,
+    48
+   ],
+   "text": "试炼 (hand-drawn pixel glyphs)"
+  }
+ },
+ "ui": {
+  "coin": {
+   "file": "ui/coin.png",
+   "note": "铜钱 icon for the HUD next to the HP bar",
+   "size": [
+    16,
+    16
+   ]
+  },
+  "coin_32": {
+   "file": "ui/coin_32.png",
+   "size": [
+    32,
+    32
+   ]
+  },
+  "medals": {
+   "file": "ui/medals.png",
+   "frame_size": [
+    32,
+    32
+   ],
+   "frames": {
+    "bronze": 2,
+    "fail": 3,
+    "gold": 0,
+    "silver": 1
+   },
+   "note": "金 / 银 / 铜 / 失败 (cracked grey disc) for the result screen and the sect book",
+   "size": [
+    128,
+    32
+   ]
+  }
+ }
+}

@@ -1,0 +1,9 @@
+{
+ "text": "动物武侠 DEMO",
+ "glyph_px": 18,
+ "size": [
+  129,
+  22
+ ],
+ "_说明": "由 tools/sync_assets.py 按 data/title.json 生成；游戏会核对 text，和标题文字不一致时改用文字显示。"
+}

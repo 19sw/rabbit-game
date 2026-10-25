@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="TrialCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/trial_card.gd" id="1_card"]
+
+[resource]
+script = ExtResource("1_card")
+pole_count = 12
+pole_points = PackedVector2Array(710, 1110, 1210, 985, 810, 985, 1035, 1110, 1285, 860, 885, 960, 1135, 1060, 785, 1060, 1235, 1110, 935, 1035, 1260, 935, 960, 860)
+step_radius = 12.0
+time_limit = 60.0
+gold_seconds = 40.0
+silver_seconds = 50.0
+bronze_seconds = 60.0
+dummy_points = PackedVector2Array(860, 1040, 1160, 940)
+dummy_start_degrees = PackedFloat32Array(0, 45)
+dummy_turn_degrees = PackedFloat32Array(90, -90)
+arm_length = 40.0
+arm_half_width = 4.0
+player_hit_radius = 6.0
+dummy_damage = 8
+dummy_stun = 0.45
+fail_hp_fraction = 0.2
+intro_seconds = 1.0
+result_seconds = 3.0

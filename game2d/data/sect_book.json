@@ -1,0 +1,16 @@
+{
+  "_说明": "门派簿（外部文件层）。tracks = 两条进度：name 名字、max 一共几格、value 现在几格（序章结束时各一格）、entries 记录条目（flag = 剧情里发生过这件事才显示：bandits_defeated 打跑山贼、puzzle_solved 解开断碑、spar_won 切磋赢过师兄、tiles_found 找回瓦片）。hint = 下方提示文字。以后的经营 / 比武系统会改 value 和条目，本轮只记录和显示。",
+  "title": "门派簿",
+  "tracks": [
+    { "id": "fame", "name": "名望", "max": 10, "value": 1, "entries": [
+      { "text": "打跑山路上的山贼", "flag": "bandits_defeated" },
+      { "text": "解开竹林断碑", "flag": "puzzle_solved" },
+      { "text": "赢了师兄一回", "flag": "spar_won" }
+    ] },
+    { "id": "estate", "name": "家业", "max": 10, "value": 1, "entries": [
+      { "text": "找回了老周的瓦", "flag": "tiles_found" }
+    ] }
+  ],
+  "hint": "两条路都能让门派复兴，任意一条走到头，就能接任掌门。",
+  "close_hint": "E / Esc 关闭"
+}

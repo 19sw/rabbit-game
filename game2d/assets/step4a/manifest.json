@@ -1,0 +1,563 @@
+{
+ "_说明": "第④步第一批 新增美术接口（pixel2d/step4a/tools/generate_step4a.py 生成，别手改）。所有 file 路径相对本文件所在目录 pixel2d/step4a/output/；in_frame 是图片内像素；矩形都是 [x, y, 宽, 高]。",
+ "characters": {
+  "tanuki_portrait_reused": {
+   "game2d_existing": "game2d/assets/portraits/tanuki.png",
+   "name": "茶摊老板 · 狸猫",
+   "note": "The tea-stall owner already has a 64x64 portrait - reused, NOT redrawn (not in this output folder).",
+   "portrait": "pixel2d/characters/output/portraits/tanuki.png"
+  },
+  "tiger": {
+   "combat_meta": "combat/tiger_combat.json",
+   "combat_sheet": "combat/tiger_combat.png",
+   "foot_anchor_in_frame": [
+    16,
+    30
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "idle": {
+    "first_column": 0,
+    "fps": 2,
+    "frames": 2,
+    "loop": true
+   },
+   "name": "山贼老大 · 黑虎",
+   "note": "one size bigger than everyone else: 24 px wide head/shoulders, top of the ears at frame row 3 - still inside 1..30",
+   "portrait": "characters/portraits/tiger.png",
+   "portrait_size": [
+    64,
+    64
+   ],
+   "role": "悬赏三 · 山贼老大「黑虎」",
+   "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+   ],
+   "sheet_meta": "characters/sprites/tiger.json",
+   "sheet_size": [
+    192,
+    128
+   ],
+   "sprite_sheet": "characters/sprites/tiger.png",
+   "walk": {
+    "first_column": 2,
+    "fps": 8,
+    "frames": 4,
+    "loop": true
+   },
+   "walk_preview": "characters/walk/tiger.gif"
+  },
+  "tiger_rage": {
+   "foot_anchor_in_frame": [
+    16,
+    30
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "idle": {
+    "first_column": 0,
+    "fps": 2,
+    "frames": 2,
+    "loop": true
+   },
+   "name": "山贼老大 · 黑虎（发怒）",
+   "portrait": "characters/portraits/tiger.png",
+   "role": "黑虎发怒后整张替换 tiger.png（布局完全相同）",
+   "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+   ],
+   "sheet_meta": "characters/sprites/tiger_rage.json",
+   "sheet_size": [
+    192,
+    128
+   ],
+   "sprite_sheet": "characters/sprites/tiger_rage.png",
+   "walk": {
+    "first_column": 2,
+    "fps": 8,
+    "frames": 4,
+    "loop": true
+   }
+  },
+  "weasel": {
+   "combat_meta": "combat/weasel_combat.json",
+   "combat_sheet": "combat/weasel_combat.png",
+   "foot_anchor_in_frame": [
+    16,
+    30
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "idle": {
+    "first_column": 0,
+    "fps": 2,
+    "frames": 2,
+    "loop": true
+   },
+   "name": "偷鸡贼 · 黄鼠狼",
+   "note": "slim and long (head ~1 px taller than the rabbit); a white chicken feather stuck in the dark-blue headband; long tail. Run away = walk at ~12 fps.",
+   "portrait": "characters/portraits/weasel.png",
+   "portrait_size": [
+    64,
+    64
+   ],
+   "role": "悬赏一 · 偷鸡的黄鼠狼",
+   "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+   ],
+   "sheet_meta": "characters/sprites/weasel.json",
+   "sheet_size": [
+    192,
+    128
+   ],
+   "sprite_sheet": "characters/sprites/weasel.png",
+   "walk": {
+    "first_column": 2,
+    "fps": 8,
+    "frames": 4,
+    "loop": true
+   },
+   "walk_preview": "characters/walk/weasel.gif"
+  }
+ },
+ "combat": {
+  "format": "identical to pixel2d/characters/output/combat/<id>_combat.json (game2d CharSheet reads it unchanged): rows = directions down,left,right,up; actions {start, count, fps, hit_frame, loop}; frame 32x32, foot anchor (16, 30)",
+  "sheets": {
+   "tiger": {
+    "actions": {
+     "attack1": {
+      "count": 5,
+      "fps": 10,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 0
+     },
+     "attack2": {
+      "count": 5,
+      "fps": 10,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 5
+     },
+     "down": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 17
+     },
+     "hurt": {
+      "count": 3,
+      "fps": 10,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 14
+     },
+     "pounce": {
+      "count": 4,
+      "fps": 12,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 21
+     },
+     "rage": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 25
+     },
+     "windup": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 10
+     }
+    },
+    "columns": 29,
+    "meta": "combat/tiger_combat.json",
+    "note": "windup = 4 frames at 8 fps (0.5 s) then holds - fits 0.7 s and the enraged 0.49 s. pounce: play once (frames 0-2 = crouch, spring, airborne) and HOLD frame 3 while the game moves him like the boar/yak charge; contact = hit (hit_frame -1 like charge). rage: play once when HP first drops to 50 % (roar, red tint grows, flames), then switch to tiger_rage_combat + characters/sprites/tiger_rage (optionally fx/rage_aura behind him).",
+    "sheet": "combat/tiger_combat.png",
+    "size": [
+     928,
+     128
+    ]
+   },
+   "tiger_rage": {
+    "actions": {
+     "attack1": {
+      "count": 5,
+      "fps": 10,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 0
+     },
+     "attack2": {
+      "count": 5,
+      "fps": 10,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 5
+     },
+     "down": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 17
+     },
+     "hurt": {
+      "count": 3,
+      "fps": 10,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 14
+     },
+     "pounce": {
+      "count": 4,
+      "fps": 12,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 21
+     },
+     "rage": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 25
+     },
+     "windup": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 10
+     }
+    },
+    "columns": 29,
+    "meta": "combat/tiger_rage_combat.json",
+    "note": "identical layout/columns/fps to tiger_combat; every frame red-tinted (the rage action is the same as in tiger_combat). Use after the rage action has played.",
+    "sheet": "combat/tiger_rage_combat.png",
+    "size": [
+     928,
+     128
+    ]
+   },
+   "weasel": {
+    "actions": {
+     "attack1": {
+      "count": 5,
+      "fps": 14,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 0
+     },
+     "attack2": {
+      "count": 5,
+      "fps": 14,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 5
+     },
+     "down": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 16
+     },
+     "hurt": {
+      "count": 3,
+      "fps": 10,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 13
+     },
+     "windup": {
+      "count": 3,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 10
+     }
+    },
+    "columns": 20,
+    "meta": "combat/weasel_combat.json",
+    "note": "windup = 3 frames at 8 fps (0.375 s) then holds its last frame - fits the 0.6 s windup. Fleeing (HP <= 50 %) uses the WALK sheet, not a combat action.",
+    "sheet": "combat/weasel_combat.png",
+    "size": [
+     640,
+     128
+    ]
+   }
+  }
+ },
+ "files": [
+  "characters/portraits/tiger.png",
+  "characters/portraits/weasel.png",
+  "characters/sprites/tiger.json",
+  "characters/sprites/tiger.png",
+  "characters/sprites/tiger_rage.json",
+  "characters/sprites/tiger_rage.png",
+  "characters/sprites/weasel.json",
+  "characters/sprites/weasel.png",
+  "characters/walk/tiger.gif",
+  "characters/walk/weasel.gif",
+  "combat/tiger_combat.gif",
+  "combat/tiger_combat.json",
+  "combat/tiger_combat.png",
+  "combat/tiger_rage_combat.json",
+  "combat/tiger_rage_combat.png",
+  "combat/weasel_combat.gif",
+  "combat/weasel_combat.json",
+  "combat/weasel_combat.png",
+  "combat_overview.png",
+  "fx/rage_aura.json",
+  "fx/rage_aura.png",
+  "manifest.json",
+  "overview.png",
+  "props/bamboo_shoot_spot.png",
+  "props/bounty_board.png",
+  "props/chick.json",
+  "props/chick.png",
+  "props/fence_gap.png",
+  "props/jade_spot.png",
+  "props/letter.png",
+  "props/mantou_basket.png"
+ ],
+ "fx": {
+  "rage_aura": {
+   "file": "fx/rage_aura.png",
+   "foot_anchor_in_frame": [
+    24,
+    38
+   ],
+   "fps": 10,
+   "frame_size": [
+    48,
+    48
+   ],
+   "frames": 4,
+   "loop": true,
+   "meta": "fx/rage_aura.json",
+   "name": "黑虎发怒气焰",
+   "note": "draw BEHIND the tiger while enraged; aura top-left = tiger frame top-left - (8, 8)",
+   "size": [
+    192,
+    48
+   ]
+  }
+ },
+ "props": {
+  "bamboo_shoot_spot": {
+   "file": "props/bamboo_shoot_spot.png",
+   "foot_anchor_in_frame": [
+    16,
+    26
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "glint": {
+    "first_column": 0,
+    "fps": 6,
+    "frames": 3,
+    "loop": true
+   },
+   "name": "竹笋发亮点",
+   "note": "挖竹笋：竹林里 3 处；列 0-2 发亮闪烁（循环），列 3 = 捡起后的物品图标（HUD / 提示用）",
+   "picked_icon": {
+    "column": 3
+   },
+   "size": [
+    128,
+    32
+   ]
+  },
+  "bounty_board": {
+   "collision_in_frame": [
+    6,
+    52,
+    52,
+    10
+   ],
+   "file": "props/bounty_board.png",
+   "foot_anchor_in_frame": [
+    32,
+    61
+   ],
+   "frame_size": [
+    64,
+    64
+   ],
+   "frames": {
+    "new": 1,
+    "normal": 0
+   },
+   "frames_note": "normal = 平常; new = 有新悬赏/新委托还没看（红绸 + 新贴的白纸条）",
+   "halves_in_frame": {
+    "委托_yellow": [
+     33,
+     17,
+     56,
+     44
+    ],
+    "悬赏_red": [
+     7,
+     17,
+     30,
+     44
+    ]
+   },
+   "interact_note": "stand just south of the board and press E; radius ~20 px",
+   "interact_point_in_frame": [
+    32,
+    70
+   ],
+   "name": "江湖告示榜",
+   "note": "2 tiles wide x 2 tiles tall. Map placement is decided by game2d (村口小广场, other side of the 比武 notice board, not blocking any road / NPC / story object).",
+   "size": [
+    128,
+    64
+   ],
+   "sort_y_note": "sort_y = map y of the frame top-left + 61"
+  },
+  "chick": {
+   "foot_anchor_in_frame": [
+    16,
+    30
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "idle": {
+    "first_column": 0,
+    "fps": 2,
+    "frames": 2,
+    "loop": true
+   },
+   "name": "走丢的小鸡",
+   "note": "small: body ~13 px tall standing on its feet at (16, 30); no portrait. Follow = walk loop.",
+   "role": "找鸡委托：在山路草丛里找到它，按 E 后跟着主角走回村口",
+   "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+   ],
+   "sheet_meta": "props/chick.json",
+   "sheet_size": [
+    192,
+    128
+   ],
+   "sprite_sheet": "props/chick.png",
+   "walk": {
+    "first_column": 2,
+    "fps": 8,
+    "frames": 4,
+    "loop": true
+   }
+  },
+  "fence_gap": {
+   "anchor_note": "tile-aligned: frame top-left = the map tile's top-left (same as the existing `fence` tiles from pixel2d/tools/art_objects.py: posts x 2-5 and 26-29, rails y 11-13 and 20-22)",
+   "file": "props/fence_gap.png",
+   "frame_size": [
+    32,
+    32
+   ],
+   "frames": {
+    "broken": 0,
+    "fixed": 1
+   },
+   "name": "篱笆破口",
+   "note": "补篱笆：村口东边 3 处。broken = 断杆、右柱歪、木板倒地；fixed = 中段换成新木头并用草绳绑好",
+   "size": [
+    64,
+    32
+   ]
+  },
+  "jade_spot": {
+   "file": "props/jade_spot.png",
+   "foot_anchor_in_frame": [
+    16,
+    26
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "glint": {
+    "first_column": 0,
+    "fps": 6,
+    "frames": 3,
+    "loop": true
+   },
+   "name": "玉佩发亮点",
+   "note": "找玉佩：竹林里 1 处；列 0-2 发亮闪烁（循环），列 3 = 捡起后的物品图标（HUD / 提示用）",
+   "picked_icon": {
+    "column": 3
+   },
+   "size": [
+    128,
+    32
+   ]
+  },
+  "letter": {
+   "file": "props/letter.png",
+   "foot_anchor_in_frame": [
+    16,
+    26
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "name": "信",
+   "note": "送信：茶摊老板给、山门老伯收",
+   "size": [
+    32,
+    32
+   ]
+  },
+  "mantou_basket": {
+   "file": "props/mantou_basket.png",
+   "foot_anchor_in_frame": [
+    16,
+    28
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "name": "一笼馒头",
+   "note": "送馒头：小食摊取、茶摊交。地上物件 / 手上提示图标",
+   "size": [
+    32,
+    32
+   ]
+  }
+ },
+ "regenerate": "cd pixel2d && .venv/bin/python step4a/tools/generate_step4a.py [--check]",
+ "tile": 32
+}

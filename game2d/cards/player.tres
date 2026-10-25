@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="PlayerStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/player_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+max_hp = 100
+walk_speed = 133.0
+body_radius = 10.0
+attack1_damage = 8
+attack1_impact = 0.17
+attack1_length = 0.49
+attack1_knockback = 6.0
+attack2_damage = 12
+attack2_impact = 0.22
+attack2_length = 0.63
+attack2_knockback = 16.0
+combo_window = 0.3
+input_buffer = 0.3
+hit_offset = 32.0
+hit_radius = 24.0
+lunge_distance = 8.0
+lunge_time = 0.12
+attack_move_factor = 0.2
+auto_face_range = 96.0
+dodge_speed = 540.0
+dodge_time = 0.16
+dodge_iframes = 0.3
+dodge_cooldown = 0.6
+dodge_cancels_attack = true
+swap_range = 64.0
+swap_angle = 60.0
+swap_behind = 28.0
+counter_window = 0.8
+counter_multiplier = 1.5
+chase_window = 0.6
+chase_range = 96.0
+hurt_stun = 0.4
+hurt_knockback = 12.0
+hurt_protect = 0.55
+regen_delay = 5.0
+regen_per_sec = 3.0

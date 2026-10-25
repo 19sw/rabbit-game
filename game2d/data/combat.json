@@ -1,0 +1,23 @@
+{
+  "_说明": "战斗用的外部文件（地点和文字）。战斗数值不在这里，在 game2d/cards/ 的数值卡里。respawn_tile = 被打倒后复活的格子 [列, 行]（1 格 = 32 像素）；spar_area = 切磋场地用地图里哪个地点（region1.toml 的 location id）。改了文字要执行一次 game2d/tools/update.sh --no-regen 补字库。详见 说明.md 战斗一章。",
+  "respawn_tile": [32, 43],
+  "spar_area": "training",
+  "spar_npc": "fox",
+  "bandits": ["wolf", "boar"],
+  "texts": {
+    "invite": "来过两招？",
+    "option_spar": "切磋",
+    "option_cancel": "算了",
+    "choice_hint": "1 / 2 或 ↑↓ + E",
+    "spar_start": "切磋开始！",
+    "spar_cancel": "师兄：好，想练了再来找我。",
+    "win": "你赢了！",
+    "lose": "你输了",
+    "win_lines": ["好身法！闪得准，还手也快。", "不错，这一招我服了。"],
+    "lose_lines": ["别急着出手，看我身上发红再闪。", "闪开之后马上还手，才有机会。"],
+    "bandits_cleared": "山贼被赶跑了！",
+    "player_down": "你被打倒了",
+    "counter": "反击",
+    "dodge_ok": "看破！"
+  }
+}

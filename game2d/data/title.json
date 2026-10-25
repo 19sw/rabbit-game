@@ -1,0 +1,68 @@
+{
+  "_说明": "启动画面的设置（外部文件层）。改完保存，执行 game2d/tools/update.sh --no-regen --no-tests 即可生效（标题文字会重新生成像素标题图和网页加载页），详见 说明.md 第 10 节。坐标单位是像素，画面大小 480×270，左上角是 [0, 0]；颜色 [红, 绿, 蓝]，每个 0~1。",
+
+  "title": "动物武侠 DEMO",
+  "loading_text": "加载中",
+  "starting_text": "加载完成，正在启动…",
+  "menu": { "continue": "继续游戏", "start": "新游戏", "help": "按键与玩法" },
+  "confirm_overwrite": "会覆盖存档，确定吗？",
+  "confirm_yes": "确定",
+  "confirm_no": "取消",
+  "help_title": "按键与玩法",
+  "help_back": "返回（Esc）",
+
+  "logo": { "center": [240, 34], "glyph_px": 18, "scale": 2 },
+  "menu_layout": { "center_x": 242, "top": 206, "button_size": [76, 16], "gap": 4 },
+  "fade_out_seconds": 0.6,
+  "fade_in_seconds": 0.5,
+
+  "standees": {
+    "rabbit": { "feet": [150, 233] },
+    "crane":  { "feet": [336, 233] }
+  },
+  "onlookers": [
+    { "id": "fox",  "feet": [70, 212],  "dir": "right", "scale": 2 },
+    { "id": "bear", "feet": [30, 206],  "dir": "right", "scale": 2 },
+    { "id": "dog",  "feet": [432, 210], "dir": "left",  "scale": 2 }
+  ],
+
+  "effects": {
+    "intensity": 1.0,
+    "mist": [
+      { "y": 100, "speed": 2.0, "alpha": 0.85 },
+      { "y": 124, "speed": -3.2, "alpha": 0.8 }
+    ],
+    "leaves": {
+      "flutter_fps": 5.0,
+      "swirls": [
+        { "center": [242, 186], "radius": [134, 30], "speed": 0.32, "bob": 7, "bamboo": 7, "ginkgo": 6 },
+        { "center": [150, 190], "radius": [34, 14], "speed": 0.75, "bob": 4, "bamboo": 2, "ginkgo": 1 },
+        { "center": [336, 190], "radius": [32, 14], "speed": -0.7, "bob": 4, "bamboo": 1, "ginkgo": 2 }
+      ]
+    },
+    "motes": {
+      "per_character": 12,
+      "rise": 18,
+      "life": [2.4, 3.6],
+      "area": [26, 70],
+      "alpha": 0.75,
+      "colors": { "rabbit": [1.0, 0.86, 0.5], "crane": [0.72, 0.9, 1.0] }
+    },
+    "ripple": {
+      "center": [242, 176],
+      "period": 2.6,
+      "rings": 2,
+      "radius_from": [2, 16],
+      "radius_to": [12, 40],
+      "alpha": 0.5,
+      "color": [0.92, 0.97, 1.0],
+      "ground": { "y": 233, "radius_from": [6, 1], "radius_to": [44, 6], "alpha": 0.35 }
+    },
+    "wind": {
+      "streaks_per_side": 3,
+      "speed": 0.55,
+      "length": 10,
+      "alpha": 0.4
+    }
+  }
+}

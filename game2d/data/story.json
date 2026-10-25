@@ -1,0 +1,1260 @@
+{
+ "_说明": "区域一序章的全部台词、选项和流程（外部文件层）。台词逐字取自 docs/design/区域1-剧情与对话-v5.md（客户已确认的宿舍开场修订稿）；自动测试会逐条比对原稿。改法见 game2d/说明.md 第 11 节。who = 说话人编号（见 speakers）；kind = 旁白 / 提示 / 碑文 / 画面 / 字条（没有头像）；choice = 选项（1/2 或 ↑↓ + E）；do = 流程动作（不显示）。stage = 当前第几步（第 0 步是开场：先“擦干地上的水”，再“看看桌上的字条”；左上角目标见 objectives.json，step = 换到哪条目标）。 if / unless = 某个标记有 / 没有时才能查看（has_rag 拿了抹布、floor_wiped 擦干了水）。action = wipe：在水渍旁按 E 擦一下（没拿抹布时提示 ui.need_rag）。 interactables：可查看的东西；带 room 的在屋里（item = 室内图里物件的 id，位置取自 assets/interiors/rooms.json；pos = 房间内像素坐标），不带 room 的在外景（pos = 地图像素坐标）。每段台词只放在一个地方。",
+ "typewriter_chars_per_second": 32,
+ "speakers": {
+  "rabbit": {
+   "name": "小兔",
+   "portrait": "rabbit"
+  },
+  "fox": {
+   "name": "师兄",
+   "portrait": "fox"
+  },
+  "crane": {
+   "name": "师父",
+   "portrait": "crane"
+  },
+  "bear": {
+   "name": "厨娘",
+   "portrait": "bear"
+  },
+  "dog": {
+   "name": "老伯",
+   "portrait": "dog"
+  },
+  "tanuki": {
+   "name": "茶摊老板",
+   "portrait": "tanuki"
+  },
+  "duck": {
+   "name": "村民",
+   "portrait": "duck"
+  },
+  "wolf": {
+   "name": "山贼·狼",
+   "portrait": "wolf"
+  },
+  "boar": {
+   "name": "山贼·野猪",
+   "portrait": "boar"
+  }
+ },
+ "pictures": {
+  "old_cloth": "res://assets/story/old_cloth.png"
+ },
+ "opening_scene": "S1-醒来",
+ "talk": {
+  "fox": [
+   {
+    "stage": [
+     1,
+     1
+    ],
+    "scene": "S2-师兄-初见"
+   },
+   {
+    "stage": [
+     2,
+     8
+    ],
+    "scene": "S2-师兄-之后"
+   },
+   {
+    "stage": [
+     9,
+     9
+    ],
+    "scene": "S9-师兄"
+   }
+  ],
+  "crane": [
+   {
+    "stage": [
+     2,
+     2
+    ],
+    "scene": "S3-师父"
+   },
+   {
+    "stage": [
+     3,
+     3
+    ],
+    "scene": "S3-师父-之后"
+   },
+   {
+    "stage": [
+     8,
+     8
+    ],
+    "scene": "S9-师父-收尾"
+   }
+  ],
+  "bear": [
+   {
+    "stage": [
+     0,
+     2
+    ],
+    "scene": "S4-厨娘-任务前"
+   },
+   {
+    "stage": [
+     3,
+     3
+    ],
+    "scene": "S4-厨娘"
+   },
+   {
+    "stage": [
+     4,
+     6
+    ],
+    "scene": "S4-厨娘-之后"
+   }
+  ],
+  "dog": [
+   {
+    "stage": [
+     4,
+     4
+    ],
+    "scene": "S5-老伯"
+   }
+  ],
+  "tanuki": [
+   {
+    "stage": [
+     6,
+     6
+    ],
+    "scene": "S7-茶摊老板"
+   }
+  ],
+  "duck": [
+   {
+    "stage": [
+     7,
+     9
+    ],
+    "scene": "S7-村民",
+    "unless": "villager_met"
+   },
+   {
+    "stage": [
+     7,
+     9
+    ],
+    "scene": "S7-村民-之后"
+   }
+  ]
+ },
+ "spar_result_scenes": {
+  "win": "S2-师兄-你赢了",
+  "lose": "S2-师兄-你输了"
+ },
+ "interactables": [
+  {
+   "id": "rag",
+   "scene": "S1-抹布",
+   "room": "dorm_main",
+   "item": "rag",
+   "radius": 26,
+   "stage": [
+    0,
+    0
+   ],
+   "unless": "has_rag",
+   "prompt": "take"
+  },
+  {
+   "id": "puddle",
+   "scene": "S1-擦水渍",
+   "action": "wipe",
+   "room": "dorm_main",
+   "item": "puddle",
+   "radius": 34,
+   "stage": [
+    0,
+    0
+   ],
+   "unless": "floor_wiped",
+   "prompt": "wipe"
+  },
+  {
+   "id": "note",
+   "scene": "S1-字条",
+   "room": "dorm_main",
+   "item": "note",
+   "radius": 30,
+   "stage": [
+    0,
+    0
+   ],
+   "if": "floor_wiped"
+  },
+  {
+   "id": "dorm_bucket",
+   "scene": "S1-木桶",
+   "room": "dorm_main",
+   "item": "bucket",
+   "radius": 30
+  },
+  {
+   "id": "wardrobe",
+   "scene": "S1-衣柜",
+   "room": "dorm_main",
+   "item": "wardrobe",
+   "radius": 30,
+   "prompt": "open"
+  },
+  {
+   "id": "senior_chest",
+   "scene": "S10-师兄的箱子",
+   "room": "dorm_main",
+   "item": "senior_chest",
+   "radius": 30
+  },
+  {
+   "id": "senior_bed",
+   "scene": "S10-师兄的床",
+   "room": "dorm_main",
+   "item": "senior_bed",
+   "radius": 30
+  },
+  {
+   "id": "bookshelf",
+   "scene": "S10-书架",
+   "room": "dorm_main",
+   "item": "bookshelf",
+   "radius": 30
+  },
+  {
+   "id": "portrait",
+   "scene": "S3-祖师像",
+   "room": "hall",
+   "item": "portrait",
+   "radius": 30
+  },
+  {
+   "id": "incense",
+   "scene": "S3-香炉",
+   "room": "hall",
+   "item": "altar",
+   "radius": 30
+  },
+  {
+   "id": "plaque",
+   "scene": "S10-牌匾",
+   "room": "hall",
+   "item": "plaque",
+   "radius": 30
+  },
+  {
+   "id": "leak_light",
+   "scene": "S10-漏光处",
+   "room": "hall",
+   "item": "leak_bucket",
+   "radius": 30
+  },
+  {
+   "id": "stove",
+   "scene": "S10-灶台",
+   "room": "kitchen",
+   "item": "stove",
+   "radius": 30
+  },
+  {
+   "id": "rice_jar",
+   "scene": "S10-米缸",
+   "room": "kitchen",
+   "item": "rice",
+   "radius": 30
+  },
+  {
+   "id": "bowls",
+   "scene": "S10-补过的碗",
+   "room": "kitchen",
+   "item": "bowls",
+   "radius": 30
+  },
+  {
+   "id": "empty_beds",
+   "scene": "S10-空床",
+   "room": "dorm_old",
+   "item": "empty_beds",
+   "radius": 30
+  },
+  {
+   "id": "name_boards",
+   "scene": "S10-名牌",
+   "room": "dorm_old",
+   "item": "name_board",
+   "radius": 30
+  },
+  {
+   "id": "old_clothes",
+   "scene": "S10-旧练功服",
+   "room": "dorm_old",
+   "item": "old_clothes",
+   "radius": 30
+  },
+  {
+   "id": "junk",
+   "scene": "S10-杂物",
+   "room": "storage",
+   "item": "junk",
+   "radius": 30
+  },
+  {
+   "id": "gong",
+   "scene": "S10-破锣",
+   "room": "storage",
+   "item": "gong",
+   "radius": 30
+  },
+  {
+   "id": "well",
+   "scene": "S4-水井",
+   "pos": [
+    1472,
+    1032
+   ],
+   "radius": 34
+  },
+  {
+   "id": "garden",
+   "scene": "S4-菜地",
+   "pos": [
+    1776,
+    1192
+   ],
+   "radius": 40
+  },
+  {
+   "id": "lion",
+   "scene": "S5-石狮",
+   "pos": [
+    1002,
+    1308
+   ],
+   "radius": 32
+  },
+  {
+   "id": "library_seal",
+   "scene": "S5-藏经阁封条",
+   "pos": [
+    243,
+    648
+   ],
+   "radius": 40
+  },
+  {
+   "id": "tea_table",
+   "scene": "S7-茶摊",
+   "pos": [
+    1248,
+    1862
+   ],
+   "radius": 34
+  },
+  {
+   "id": "stele",
+   "scene": "S8-断碑",
+   "object": "stele",
+   "radius": 32,
+   "stage": [
+    7,
+    9
+   ],
+   "prompt": "read"
+  }
+ ],
+ "bubbles": {
+  "stage_from": 7,
+  "radius": 80,
+  "seconds": 4.0,
+  "lines": [
+   {
+    "who": "dog",
+    "text": "瓦被山贼藏进后山了？……竹林那条小路，好多年没人走了。"
+   },
+   {
+    "who": "bear",
+    "text": "盐买回来啦？好孩子。去后山小心点，林子里湿，别摔着。"
+   },
+   {
+    "who": "fox",
+    "text": "听说你一个人把山贼打跑了？……行啊你。哼，我才不羡慕。"
+   },
+   {
+    "who": "fox",
+    "text": "（小声）下次带上我。"
+   }
+  ]
+ },
+ "bandits": {
+  "intro_scene": "S6-山贼-开战",
+  "win_scene": "S6-山贼-胜利",
+  "lose_scene": "S6-山贼-失败",
+  "trigger_radius": 230,
+  "trigger_rect": [
+   0,
+   1440,
+   600,
+   180
+  ]
+ },
+ "grove": {
+  "enter_scene": "S8-进林",
+  "rect": [
+   448,
+   0,
+   1152,
+   352
+  ]
+ },
+ "puzzle": {
+  "read_scene": "S8-断碑",
+  "order": [
+   "stone_qing",
+   "stone_moss",
+   "stone_crack"
+  ],
+  "wrong_scene": "S8-拜错",
+  "hint_scene": "S8-卡住提示",
+  "hint_after_errors": 3,
+  "radius": 30,
+  "parted_text": "沙——",
+  "stash_scene": "S8-找到瓦片",
+  "stash_radius": 44
+ },
+ "ui": {
+  "prompt_talk": "按 E 交谈",
+  "prompt_look": "按 E 查看",
+  "prompt_read": "按 E 读碑文",
+  "prompt_bow": "按 E 拜一拜",
+  "get_item": "获得：%s",
+  "prologue_end_title": "序章 · 完",
+  "back_to_title": "回到启动画面",
+  "keep_playing": "继续逛逛",
+  "choice_hint": "1 / 2 或 ↑↓ + E",
+  "prompt_take": "按 E 拿起",
+  "prompt_wipe": "按 E 擦水渍",
+  "prompt_open": "按 E 打开",
+  "need_rag": "先去墙角拿抹布",
+  "wardrobe_title": "衣柜"
+ },
+ "scenes": {
+  "S1-醒来": [
+   {
+    "kind": "旁白",
+    "text": "滴答——滴答——"
+   },
+   {
+    "do": "bucket_fill"
+   },
+   {
+    "kind": "画面",
+    "text": "屋顶漏下的雨水，一滴一滴落进床边的木桶。桶里的水越来越满。"
+   },
+   {
+    "kind": "旁白",
+    "text": "……哗啦。"
+   },
+   {
+    "do": "bucket_overflow"
+   },
+   {
+    "kind": "画面",
+    "text": "木桶满了，水漫出来，在地上淌开一大滩。"
+   },
+   {
+    "do": "sit_up"
+   },
+   {
+    "who": "rabbit",
+    "text": "……嗯？什么声音……"
+   },
+   {
+    "who": "rabbit",
+    "text": "……！桶满了！"
+   },
+   {
+    "who": "rabbit",
+    "text": "又漏了。今天得找人把屋顶补一补。"
+   },
+   {
+    "who": "rabbit",
+    "text": "师兄的床又空了，被子都没叠。"
+   },
+   {
+    "who": "rabbit",
+    "text": "先把地上的水擦干，不然要渗到床底下去了。"
+   },
+   {
+    "do": "get_up"
+   },
+   {
+    "kind": "提示",
+    "text": "墙角有抹布。（WASD 移动，E 查看，Esc 查看全部按键）"
+   },
+   {
+    "do": "set_stage",
+    "stage": 0,
+    "step": "wipe_floor"
+   },
+   {
+    "do": "show_key_hint"
+   }
+  ],
+  "S1-抹布": [
+   {
+    "do": "take_rag"
+   },
+   {
+    "who": "rabbit",
+    "text": "抹布……拧一拧还能用。"
+   },
+   {
+    "kind": "提示",
+    "text": "走到水渍旁边，按 E 擦干。"
+   }
+  ],
+  "S1-擦水渍": [
+   {
+    "who": "rabbit",
+    "text": "嘿咻——"
+   },
+   {
+    "do": "wipe_done"
+   },
+   {
+    "who": "rabbit",
+    "text": "……好了，干了。顺手把桶里的水也倒掉。"
+   },
+   {
+    "do": "pour_bucket"
+   },
+   {
+    "kind": "画面",
+    "text": "小兔把木桶里的水倒掉，放回原处。屋顶还在滴，桶又开始接水。"
+   },
+   {
+    "who": "rabbit",
+    "text": "咦，桌上好像有张字条。"
+   },
+   {
+    "do": "set_step",
+    "step": "read_note"
+   }
+  ],
+  "S1-字条": [
+   {
+    "kind": "字条",
+    "text": "「醒了来练武场。输的刷锅。——师兄」"
+   },
+   {
+    "who": "rabbit",
+    "text": "……他怎么知道输的一定是我。"
+   },
+   {
+    "do": "set_stage",
+    "stage": 1
+   }
+  ],
+  "S1-木桶": [
+   {
+    "who": "rabbit",
+    "text": "一个洞滴进桶里，一个洞正对着师兄的枕头。怪不得他今天起这么早。"
+   },
+   {
+    "who": "rabbit",
+    "text": "师兄说这叫\"以静制动\"。我觉得这叫穷。"
+   }
+  ],
+  "S1-衣柜": [
+   {
+    "do": "open_wardrobe"
+   },
+   {
+    "kind": "画面",
+    "text": "打开衣柜，里面叠着几件衣服。"
+   },
+   {
+    "who": "rabbit",
+    "text": "两件换洗的练功服，一件比一件旧。"
+   },
+   {
+    "who": "rabbit",
+    "text": "最底下那件，补丁是师父亲手缝的。针脚歪歪扭扭的……师父的剑法可比针线活好多了。"
+   },
+   {
+    "who": "rabbit",
+    "text": "还有一件小时候的衣服，袖子短得只到胳膊肘了。一直没舍得扔。"
+   },
+   {
+    "do": "close_wardrobe"
+   }
+  ],
+  "S2-师兄-初见": [
+   {
+    "who": "fox",
+    "text": "哟，醒啦？我还以为你被雨水泡发了，正打算捞起来晒晒。"
+   },
+   {
+    "who": "rabbit",
+    "text": "屋顶又漏了。"
+   },
+   {
+    "who": "fox",
+    "text": "漏就漏呗，咱门派最不缺的就是\"透气\"。来来来，先陪师兄过两招，活动活动筋骨。"
+   },
+   {
+    "choice": [
+     {
+      "text": "好，这次我一定赢你。",
+      "then": [
+       {
+        "who": "fox",
+        "text": "口气不小！输了的人刷一个月的锅。"
+       }
+      ]
+     },
+     {
+      "text": "我还没吃早饭……",
+      "then": [
+       {
+        "who": "fox",
+        "text": "空着肚子才身轻如燕——不对，是饿得发飘。来吧！"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "who": "fox",
+    "text": "记住咱家功夫的要诀：别跟人硬碰。看我身上发红、头上冒\"!\"，就闪开，闪完马上还手。"
+   },
+   {
+    "kind": "提示",
+    "text": "J 攻击，空格闪避。闪避成功后马上按 J 是\"反击\"；贴着对手闪避会绕到他背后。"
+   },
+   {
+    "do": "start_story_spar"
+   }
+  ],
+  "S2-师兄-你赢了": [
+   {
+    "who": "fox",
+    "text": "哎哎哎，停！停！……行啊，刚才那一下闪身绕背，有点师父的味道了。"
+   },
+   {
+    "who": "fox",
+    "text": "（小声）锅还是我来刷吧，别告诉师父我输了。"
+   },
+   {
+    "who": "fox",
+    "text": "去正殿吧，师父一早就在找你。"
+   },
+   {
+    "do": "set_stage",
+    "stage": 2
+   }
+  ],
+  "S2-师兄-你输了": [
+   {
+    "who": "fox",
+    "text": "哈哈，又是我赢！不过你刚才闪那一下挺快，就是闪完忘了还手。"
+   },
+   {
+    "who": "fox",
+    "text": "没事，打多了就会了。想再来随时找我。去正殿吧，师父一早就在找你。"
+   },
+   {
+    "do": "set_stage",
+    "stage": 2
+   }
+  ],
+  "S2-师兄-之后": [
+   {
+    "who": "fox",
+    "text": "师父找你呢，别磨蹭。我？我在想下山以后先吃什么。"
+   },
+   {
+    "who": "fox",
+    "text": "……开玩笑的，我哪也不去。"
+   },
+   {
+    "do": "spar_invite"
+   }
+  ],
+  "S3-师父": [
+   {
+    "who": "crane",
+    "text": "来了。"
+   },
+   {
+    "who": "crane",
+    "text": "屋顶的事，我听见了——整夜都听见了。"
+   },
+   {
+    "who": "rabbit",
+    "text": "……"
+   },
+   {
+    "who": "crane",
+    "text": "山下的瓦匠老周欠咱们一个人情。你下山一趟，请他上山补屋顶。"
+   },
+   {
+    "who": "rabbit",
+    "text": "欠咱们人情？"
+   },
+   {
+    "who": "crane",
+    "text": "很多年前的事了。那时候山门还热闹，山下的人有难，都往这儿跑。"
+   },
+   {
+    "who": "crane",
+    "text": "先去厨房，问问厨娘还缺什么，顺路一起带回来。"
+   },
+   {
+    "choice": [
+     {
+      "text": "师父，以前的门派是什么样的？",
+      "then": [
+       {
+        "who": "crane",
+        "text": "（停了一下）等你再长大些，我慢慢讲给你听。今天先把屋顶补上。"
+       }
+      ]
+     },
+     {
+      "text": "保证完成任务！",
+      "then": [
+       {
+        "who": "crane",
+        "text": "嗯。路上小心，最近山路不太平。"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "do": "set_stage",
+    "stage": 3
+   }
+  ],
+  "S3-师父-之后": [
+   {
+    "who": "crane",
+    "text": "先去厨房。厨娘要的东西别忘了，不然今晚只能喝清汤。"
+   }
+  ],
+  "S3-香炉": [
+   {
+    "who": "rabbit",
+    "text": "香炉里只剩半截香。师父说，香可以省，礼不能省。"
+   }
+  ],
+  "S3-祖师像": [
+   {
+    "who": "rabbit",
+    "text": "画像太旧了，只看得出一个模模糊糊的背影。师父每天都擦，可从来不说画的是谁。"
+   }
+  ],
+  "S4-厨娘-任务前": [
+   {
+    "who": "bear",
+    "text": "哎哟小兔，饭还没好呢，先去正殿，师父等着你。"
+   }
+  ],
+  "S4-厨娘": [
+   {
+    "who": "bear",
+    "text": "要下山？正好！帮我带一包盐、一捆青菜回来。"
+   },
+   {
+    "who": "bear",
+    "text": "钱在这儿……就这些了，省着点花。"
+   },
+   {
+    "who": "bear",
+    "text": "村口茶摊老板的青菜最便宜。跟他说是山上门派要的，他会多给一把。"
+   },
+   {
+    "who": "rabbit",
+    "text": "他为什么会多给？"
+   },
+   {
+    "who": "bear",
+    "text": "老一辈的交情呗。去吧去吧，早去早回。"
+   },
+   {
+    "do": "set_stage",
+    "stage": 4
+   }
+  ],
+  "S4-厨娘-之后": [
+   {
+    "who": "bear",
+    "text": "盐、青菜，记住了没？还有，别跟你师兄学，路上不许偷吃。"
+   }
+  ],
+  "S4-水井": [
+   {
+    "who": "rabbit",
+    "text": "井绳又短了一截。再这样下去，得踮着脚打水了。"
+   }
+  ],
+  "S4-菜地": [
+   {
+    "who": "rabbit",
+    "text": "萝卜是师兄种的，歪歪扭扭，跟他的字一样。"
+   }
+  ],
+  "S5-老伯": [
+   {
+    "who": "dog",
+    "text": "下山去？"
+   },
+   {
+    "who": "rabbit",
+    "text": "嗯，买菜，再请瓦匠老周来补屋顶。"
+   },
+   {
+    "who": "dog",
+    "text": "老周啊……他小时候发大水，是你师祖背着他从水里蹚出来的。"
+   },
+   {
+    "who": "dog",
+    "text": "那时候山门前天天有人来道谢。现在嘛……就剩我这把扫帚天天来。"
+   },
+   {
+    "choice": [
+     {
+      "text": "那门派后来为什么没落了？",
+      "then": [
+       {
+        "who": "dog",
+        "text": "（扫地的手停了停）那一年……塌了半座藏经阁，走了好多人。剩下的事，你去问你师父吧。"
+       }
+      ]
+     },
+     {
+      "text": "以后我让门派重新热闹起来！",
+      "then": [
+       {
+        "who": "dog",
+        "text": "哈哈，好！那你先把今天的菜买回来。"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "who": "dog",
+    "text": "山路上最近有生面孔转悠，当心点。"
+   },
+   {
+    "do": "set_stage",
+    "stage": 5
+   },
+   {
+    "do": "bandits_appear"
+   }
+  ],
+  "S5-石狮": [
+   {
+    "who": "rabbit",
+    "text": "左边这只石狮缺了半只耳朵。老伯说，是师兄小时候爬上去摔下来时磕掉的。"
+   }
+  ],
+  "S5-藏经阁封条": [
+   {
+    "who": "rabbit",
+    "text": "封条还是师父亲手贴的。我从小就被告诉，不许进去。"
+   },
+   {
+    "who": "rabbit",
+    "text": "……瓦砾底下压着几页书，字被雨泡开了，只认得出一个\"风\"字。"
+   }
+  ],
+  "S6-山贼-开战": [
+   {
+    "who": "wolf",
+    "text": "站住！哪来的小兔子？"
+   },
+   {
+    "who": "boar",
+    "text": "看这身破衣服，是山上那个穷门派的吧？兜里那几个铜板，交出来！"
+   },
+   {
+    "who": "rabbit",
+    "text": "那是买盐的钱。"
+   },
+   {
+    "who": "wolf",
+    "text": "盐？哈哈！今天你就尝尝什么叫咸！"
+   },
+   {
+    "do": "bandits_fight"
+   }
+  ],
+  "S6-山贼-胜利": [
+   {
+    "who": "boar",
+    "text": "哎哟哟……别打了别打了！"
+   },
+   {
+    "who": "wolf",
+    "text": "这身法……怎么跟传说里的一样……快、快跑！"
+   },
+   {
+    "who": "boar",
+    "text": "（边跑边喊）瓦片的事不关我们事，是老大让藏的——"
+   },
+   {
+    "who": "rabbit",
+    "text": "……瓦片？"
+   },
+   {
+    "do": "set_flag",
+    "flag": "bandits_defeated"
+   },
+   {
+    "do": "set_stage",
+    "stage": 6
+   }
+  ],
+  "S6-山贼-失败": [
+   {
+    "who": "rabbit",
+    "text": "……呼。刚才太着急了。师兄说过，别硬碰，看见\"!\"就闪，闪完马上还手。"
+   }
+  ],
+  "S7-茶摊老板": [
+   {
+    "who": "tanuki",
+    "text": "山上来的？是那个门派的小娃娃吧！"
+   },
+   {
+    "who": "rabbit",
+    "text": "要一包盐、一捆青菜。"
+   },
+   {
+    "who": "tanuki",
+    "text": "青菜我多给你一把——当年你们门派的人帮我爹赶走过山贼，这人情我记一辈子。"
+   },
+   {
+    "who": "rabbit",
+    "text": "说到山贼……刚才山路上有两个，跑之前说什么\"瓦片\"。"
+   },
+   {
+    "who": "tanuki",
+    "text": "唉，就是他们！前几天把老周的一车瓦抢了，听说藏进了你们后山竹林里——那片林子密，我们村里人进去就转向。"
+   },
+   {
+    "who": "tanuki",
+    "text": "瓦找不回来，老周也没法上山干活啊。"
+   },
+   {
+    "do": "set_stage",
+    "stage": 7
+   }
+  ],
+  "S7-村民": [
+   {
+    "who": "duck",
+    "text": "你身上这衣服的样式……我小时候见过！那些人走路轻飘飘的，一转身就不见了。"
+   },
+   {
+    "who": "duck",
+    "text": "后山竹林？我爷爷说过，林子里那块断碑是你们门派立的，碑上的字是\"给自己人指路的\"。"
+   },
+   {
+    "who": "rabbit",
+    "text": "（给自己人指路……）"
+   },
+   {
+    "do": "set_flag",
+    "flag": "villager_met"
+   }
+  ],
+  "S7-村民-之后": [
+   {
+    "who": "duck",
+    "text": "竹林里风大，跟着风走，别跟着眼睛走——我爷爷的原话，我也不懂。"
+   }
+  ],
+  "S7-茶摊": [
+   {
+    "who": "rabbit",
+    "text": "茶碗缺了口，茶倒是香的。"
+   }
+  ],
+  "S8-进林": [
+   {
+    "who": "rabbit",
+    "text": "好密的竹子……风一吹，到处沙沙响。"
+   },
+   {
+    "who": "rabbit",
+    "text": "那块就是村民说的断碑吧。"
+   }
+  ],
+  "S8-断碑": [
+   {
+    "kind": "碑文",
+    "text": "「风自东来，先拜青石，再拜苔石，后拜裂石。」"
+   },
+   {
+    "who": "rabbit",
+    "text": "青石、苔石、裂石……这附近有三块石头。"
+   },
+   {
+    "kind": "提示",
+    "text": "靠近石头按 E\"拜一拜\"。"
+   }
+  ],
+  "S8-拜错": [
+   {
+    "who": "rabbit",
+    "text": "……不对。风不是往这边吹的。"
+   }
+  ],
+  "S8-卡住提示": [
+   {
+    "who": "rabbit",
+    "text": "村民说，跟着风走……竹叶刚才往哪边飘？"
+   }
+  ],
+  "S8-找到瓦片": [
+   {
+    "who": "rabbit",
+    "text": "找到了！老周的瓦，一片都没少。"
+   },
+   {
+    "who": "rabbit",
+    "text": "……咦，瓦堆底下还压着一块旧布。"
+   },
+   {
+    "kind": "画面",
+    "text": "一块褪色的蓝布，上面绣着和小兔腰带一模一样的花纹。",
+    "image": "old_cloth"
+   },
+   {
+    "who": "rabbit",
+    "text": "这花纹……和我的腰带一样？"
+   },
+   {
+    "who": "rabbit",
+    "text": "（把布叠好，揣进怀里）"
+   },
+   {
+    "do": "get_item",
+    "item": "旧布"
+   },
+   {
+    "do": "set_flag",
+    "flag": "tiles_found"
+   },
+   {
+    "do": "set_stage",
+    "stage": 8
+   }
+  ],
+  "S9-师父-收尾": [
+   {
+    "who": "crane",
+    "text": "回来了。"
+   },
+   {
+    "who": "rabbit",
+    "text": "盐和青菜买了。瓦也找回来了，在后山竹林里，老周说明天一早就上山补屋顶。"
+   },
+   {
+    "who": "crane",
+    "text": "竹林……你找到那块断碑了？"
+   },
+   {
+    "who": "rabbit",
+    "text": "嗯，跟着风走就找到了。"
+   },
+   {
+    "who": "crane",
+    "text": "（像是笑了一下）……跟着风走。好。"
+   },
+   {
+    "who": "rabbit",
+    "text": "师父，瓦堆底下还有这个。"
+   },
+   {
+    "kind": "画面",
+    "text": "小兔拿出那块旧布。",
+    "image": "old_cloth"
+   },
+   {
+    "who": "crane",
+    "text": "（沉默了很久）"
+   },
+   {
+    "who": "crane",
+    "text": "……收好它。"
+   },
+   {
+    "who": "crane",
+    "text": "小兔，今天你下山一趟，看见了什么？"
+   },
+   {
+    "who": "rabbit",
+    "text": "看见村里人还记得咱们。也看见……咱们连一片瓦都要去找回来。"
+   },
+   {
+    "who": "crane",
+    "text": "嗯。门派要重新站起来，有两条路。"
+   },
+   {
+    "who": "crane",
+    "text": "一条，是去江湖上闯——比武、试炼、行侠，让天下人重新知道咱们的功夫。这叫名望。"
+   },
+   {
+    "who": "crane",
+    "text": "一条，是把这个家一砖一瓦撑起来——修屋子、收弟子、接活计、种地开铺。这叫家业。"
+   },
+   {
+    "who": "rabbit",
+    "text": "那我该走哪条？"
+   },
+   {
+    "who": "crane",
+    "text": "走哪条都行。两条都走得好，自然更好。等哪天，名望或家业撑得起这座山门——这掌门的位子，也就该交给后来人了。"
+   },
+   {
+    "who": "rabbit",
+    "text": "……掌门？！"
+   },
+   {
+    "who": "crane",
+    "text": "（摆摆手）去吃饭吧。"
+   },
+   {
+    "kind": "画面",
+    "text": "打开\"门派簿\"界面（第一次出现）。",
+    "show": false,
+    "do": "open_sect_book"
+   },
+   {
+    "kind": "画面",
+    "text": "小兔走出正殿。镜头停在师父身上。",
+    "show": false,
+    "do": "walk_out"
+   },
+   {
+    "who": "crane",
+    "text": "（自言自语）……你们，也该回来看看了。"
+   },
+   {
+    "kind": "画面",
+    "text": "「序章 · 完」，然后出现\"回到启动画面\"按钮。",
+    "show": false,
+    "do": "prologue_end"
+   }
+  ],
+  "S9-师兄": [
+   {
+    "who": "fox",
+    "text": "师父刚才一个人在殿里站了好久……你又惹他了？"
+   },
+   {
+    "who": "rabbit",
+    "text": "没有。"
+   },
+   {
+    "who": "fox",
+    "text": "那就好。走，吃饭去！今天的锅，我刷。"
+   },
+   {
+    "do": "spar_invite"
+   }
+  ],
+  "S10-师兄的箱子": [
+   {
+    "who": "rabbit",
+    "text": "木剑又扔在地上。师兄说这叫\"剑不离身\"——离身三尺也算。"
+   }
+  ],
+  "S10-师兄的床": [
+   {
+    "who": "rabbit",
+    "text": "被子底下压着半根萝卜……他又半夜偷吃。"
+   }
+  ],
+  "S10-书架": [
+   {
+    "who": "rabbit",
+    "text": "一本《基础步法》，翻得都卷边了。另一本是师兄的《江湖奇闻》，夹着好几张糖纸。"
+   }
+  ],
+  "S10-牌匾": [
+   {
+    "who": "rabbit",
+    "text": "牌匾上的金字掉了一半，剩下的四个字我一直没认全。"
+   }
+  ],
+  "S10-漏光处": [
+   {
+    "who": "rabbit",
+    "text": "连正殿都漏……屋顶的事真不能再拖了。"
+   }
+  ],
+  "S10-灶台": [
+   {
+    "who": "rabbit",
+    "text": "粥是稀的，可是香。厨娘说，稀粥也要熬出米油来。"
+   }
+  ],
+  "S10-米缸": [
+   {
+    "who": "rabbit",
+    "text": "米缸快见底了。……今天的盐，可千万别弄丢。"
+   }
+  ],
+  "S10-补过的碗": [
+   {
+    "who": "rabbit",
+    "text": "每个碗上都有几颗铜钉。厨娘说，碗碎了补一补，日子也是。"
+   }
+  ],
+  "S10-空床": [
+   {
+    "who": "rabbit",
+    "text": "一排空床铺，落满了灰。听老伯说，以前这里住满了人，夜里打呼噜能把屋顶震响。"
+   }
+  ],
+  "S10-名牌": [
+   {
+    "who": "rabbit",
+    "text": "墙上的名牌大多摘了，只剩几块，字也看不清了。"
+   }
+  ],
+  "S10-旧练功服": [
+   {
+    "who": "rabbit",
+    "text": "这件比我的还旧……不知道是哪位师兄留下的。"
+   }
+  ],
+  "S10-杂物": [
+   {
+    "who": "rabbit",
+    "text": "扫帚、锄头、旧兵器……都落了一层灰。"
+   }
+  ],
+  "S10-破锣": [
+   {
+    "who": "rabbit",
+    "text": "这面锣是以前门派开饭时敲的。现在开饭，靠厨娘喊。"
+   }
+  ]
+ }
+}

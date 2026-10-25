@@ -1,0 +1,283 @@
+{
+  "_说明": "第④步第一批（外部文件层）：江湖告示榜、悬赏、委托（docs/design/第四步-第一批-悬赏与委托-方案-v1.md）。改完保存即生效（tests/step4a_suite.gd 会逐项和方案比对）。黄鼠狼、黑虎的战斗数值不在这里，在数值卡 cards/weasel.tres、cards/tiger.tres（狼山贼用序章的 cards/wolf.tres）；名望 / 家业最多几格沿用 economy.json 的 arena.fame_max / disciple.estate_max（都是 10）。坐标都是地图像素 [x, y]，矩形 [x, y, 宽, 高]。",
+  "_rules说明": "rules = 规则和经济数字。post_hour 每天几点上新悬赏（8 = 辰时 08:00）；first_day 序章结束后第几天上第一条悬赏（序章结束那天算第 1 天）；max_bounty / max_commission 同时最多接几条；lose_fraction 主角生命掉到多少比例判负（0.2 = 20%，判负后生命回满、恶人留在原地、不扣钱）。patrol = 三条主线都交榜后开放的巡山：interval_days 每几天上一条，coins 赏金，fame 名望（0 = 不加），没接的会被下一条换掉。commissions = 委托：refresh_hour 每天几点刷新，per_day 每天几条，expire_hour 几点作废（24 = 子时），estate_every 累计完成几条家业 +1，fame_bonus_at 名望到几格报酬加成，fame_bonus_mult 加成倍数（四舍五入），kinds = 六种委托（reward 报酬，needs_repair 要先修好哪一处才会抽到，count 要找几个）。",
+  "rules": {
+    "post_hour": 8,
+    "first_day": 2,
+    "max_bounty": 1,
+    "max_commission": 2,
+    "lose_fraction": 0.2,
+    "patrol": { "interval_days": 2, "coins": 15, "fame": 0 },
+    "commissions": {
+      "refresh_hour": 8,
+      "per_day": 2,
+      "expire_hour": 24,
+      "estate_every": 5,
+      "fame_bonus_at": 5,
+      "fame_bonus_mult": 1.5,
+      "kinds": {
+        "bun":     { "reward": 12, "needs_repair": "kitchen" },
+        "letter":  { "reward": 8 },
+        "chicken": { "reward": 10 },
+        "shoots":  { "reward": 10, "count": 3 },
+        "jade":    { "reward": 12, "count": 1 },
+        "fence":   { "reward": 10, "count": 3 }
+      }
+    }
+  },
+  "_bounties说明": "bounties = 三条主线悬赏，按顺序上榜（每交一条，下一条在第二天辰时上榜）。id 内部名，name 悬赏名，place 地点名，coins 赏金，fame 名望，enemies 恶人（card = cards/ 里的数值卡，sprite = 用哪张人物图，pos 站的位置，dir 朝向），retreat 判负后主角被送到哪里（离恶人远一点，免得马上又打起来），scenes 上场 / 再战 / 胜 / 败 台词，book 门派簿里的简称（揭完的几条合成一行“揭榜：黄鼠狼、拦路山贼、黑虎 · 巡山 N 回”，门派簿才放得下）。patrol = 巡山的恶人和台词（规则数字在 rules.patrol）。",
+  "bounties": [
+    {
+      "id": "weasel", "name": "偷鸡的黄鼠狼", "place": "山路草丛", "coins": 20, "fame": 1,
+      "desc": "最近村里接连丢鸡，有人在山路边的草丛里看见一只插着鸡毛的黄鼠狼。它跑得快，血掉到一半就逃，逃完还会回头。",
+      "enemies": [ { "card": "weasel", "sprite": "weasel", "name": "偷鸡贼 · 黄鼠狼", "title": "黄鼠狼", "pos": [380, 1560], "dir": "right" } ],
+      "retreat": [600, 1430],
+      "scenes": { "intro": "J-黄鼠狼-上场", "again": "J-黄鼠狼-再战", "win": "J-黄鼠狼-胜", "lose": "J-黄鼠狼-败" },
+      "book": "黄鼠狼"
+    },
+    {
+      "id": "wolves", "name": "拦路的山贼", "place": "山路石坎", "coins": 35, "fame": 1,
+      "desc": "山路石坎上有三个狼山贼拦路收钱。三个一起上，要绕着打，别被围住。",
+      "enemies": [
+        { "card": "wolf_bounty", "sprite": "wolf", "name": "狼山贼 · 甲", "title": "狼山贼", "pos": [1260, 1445], "dir": "left" },
+        { "card": "wolf_bounty", "sprite": "wolf", "name": "狼山贼 · 乙", "title": "狼山贼", "pos": [1340, 1462], "dir": "left" },
+        { "card": "wolf_bounty", "sprite": "wolf", "name": "狼山贼 · 丙", "title": "狼山贼", "pos": [1460, 1440], "dir": "left" }
+      ],
+      "retreat": [1040, 1410],
+      "scenes": { "intro": "J-狼山贼-上场", "again": "J-狼山贼-再战", "win": "J-狼山贼-胜", "lose": "J-狼山贼-败" },
+      "book": "拦路山贼"
+    },
+    {
+      "id": "tiger", "name": "山贼老大「黑虎」", "place": "后山竹林深处", "coins": 80, "fame": 2,
+      "desc": "山贼的老大黑虎躲在后山竹林深处。他力气大、出手重，被逼急了会发怒，出招更快，还会扑人。",
+      "enemies": [ { "card": "tiger", "sprite": "tiger", "name": "山贼老大 · 黑虎", "title": "黑虎", "pos": [1200, 220], "dir": "left" } ],
+      "retreat": [980, 330],
+      "scenes": { "intro": "J-黑虎-上场", "again": "J-黑虎-再战", "win": "J-黑虎-胜", "lose": "J-黑虎-败" },
+      "book": "黑虎"
+    }
+  ],
+  "patrol": {
+    "id": "patrol", "name": "巡山", "place": "山路",
+    "desc": "山路上又来了两个狼山贼，去把他们赶走。",
+    "enemies": [
+      { "card": "wolf_bounty", "sprite": "wolf", "name": "狼山贼 · 甲", "title": "狼山贼", "pos": [520, 1615], "dir": "right" },
+      { "card": "wolf_bounty", "sprite": "wolf", "name": "狼山贼 · 乙", "title": "狼山贼", "pos": [600, 1630], "dir": "left" }
+    ],
+    "retreat": [760, 1430],
+    "scenes": { "intro": "J-巡山-上场", "again": "J-巡山-上场", "win": "J-巡山-胜", "lose": "J-巡山-败" },
+    "book": "巡山 %d 回"
+  },
+  "_places说明": "board = 江湖告示榜（foot 底边中点 = 脚底锚点所在的地图位置，interact 按 E 站的点，radius 多近能按 E；有正式美术时按 assets/step4a/manifest.json 的帧尺寸和碰撞）。stall = 小食摊取馒头的点；pen = 小鸡带回村口算数的位置，pen_radius 多近算到了；chicken_spots = 小鸡可能出现在山路草丛的位置（按种子 + 天数选一个）；shoot_spots / jade_spots = 竹林发亮点的候选位置（选 3 个 / 1 个）；fence_gaps = 村口东边篱笆的三个破口（格子左上角）；thing_radius = 发亮点、破口、小鸡多近能按 E。",
+  "places": {
+    "board": { "foot": [1300, 1740], "interact": [1300, 1749], "radius": 22, "collision": [-26, -9, 52, 10] },
+    "stall": { "interact": [1598, 1034], "radius": 28 },
+    "pen": [1250, 1772],
+    "pen_radius": 56,
+    "chicken_spots": [[150, 1470], [240, 1640], [110, 1780], [300, 1700]],
+    "shoot_spots": [[700, 200], [820, 300], [1100, 300], [1250, 150], [1480, 220], [1350, 320], [660, 320]],
+    "jade_spots": [[700, 200], [820, 300], [1100, 300], [1250, 150], [1480, 220]],
+    "fence_gaps": [[1728, 1792], [1760, 1792], [1792, 1792]],
+    "thing_radius": 26
+  },
+  "_kinds说明": "委托的说明文字：name 名字，client 谁托的，desc 接活前告示上写的话，thanks 交差时托付人的话，hud 正在做的事每一步怎么写（按步骤顺序；最后一步都是回榜交差）。",
+  "kinds": {
+    "bun": { "name": "送馒头", "client": "茶摊老板", "desc": "今天茶客多，劳烦去门里的小食摊取一笼馒头，送到村口茶摊。", "thanks": "馒头一上桌就卖光了，多谢小兔兄弟！",
+      "hud": ["去小食摊取馒头", "把馒头送到村口茶摊", "回告示榜交差"] },
+    "letter": { "name": "送信", "client": "茶摊老板", "desc": "有封信要带给山门的老伯，我这儿走不开，劳烦少侠跑一趟。", "thanks": "老伯托人捎话：信收到了，替他谢谢你。",
+      "hud": ["找茶摊老板拿信", "把信送给山门的老伯", "回告示榜交差"] },
+    "chicken": { "name": "找鸡", "client": "村民", "desc": "我家的小鸡跑丢了，好像钻进了山路边的草丛。找到它，它会跟着你回来。", "thanks": "小鸡回来了！咯咯直叫，像是在谢你呢。",
+      "hud": ["去山路草丛找鸡", "带小鸡回村口", "回告示榜交差"] },
+    "shoots": { "name": "挖竹笋", "client": "厨娘", "desc": "后山竹林这几天冒笋了，地上发亮的地方就是。挖三根回来，晚上做笋汤。", "thanks": "笋真嫩！今晚的汤有你一碗。",
+      "hud": ["去竹林挖竹笋 %d/%d", "回告示榜交差"] },
+    "jade": { "name": "找玉佩", "client": "村民", "desc": "我在后山竹林里丢了一块玉佩，是家里传下来的。草里有亮光的地方，就是它。", "thanks": "就是这块！真不知道怎么谢你才好。",
+      "hud": ["去竹林找玉佩", "回告示榜交差"] },
+    "fence": { "name": "补篱笆", "client": "村民", "desc": "村口东边的篱笆坏了三处，鸡老往外跑。劳烦你去补一补。", "thanks": "篱笆补得结结实实，这下鸡跑不出去了。",
+      "hud": ["补村口东边的篱笆 %d/%d", "回告示榜交差"] }
+  },
+  "speakers": {
+    "weasel": { "name": "黄鼠狼", "portrait": "weasel" },
+    "tiger": { "name": "黑虎", "portrait": "tiger" },
+    "wolf_gang": { "name": "狼山贼", "portrait": "wolf" }
+  },
+  "_talk说明": "talk = 名望到 rules.commissions.fame_bonus_at 格以后村民换的台词（fame_* ），以及平时的台词。",
+  "talk": {
+    "duck_fame": "J-村民-名望",
+    "tanuki": "J-茶摊-平时",
+    "tanuki_fame": "J-茶摊-名望"
+  },
+  "scenes": {
+    "J-黄鼠狼-上场": [
+      { "who": "weasel", "text": "嘿嘿，鸡是我偷的，又怎么样？" },
+      { "who": "rabbit", "text": "村里人养几只鸡不容易，跟我回去认个错。" },
+      { "who": "weasel", "text": "想抓我？先追得上我再说！", "do": "jh", "op": "b_engage" }
+    ],
+    "J-黄鼠狼-再战": [ { "who": "weasel", "text": "又来啦？你这兔子还真不死心。", "do": "jh", "op": "b_engage" } ],
+    "J-黄鼠狼-胜": [
+      { "who": "weasel", "text": "哎哟哎哟，别打了！鸡我不偷了，再也不偷了……" },
+      { "kind": "提示", "text": "讨平了偷鸡的黄鼠狼！回村口的江湖告示榜交榜领赏。" }
+    ],
+    "J-黄鼠狼-败": [
+      { "who": "weasel", "text": "嘻嘻，就这点本事？回去再练练吧！" },
+      { "kind": "提示", "text": "生命掉到两成，败下阵来。生命已经回满，黄鼠狼还在原地，随时可以再去。" }
+    ],
+    "J-狼山贼-上场": [
+      { "who": "wolf_gang", "text": "又是你这只兔子！上回在山路上让你占了便宜。" },
+      { "who": "wolf_gang", "text": "今天我们三个一起上，看你往哪儿躲！" },
+      { "who": "rabbit", "text": "拦路收钱的事，到此为止吧。" },
+      { "who": "wolf_gang", "text": "兄弟们，围住他！", "do": "jh", "op": "b_engage" }
+    ],
+    "J-狼山贼-再战": [ { "who": "wolf_gang", "text": "又送上门来了？兄弟们，围上！", "do": "jh", "op": "b_engage" } ],
+    "J-狼山贼-胜": [
+      { "who": "wolf_gang", "text": "撤、撤！这兔子邪门得很……快回去告诉老大！" },
+      { "kind": "提示", "text": "赶走了拦路的山贼！回村口的江湖告示榜交榜领赏。" }
+    ],
+    "J-狼山贼-败": [
+      { "who": "wolf_gang", "text": "三个打一个，你还想赢？哈哈！" },
+      { "kind": "提示", "text": "生命掉到两成，败下阵来。生命已经回满，山贼还在石坎上，随时可以再去。别被他们围住。" }
+    ],
+    "J-黑虎-上场": [
+      { "who": "tiger", "text": "就是你？在山路上赶跑了我的人，又打散了狼兄弟。" },
+      { "who": "rabbit", "text": "你就是山贼老大黑虎？村里人的东西，你们抢够了。" },
+      { "who": "tiger", "text": "哼，这破落山门才剩几个人，一个小徒弟也敢来竹林撒野？" },
+      { "who": "tiger", "text": "来吧，让黑虎爷爷看看你有几斤几两！", "do": "jh", "op": "b_engage" }
+    ],
+    "J-黑虎-再战": [ { "who": "tiger", "text": "还敢回来？好，这回别再趴下了。", "do": "jh", "op": "b_engage" } ],
+    "J-黑虎-胜": [
+      { "who": "tiger", "text": "……好俊的身手。是我黑虎看走了眼。" },
+      { "who": "tiger", "text": "山路上的兄弟，我会带走。这片山，我们以后不来了。" },
+      { "who": "rabbit", "text": "说到做到。再让我在山路上碰见，可就不是今天这样了。" },
+      { "kind": "提示", "text": "讨平了山贼老大黑虎！回村口的江湖告示榜交榜领赏。" }
+    ],
+    "J-黑虎-败": [
+      { "who": "tiger", "text": "哈哈哈！小徒弟，回去叫你师父来吧！" },
+      { "kind": "提示", "text": "生命掉到两成，败下阵来。生命已经回满，黑虎还在竹林深处。他发怒后会扑人，看准前摇再闪。" }
+    ],
+    "J-巡山-上场": [ { "who": "wolf_gang", "text": "这条山路是我们的地盘！识相的留下买路钱！", "do": "jh", "op": "b_engage" } ],
+    "J-巡山-胜": [
+      { "who": "wolf_gang", "text": "跑、快跑！是打跑老大的那只兔子！" },
+      { "kind": "提示", "text": "巡山完成！回江湖告示榜交榜领赏。" }
+    ],
+    "J-巡山-败": [
+      { "who": "wolf_gang", "text": "哼，也不过如此！" },
+      { "kind": "提示", "text": "生命掉到两成，败下阵来。生命已经回满，山贼还在山路上，随时可以再去。" }
+    ],
+    "J-馒头-取": [
+      { "who": "bear", "text": "茶摊老板要的馒头？刚出笼的，拿好，别凉了。", "do": "jh", "op": "c_step", "cid": "bun" },
+      { "kind": "提示", "text": "拿到一笼馒头。送到村口茶摊。" }
+    ],
+    "J-馒头-送": [
+      { "who": "tanuki", "text": "哎呀，馒头来了！热乎的，正好配茶。辛苦你啦，小兔兄弟。", "do": "jh", "op": "c_step", "cid": "bun" },
+      { "kind": "提示", "text": "馒头送到了。回江湖告示榜交差。" }
+    ],
+    "J-送信-取": [
+      { "who": "tanuki", "text": "这封信劳烦你带给山门的老伯，是他山外的老朋友托我转交的。", "do": "jh", "op": "c_step", "cid": "letter" },
+      { "kind": "提示", "text": "拿到一封信。送到山门的老伯那里。" }
+    ],
+    "J-送信-送": [
+      { "who": "dog", "text": "信？给我的？……哈哈，是老伙计写来的。难为你跑这一趟。", "do": "jh", "op": "c_step", "cid": "letter" },
+      { "kind": "提示", "text": "信送到了。回江湖告示榜交差。" }
+    ],
+    "J-找鸡-找到": [
+      { "kind": "旁白", "text": "咯咯哒！小鸡歪着头看了你一会儿，扑扑翅膀，跟在你身后。", "do": "jh", "op": "c_step", "cid": "chicken" },
+      { "kind": "提示", "text": "小鸡跟着你走。带它回村口。" }
+    ],
+    "J-玉佩-找到": [
+      { "kind": "旁白", "text": "草丛里有一块温润的玉佩，系着褪了色的红绳。", "do": "jh", "op": "c_step", "cid": "jade" },
+      { "kind": "提示", "text": "找到了玉佩。回江湖告示榜交差。" }
+    ],
+    "J-村民-名望": [
+      { "who": "duck", "text": "你就是那位打退山贼的少侠吧！村里人都在说你呢。" },
+      { "who": "duck", "text": "以后村里有什么难事，还得请小兔兄弟多帮衬。" }
+    ],
+    "J-茶摊-平时": [
+      { "who": "tanuki", "text": "来碗茶歇歇脚？村口的江湖告示榜上常有活计，去看看吧。" }
+    ],
+    "J-茶摊-名望": [
+      { "who": "tanuki", "text": "哟，少侠来啦！如今十里八乡都听说过你的名号。" },
+      { "who": "tanuki", "text": "这碗茶算我请的。告示榜上的委托，托付人都说给你的工钱要多给些。" }
+    ]
+  },
+  "ui": {
+    "prompt_board": "按 E 看江湖告示榜",
+    "prompt_take": "按 E 拿",
+    "prompt_dig": "按 E 挖",
+    "prompt_pick": "按 E 捡",
+    "prompt_mend": "按 E 补",
+    "prompt_chick": "按 E 抱小鸡",
+    "board_title": "江湖告示榜：左边红纸是悬赏，右边黄纸是委托。",
+    "opt_bounty": "看悬赏",
+    "opt_commission": "看委托",
+    "opt_leave": "离开",
+    "opt_back": "返回",
+    "opt_accept_bounty": "接榜",
+    "opt_turnin_bounty": "交榜",
+    "opt_abandon_bounty": "放弃这条悬赏",
+    "opt_c_accept": "%s：接下",
+    "opt_c_turnin": "%s：交差",
+    "opt_c_abandon": "%s：放弃",
+    "opt_c_done": "%s：已交差",
+    "opt_c_full": "%s：接不下了",
+    "opt_confirm_abandon": "放弃（没有惩罚）",
+    "opt_keep": "不放弃",
+    "bounty_offer": "悬赏第 %d 条【%s】%s · 赏金 %d 文 · 名望 +%d\n%s",
+    "patrol_offer": "悬赏【巡山】赏金 %d 文（不加名望）\n%s没人接的话，第 %d 天辰时换下一条。",
+    "bounty_active": "【%s】进行中：去%s。\n打不过就先回来，判负不扣钱；放弃也没有惩罚。",
+    "bounty_won": "【%s】已经办妥。\n交榜可领赏金 %d 文%s。",
+    "bounty_fame_part": "、名望 +%d",
+    "bounty_none_next": "悬赏还没贴出来。下一条：第 %d 天辰时上榜（今天第 %d 天）。",
+    "patrol_none_next": "三条悬赏都揭了。下一条巡山：第 %d 天辰时上榜（今天第 %d 天）。",
+    "bounty_slot_full": "手上已经有一条悬赏了，办完或放弃再来接。",
+    "bounty_accepted": "接下悬赏【%s】。恶人在%s，小地图上有红点。",
+    "bounty_abandoned": "放弃了悬赏【%s】。想接的话，它还在榜上。",
+    "bounty_paid": "交榜：赏金 %d 文%s。",
+    "bounty_paid_fame": "，名望 +%d 格",
+    "bounty_paid_fame_full": "（名望已满）",
+    "commission_head": "今日委托（子时前回榜交差）：",
+    "commission_none": "今天的委托辰时（8 点）才贴出来。",
+    "commission_bonus": "（名望已有 %d 格：报酬 ×%s）",
+    "commission_line": "%d. %s · %d 文 — %s",
+    "commission_open": "可接",
+    "commission_taken": "进行中（%s）",
+    "commission_ready": "办妥了，可以交差",
+    "commission_done": "已交差",
+    "commission_detail": "%s托付【%s】· %d 文：\n%s",
+    "commission_accepted": "接下委托【%s】。子时（24 点）前回榜交差。",
+    "commission_abandoned": "放弃了委托【%s】。没有惩罚，它还在榜上。",
+    "commission_paid": "%s留话：『%s』\n报酬 %d 文。",
+    "commission_estate": "累计完成 %d 条委托：家业 +1 格！",
+    "commission_estate_full": "累计完成 %d 条委托（家业已满）。",
+    "abandon_question": "【%s】还没办完（%s）。要放弃吗？",
+    "toast_bounty_won": "讨平！回告示榜交榜",
+    "toast_lost": "败下阵来，生命已回满",
+    "toast_rage": "黑虎发怒了！",
+    "toast_rage_sub": "出招更快，小心扑击",
+    "toast_got_bun": "拿到一笼馒头",
+    "toast_got_letter": "拿到一封信",
+    "toast_shoot": "挖到一根竹笋（%d/%d）",
+    "toast_jade": "找到玉佩",
+    "toast_fence": "补好一处篱笆（%d/%d）",
+    "toast_chick_home": "小鸡回到村口了！回告示榜交差",
+    "toast_expired": "过了子时，没办完的委托作废了",
+    "toast_new_bounty": "江湖告示榜贴出了新悬赏",
+    "chick_bubble": "咯咯！",
+    "rage_bubble": "吼——！你惹恼我了！",
+    "flee_bubble": "打不过，溜了溜了！",
+    "hud_bounty": "悬赏：%s（%s）",
+    "hud_bounty_won": "悬赏：%s · 回榜交榜",
+    "hud_commission": "委托：%s · %s",
+    "item_bun": "馒头",
+    "item_letter": "信"
+  },
+  "book": {
+    "bounty_line": "悬赏 %d/3 条",
+    "bounty_next": "（下一条第 %d 天辰时）",
+    "bounty_doing": "悬赏第 %d 条【%s】进行中",
+    "bounty_won": "悬赏第 %d 条【%s】待交榜",
+    "patrol_line": "悬赏 3/3 条 · 巡山 %d 回",
+    "commission_line": "委托 %d 条（家业进度 %d/%d）",
+    "joiner": " · ",
+    "bounty_entry": "揭榜：%s",
+    "bounty_entry_sep": "、",
+    "commission_estate": "接委托累计 %d 条"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "_说明": "序章的目标（外部文件层），文字 = 剧本 v4“一页看懂：任务流程”表格的“左上角目标文字”（第 1 步有三条：先“擦干地上的水”，再“看看桌上的字条”，读完字条再“去练武场找师兄”，所以一共 11 条）。前两条在开场对话之后依次出现（id 写在 story.json 的 step 里），之后第 N 步做完显示第 N+1 条。star = 小地图星星的位置（first_of = 按顺序取第一个 unless 标记还没有的）：npc 填人物编号（fox 师兄、crane 师父、bear 厨娘、dog 看门老伯、tanuki 茶摊老板、duck 村民），object 填地图物件类型（stele 断碑、tile_stash 藏瓦处），thing 填 story.json 里可查看物件的 id（如 note 字条），pos 填像素坐标 [x, y]（1 格 = 32 像素）；目标在屋里、人在屋外时，星星自动指向那间屋子的门。star_after_puzzle = 谜题解开后星星改到哪里；plain = true 表示不加“目标：”前缀、不显示星星。推进条件在 story.json 里。详见 说明.md 第 11 节。",
+  "steps": [
+    { "id": "wipe_floor", "text": "擦干地上的水", "star": { "first_of": [{ "thing": "rag", "unless": "has_rag" }, { "thing": "puddle" }] } },
+    { "id": "read_note", "text": "看看桌上的字条", "star": { "thing": "note" } },
+    { "id": "find_senior", "text": "去练武场找师兄", "star": { "npc": "fox" } },
+    { "id": "find_master", "text": "去正殿见师父", "star": { "npc": "crane" } },
+    { "id": "find_cook", "text": "去厨房找厨娘", "star": { "npc": "bear" } },
+    { "id": "leave_gate", "text": "从山门下山", "star": { "npc": "dog" } },
+    { "id": "road", "text": "沿山路去村口", "star": { "pos": [1456, 1808] } },
+    { "id": "tea_stall", "text": "去村口找茶摊老板", "star": { "npc": "tanuki" } },
+    { "id": "grove", "text": "去后山竹林找回瓦片", "star": { "object": "stele" }, "star_after_puzzle": { "object": "tile_stash" } },
+    { "id": "report", "text": "把瓦片的事告诉师父", "star": { "npc": "crane" } },
+    { "id": "done", "text": "序章完成", "plain": true }
+  ]
+}

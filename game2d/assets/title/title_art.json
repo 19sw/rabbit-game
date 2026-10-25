@@ -1,0 +1,73 @@
+{
+ "_说明": "由 pixel2d/title/tools/generate_title_art.py 生成，不要手改。feet = 脚底中心在帧里的像素位置。",
+ "rabbit": {
+  "file": "rabbit_standee.png",
+  "frame_size": [
+   80,
+   104
+  ],
+  "frames": 4,
+  "fps": 3.0,
+  "feet": [
+   40,
+   100
+  ],
+  "height_px": 100,
+  "faces": "right"
+ },
+ "crane": {
+  "file": "crane_standee.png",
+  "frame_size": [
+   72,
+   108
+  ],
+  "frames": 4,
+  "fps": 3.0,
+  "feet": [
+   36,
+   104
+  ],
+  "height_px": 99,
+  "faces": "left"
+ },
+ "layers": [
+  "bg_sky.png",
+  "mist_0.png",
+  "bg_hills.png",
+  "mist_1.png",
+  "bg_sect.png"
+ ],
+ "edge_strip": "bg_sect_edge.png",
+ "mist": [
+  {
+   "file": "mist_0.png",
+   "size": [
+    480,
+    30
+   ]
+  },
+  {
+   "file": "mist_1.png",
+   "size": [
+    480,
+    26
+   ]
+  }
+ ],
+ "leaves": {
+  "file": "leaves.png",
+  "frame_size": [
+   8,
+   8
+  ],
+  "frames": 4,
+  "rows": [
+   "bamboo",
+   "ginkgo"
+  ]
+ },
+ "size": [
+  480,
+  270
+ ]
+}

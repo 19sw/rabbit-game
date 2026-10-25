@@ -1,0 +1,27 @@
+extends "res://tests/run_tests.gd"
+## Mid-prologue save (opening done, rag taken, one wipe), written by the game, then turned into the version-1 (第②步)
+## layout: the step-2 schema is the current one without the "step3" section.
+func _run() -> void:
+	await frames(3)
+	root.remove_child(main)
+	var s = load("res://tests/sample_suite.gd").new(self)
+	SaveGame.erase()
+	await s.new_game()
+	await s.finish_scene()
+	var it = s.g.interiors
+	await s.stand_near(it.anchor("dorm_main", "rag"), [Vector2(0, 18), Vector2(18, 0), Vector2(-18, 0), Vector2(0, -18)])
+	await tap(KEY_E)
+	await s.finish_scene()
+	await s.stand_near(it.anchor("dorm_main", "puddle"), [Vector2(0, 26), Vector2(26, 0), Vector2(-26, 0), Vector2(0, -26)])
+	await tap(KEY_E)
+	await frames(30)
+	s.smp.save_now("fixture")
+	var doc = JSON.parse_string(FileAccess.get_file_as_string(SaveGame.path()))
+	doc["version"] = 1
+	doc["state"].erase("step3")
+	var f := FileAccess.open(OS.get_environment("FIXTURE_OUT"), FileAccess.WRITE)
+	f.store_string(JSON.stringify(doc, "", true, true))
+	f.close()
+	print("MID unlocked ", doc["state"]["sample"]["unlocked"], " stage ", doc["state"]["story"]["stage"])
+	SaveGame.erase()
+	quit(0)

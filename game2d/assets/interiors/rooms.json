@@ -1,0 +1,2508 @@
+{
+ "_说明": "由 pixel2d/interiors/tools/generate_interiors.py 生成（游戏用室内数据，别手改）。坐标都是房间内的像素。",
+ "garments": [
+  "new",
+  "old",
+  "patched",
+  "child"
+ ],
+ "rooms": [
+  {
+   "anchors": {
+    "bed": [
+     247,
+     132
+    ],
+    "bookshelf": [
+     35,
+     110
+    ],
+    "bucket": [
+     289,
+     98
+    ],
+    "note": [
+     108,
+     147
+    ],
+    "puddle": [
+     290,
+     114
+    ],
+    "rag": [
+     43,
+     206
+    ],
+    "senior_bed": [
+     343,
+     136
+    ],
+    "senior_chest": [
+     417,
+     98
+    ],
+    "wardrobe": [
+     170,
+     96
+    ]
+   },
+   "colliders": [
+    {
+     "kind": "wardrobe",
+     "rect": [
+      148,
+      71,
+      44,
+      14
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      16,
+      72,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "bed_player",
+     "rect": [
+      226,
+      66,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "bucket",
+     "rect": [
+      277,
+      76,
+      24,
+      18
+     ]
+    },
+    {
+     "kind": "bed_messy",
+     "rect": [
+      322,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      398,
+      74,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "low_table",
+     "rect": [
+      89,
+      125,
+      38,
+      18
+     ]
+    },
+    {
+     "kind": "broom",
+     "rect": [
+      16,
+      221,
+      12,
+      8
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -180,
+      576,
+      248
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      470,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      10,
+      242,
+      152,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      190,
+      242,
+      280,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      162,
+      254,
+      28,
+      48
+     ]
+    }
+   ],
+   "door_y": 242,
+   "doors": [
+    {
+     "x0": 162,
+     "x1": 190
+    }
+   ],
+   "drips": [
+    {
+     "into": "bucket",
+     "x": 288,
+     "y_land": 83,
+     "y_top": 16
+    },
+    {
+     "into": "pillow",
+     "x": 332,
+     "y_land": 73,
+     "y_top": 16
+    }
+   ],
+   "floor": [
+    10,
+    68,
+    460,
+    174
+   ],
+   "furniture": [
+    {
+     "atlas": [
+      0,
+      0,
+      64,
+      84
+     ],
+     "name": "wardrobe",
+     "rect": [
+      138,
+      5,
+      64,
+      84
+     ],
+     "sort_y": 85,
+     "type": "wardrobe"
+    },
+    {
+     "atlas": [
+      65,
+      0,
+      44,
+      40
+     ],
+     "name": "chest_6",
+     "rect": [
+      14,
+      58,
+      44,
+      40
+     ],
+     "sort_y": 92,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      110,
+      0,
+      48,
+      76
+     ],
+     "name": "bed",
+     "rect": [
+      224,
+      58,
+      48,
+      76
+     ],
+     "sort_y": 128,
+     "type": "bed_player"
+    },
+    {
+     "atlas": [
+      159,
+      0,
+      30,
+      30
+     ],
+     "name": "bucket",
+     "rect": [
+      274,
+      69,
+      30,
+      30
+     ],
+     "sort_y": 94,
+     "type": "bucket"
+    },
+    {
+     "atlas": [
+      190,
+      0,
+      48,
+      80
+     ],
+     "name": "senior_bed",
+     "rect": [
+      320,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_messy"
+    },
+    {
+     "atlas": [
+      239,
+      0,
+      44,
+      40
+     ],
+     "name": "senior_chest",
+     "rect": [
+      396,
+      60,
+      44,
+      40
+     ],
+     "sort_y": 94,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      284,
+      0,
+      48,
+      40
+     ],
+     "name": "note",
+     "rect": [
+      83,
+      109,
+      48,
+      40
+     ],
+     "sort_y": 143,
+     "type": "low_table"
+    },
+    {
+     "atlas": [
+      333,
+      0,
+      20,
+      52
+     ],
+     "name": "broom_19",
+     "rect": [
+      11,
+      179,
+      20,
+      52
+     ],
+     "sort_y": 229,
+     "type": "broom"
+    }
+   ],
+   "id": "dorm_main",
+   "lights": [
+    {
+     "kind": "oil_lamp",
+     "pos": [
+      119,
+      119
+     ]
+    }
+   ],
+   "mood": "",
+   "name": "主角与师兄的宿舍",
+   "size": [
+    480,
+    256
+   ],
+   "spots": {},
+   "start": [
+    211,
+    139
+   ],
+   "variants": {
+    "bed_quilt": {
+     "atlas": [
+      403,
+      0,
+      48,
+      50
+     ],
+     "rect": [
+      224,
+      84,
+      48,
+      50
+     ]
+    },
+    "bed_sleeping": {
+     "atlas": [
+      354,
+      0,
+      48,
+      76
+     ],
+     "rect": [
+      224,
+      58,
+      48,
+      76
+     ]
+    },
+    "puddle": {
+     "atlas": [
+      517,
+      0,
+      56,
+      28
+     ],
+     "rect": [
+      262,
+      98,
+      56,
+      28
+     ]
+    },
+    "rag": {
+     "atlas": [
+      574,
+      0,
+      22,
+      14
+     ],
+     "rect": [
+      30,
+      216,
+      22,
+      14
+     ]
+    },
+    "wardrobe_open": {
+     "atlas": [
+      452,
+      0,
+      64,
+      84
+     ],
+     "rect": [
+      138,
+      5,
+      64,
+      84
+     ]
+    }
+   },
+   "wall_rows": 2,
+   "water": {
+    "bucket": {
+     "center": [
+      288,
+      82
+     ],
+     "r": 9,
+     "rim": 12
+    },
+    "puddle": {
+     "blobs": [
+      [
+       290,
+       112,
+       20,
+       8
+      ],
+      [
+       276,
+       114,
+       10,
+       6
+      ],
+      [
+       304,
+       109,
+       9,
+       5
+      ],
+      [
+       296,
+       117,
+       8,
+       4
+      ]
+     ],
+     "rect": [
+      262,
+      98,
+      56,
+      28
+     ]
+    }
+   }
+  },
+  {
+   "anchors": {
+    "altar": [
+     360,
+     158
+    ],
+    "leak_bucket": [
+     455,
+     231
+    ],
+    "plaque": [
+     226,
+     168
+    ],
+    "portrait": [
+     280,
+     158
+    ]
+   },
+   "colliders": [
+    {
+     "kind": "altar",
+     "rect": [
+      266,
+      119,
+      108,
+      32
+     ]
+    },
+    {
+     "kind": "candle_stand",
+     "rect": [
+      245,
+      135,
+      10,
+      10
+     ]
+    },
+    {
+     "kind": "candle_stand",
+     "rect": [
+      387,
+      135,
+      10,
+      10
+     ]
+    },
+    {
+     "kind": "tea_table",
+     "rect": [
+      38,
+      122,
+      38,
+      18
+     ]
+    },
+    {
+     "kind": "hall_pillar",
+     "rect": [
+      132,
+      121,
+      20,
+      14
+     ]
+    },
+    {
+     "kind": "hall_pillar",
+     "rect": [
+      487,
+      121,
+      20,
+      14
+     ]
+    },
+    {
+     "kind": "hall_pillar",
+     "rect": [
+      132,
+      236,
+      20,
+      14
+     ]
+    },
+    {
+     "kind": "hall_pillar",
+     "rect": [
+      487,
+      236,
+      20,
+      14
+     ]
+    },
+    {
+     "kind": "weapon_rack",
+     "rect": [
+      558,
+      122,
+      56,
+      22
+     ]
+    },
+    {
+     "kind": "donation_box",
+     "rect": [
+      400,
+      249,
+      30,
+      18
+     ]
+    },
+    {
+     "kind": "bucket",
+     "rect": [
+      443,
+      209,
+      24,
+      18
+     ]
+    },
+    {
+     "kind": "broom",
+     "rect": [
+      594,
+      263,
+      12,
+      8
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -148,
+      736,
+      248
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -48,
+      58,
+      416
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      630,
+      -48,
+      58,
+      416
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      10,
+      306,
+      248,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      382,
+      306,
+      248,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      258,
+      318,
+      124,
+      48
+     ]
+    }
+   ],
+   "door_y": 306,
+   "doors": [
+    {
+     "x0": 258,
+     "x1": 382
+    }
+   ],
+   "drips": [],
+   "floor": [
+    10,
+    100,
+    620,
+    206
+   ],
+   "furniture": [
+    {
+     "atlas": [
+      0,
+      0,
+      112,
+      62
+     ],
+     "name": "altar",
+     "rect": [
+      264,
+      93,
+      112,
+      62
+     ],
+     "sort_y": 151,
+     "type": "altar"
+    },
+    {
+     "atlas": [
+      113,
+      0,
+      20,
+      56
+     ],
+     "name": "candle_stand_7",
+     "rect": [
+      240,
+      91,
+      20,
+      56
+     ],
+     "sort_y": 145,
+     "type": "candle_stand"
+    },
+    {
+     "atlas": [
+      134,
+      0,
+      20,
+      56
+     ],
+     "name": "candle_stand_8",
+     "rect": [
+      382,
+      91,
+      20,
+      56
+     ],
+     "sort_y": 145,
+     "type": "candle_stand"
+    },
+    {
+     "atlas": [
+      155,
+      0,
+      48,
+      40
+     ],
+     "name": "tea_table_12",
+     "rect": [
+      32,
+      106,
+      48,
+      40
+     ],
+     "sort_y": 140,
+     "type": "tea_table"
+    },
+    {
+     "atlas": [
+      204,
+      0,
+      28,
+      92
+     ],
+     "name": "hall_pillar_14",
+     "rect": [
+      128,
+      45,
+      28,
+      92
+     ],
+     "sort_y": 135,
+     "type": "hall_pillar"
+    },
+    {
+     "atlas": [
+      233,
+      0,
+      28,
+      92
+     ],
+     "name": "hall_pillar_15",
+     "rect": [
+      483,
+      45,
+      28,
+      92
+     ],
+     "sort_y": 135,
+     "type": "hall_pillar"
+    },
+    {
+     "atlas": [
+      262,
+      0,
+      28,
+      92
+     ],
+     "name": "hall_pillar_16",
+     "rect": [
+      128,
+      160,
+      28,
+      92
+     ],
+     "sort_y": 250,
+     "type": "hall_pillar"
+    },
+    {
+     "atlas": [
+      291,
+      0,
+      28,
+      92
+     ],
+     "name": "hall_pillar_17",
+     "rect": [
+      483,
+      160,
+      28,
+      92
+     ],
+     "sort_y": 250,
+     "type": "hall_pillar"
+    },
+    {
+     "atlas": [
+      320,
+      0,
+      64,
+      64
+     ],
+     "name": "weapon_rack_18",
+     "rect": [
+      554,
+      82,
+      64,
+      64
+     ],
+     "sort_y": 144,
+     "type": "weapon_rack"
+    },
+    {
+     "atlas": [
+      385,
+      0,
+      36,
+      38
+     ],
+     "name": "donation_box_19",
+     "rect": [
+      397,
+      232,
+      36,
+      38
+     ],
+     "sort_y": 267,
+     "type": "donation_box"
+    },
+    {
+     "atlas": [
+      422,
+      0,
+      30,
+      30
+     ],
+     "name": "leak_bucket",
+     "rect": [
+      440,
+      202,
+      30,
+      30
+     ],
+     "sort_y": 227,
+     "type": "bucket"
+    },
+    {
+     "atlas": [
+      453,
+      0,
+      20,
+      52
+     ],
+     "name": "broom_21",
+     "rect": [
+      589,
+      221,
+      20,
+      52
+     ],
+     "sort_y": 271,
+     "type": "broom"
+    }
+   ],
+   "id": "hall",
+   "lights": [
+    {
+     "kind": "candle",
+     "pos": [
+      248,
+      91
+     ]
+    },
+    {
+     "kind": "candle",
+     "pos": [
+      280,
+      92
+     ]
+    },
+    {
+     "kind": "eternal_lamp",
+     "pos": [
+      325,
+      109
+     ]
+    }
+   ],
+   "mood": "",
+   "name": "正殿",
+   "size": [
+    640,
+    320
+   ],
+   "spots": {
+    "crane": {
+     "dir": "up",
+     "pos": [
+      320,
+      170
+     ]
+    }
+   },
+   "start": [
+    304,
+    234
+   ],
+   "variants": {},
+   "wall_rows": 3,
+   "water": {}
+  },
+  {
+   "anchors": {
+    "bowls": [
+     150,
+     116
+    ],
+    "rice": [
+     32,
+     103
+    ],
+    "stove": [
+     375,
+     126
+    ]
+   },
+   "colliders": [
+    {
+     "kind": "bowl_cupboard",
+     "rect": [
+      124,
+      90,
+      52,
+      22
+     ]
+    },
+    {
+     "kind": "jar",
+     "rect": [
+      14,
+      77,
+      36,
+      22
+     ]
+    },
+    {
+     "kind": "jar_bench",
+     "rect": [
+      54,
+      80,
+      58,
+      18
+     ]
+    },
+    {
+     "kind": "stove",
+     "rect": [
+      325,
+      86,
+      100,
+      36
+     ]
+    },
+    {
+     "kind": "woodpile",
+     "rect": [
+      423,
+      132,
+      44,
+      28
+     ]
+    },
+    {
+     "kind": "stool",
+     "rect": [
+      342,
+      137,
+      18,
+      12
+     ]
+    },
+    {
+     "kind": "work_table",
+     "rect": [
+      190,
+      106,
+      78,
+      26
+     ]
+    },
+    {
+     "kind": "bench",
+     "rect": [
+      200,
+      152,
+      58,
+      10
+     ]
+    },
+    {
+     "kind": "jar",
+     "rect": [
+      208,
+      201,
+      44,
+      22
+     ]
+    },
+    {
+     "kind": "bucket",
+     "rect": [
+      123,
+      194,
+      24,
+      18
+     ]
+    },
+    {
+     "kind": "broom",
+     "rect": [
+      18,
+      212,
+      12,
+      8
+     ]
+    },
+    {
+     "kind": "veg_basket",
+     "rect": [
+      80,
+      155,
+      28,
+      14
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -180,
+      576,
+      248
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      470,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      10,
+      242,
+      152,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      190,
+      242,
+      280,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      162,
+      254,
+      28,
+      48
+     ]
+    }
+   ],
+   "door_y": 242,
+   "doors": [
+    {
+     "x0": 162,
+     "x1": 190
+    }
+   ],
+   "drips": [],
+   "floor": [
+    10,
+    68,
+    460,
+    174
+   ],
+   "furniture": [
+    {
+     "atlas": [
+      0,
+      0,
+      56,
+      96
+     ],
+     "name": "bowls",
+     "rect": [
+      122,
+      18,
+      56,
+      96
+     ],
+     "sort_y": 112,
+     "type": "bowl_cupboard"
+    },
+    {
+     "atlas": [
+      57,
+      0,
+      42,
+      42
+     ],
+     "name": "rice",
+     "rect": [
+      11,
+      60,
+      42,
+      42
+     ],
+     "sort_y": 99,
+     "type": "jar"
+    },
+    {
+     "atlas": [
+      100,
+      0,
+      64,
+      40
+     ],
+     "name": "jar_bench_13",
+     "rect": [
+      51,
+      61,
+      64,
+      40
+     ],
+     "sort_y": 98,
+     "type": "jar_bench"
+    },
+    {
+     "atlas": [
+      165,
+      0,
+      104,
+      70
+     ],
+     "name": "stove",
+     "rect": [
+      323,
+      56,
+      104,
+      70
+     ],
+     "sort_y": 122,
+     "type": "stove"
+    },
+    {
+     "atlas": [
+      270,
+      0,
+      48,
+      50
+     ],
+     "name": "woodpile_15",
+     "rect": [
+      421,
+      112,
+      48,
+      50
+     ],
+     "sort_y": 160,
+     "type": "woodpile"
+    },
+    {
+     "atlas": [
+      319,
+      0,
+      24,
+      26
+     ],
+     "name": "stool_16",
+     "rect": [
+      339,
+      125,
+      24,
+      26
+     ],
+     "sort_y": 149,
+     "type": "stool"
+    },
+    {
+     "atlas": [
+      344,
+      0,
+      84,
+      50
+     ],
+     "name": "work_table_17",
+     "rect": [
+      187,
+      88,
+      84,
+      50
+     ],
+     "sort_y": 132,
+     "type": "work_table"
+    },
+    {
+     "atlas": [
+      429,
+      0,
+      64,
+      22
+     ],
+     "name": "bench_18",
+     "rect": [
+      197,
+      142,
+      64,
+      22
+     ],
+     "sort_y": 162,
+     "type": "bench"
+    },
+    {
+     "atlas": [
+      494,
+      0,
+      50,
+      50
+     ],
+     "name": "jar_19",
+     "rect": [
+      205,
+      176,
+      50,
+      50
+     ],
+     "sort_y": 223,
+     "type": "jar"
+    },
+    {
+     "atlas": [
+      545,
+      0,
+      30,
+      30
+     ],
+     "name": "bucket_20",
+     "rect": [
+      120,
+      187,
+      30,
+      30
+     ],
+     "sort_y": 212,
+     "type": "bucket"
+    },
+    {
+     "atlas": [
+      576,
+      0,
+      20,
+      52
+     ],
+     "name": "broom_21",
+     "rect": [
+      13,
+      170,
+      20,
+      52
+     ],
+     "sort_y": 220,
+     "type": "broom"
+    },
+    {
+     "atlas": [
+      597,
+      0,
+      34,
+      28
+     ],
+     "name": "veg_basket_22",
+     "rect": [
+      77,
+      144,
+      34,
+      28
+     ],
+     "sort_y": 169,
+     "type": "veg_basket"
+    }
+   ],
+   "id": "kitchen",
+   "lights": [
+    {
+     "kind": "stove_fire",
+     "pos": [
+      352,
+      116
+     ]
+    }
+   ],
+   "mood": "",
+   "name": "厨房",
+   "size": [
+    480,
+    256
+   ],
+   "spots": {
+    "bear": {
+     "dir": "right",
+     "pos": [
+      301,
+      112
+     ]
+    }
+   },
+   "start": [
+    160,
+    189
+   ],
+   "variants": {},
+   "wall_rows": 2,
+   "water": {}
+  },
+  {
+   "anchors": {
+    "empty_beds": [
+     37,
+     136
+    ],
+    "name_board": [
+     190,
+     108
+    ],
+    "old_clothes": [
+     309,
+     136
+    ]
+   },
+   "colliders": [
+    {
+     "kind": "bed_bare",
+     "rect": [
+      16,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "bed_bare",
+     "rect": [
+      64,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "bed_bare",
+     "rect": [
+      288,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "bed_bare",
+     "rect": [
+      336,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "bed_bare",
+     "rect": [
+      112,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      389,
+      72,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      424,
+      76,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      181,
+      81,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "broken_stool",
+     "rect": [
+      195,
+      135,
+      24,
+      12
+     ]
+    },
+    {
+     "kind": "cracked_basin",
+     "rect": [
+      400,
+      173,
+      24,
+      14
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -180,
+      576,
+      248
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      470,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      10,
+      242,
+      248,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      286,
+      242,
+      184,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      258,
+      254,
+      28,
+      48
+     ]
+    }
+   ],
+   "door_y": 242,
+   "doors": [
+    {
+     "x0": 258,
+     "x1": 286
+    }
+   ],
+   "drips": [],
+   "floor": [
+    10,
+    68,
+    460,
+    174
+   ],
+   "furniture": [
+    {
+     "atlas": [
+      0,
+      0,
+      48,
+      80
+     ],
+     "name": "empty_beds",
+     "rect": [
+      14,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_bare"
+    },
+    {
+     "atlas": [
+      49,
+      0,
+      48,
+      80
+     ],
+     "name": "bed_bare_9",
+     "rect": [
+      62,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_bare"
+    },
+    {
+     "atlas": [
+      98,
+      0,
+      48,
+      80
+     ],
+     "name": "old_clothes",
+     "rect": [
+      286,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_bare"
+    },
+    {
+     "atlas": [
+      147,
+      0,
+      48,
+      80
+     ],
+     "name": "bed_bare_11",
+     "rect": [
+      334,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_bare"
+    },
+    {
+     "atlas": [
+      196,
+      0,
+      48,
+      80
+     ],
+     "name": "bed_bare_12",
+     "rect": [
+      110,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_bare"
+    },
+    {
+     "atlas": [
+      245,
+      0,
+      44,
+      40
+     ],
+     "name": "chest_13",
+     "rect": [
+      387,
+      58,
+      44,
+      40
+     ],
+     "sort_y": 92,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      290,
+      0,
+      44,
+      40
+     ],
+     "name": "chest_14",
+     "rect": [
+      422,
+      62,
+      44,
+      40
+     ],
+     "sort_y": 96,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      335,
+      0,
+      44,
+      40
+     ],
+     "name": "chest_15",
+     "rect": [
+      179,
+      67,
+      44,
+      40
+     ],
+     "sort_y": 101,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      380,
+      0,
+      30,
+      22
+     ],
+     "name": "broken_stool_16",
+     "rect": [
+      192,
+      128,
+      30,
+      22
+     ],
+     "sort_y": 147,
+     "type": "broken_stool"
+    },
+    {
+     "atlas": [
+      411,
+      0,
+      30,
+      24
+     ],
+     "name": "cracked_basin_17",
+     "rect": [
+      397,
+      166,
+      30,
+      24
+     ],
+     "sort_y": 187,
+     "type": "cracked_basin"
+    }
+   ],
+   "id": "dorm_old",
+   "lights": [
+    {
+     "kind": "moon",
+     "pos": [
+      422,
+      192
+     ]
+    }
+   ],
+   "mood": "dim",
+   "name": "另一间宿舍（旧弟子房）",
+   "size": [
+    480,
+    256
+   ],
+   "spots": {},
+   "start": [
+    256,
+    189
+   ],
+   "variants": {},
+   "wall_rows": 2,
+   "water": {}
+  },
+  {
+   "anchors": {},
+   "colliders": [
+    {
+     "kind": "shelf_tall",
+     "rect": [
+      13,
+      81,
+      56,
+      24
+     ]
+    },
+    {
+     "kind": "shelf_tall",
+     "rect": [
+      77,
+      81,
+      56,
+      24
+     ]
+    },
+    {
+     "kind": "shelf_tall",
+     "rect": [
+      197,
+      81,
+      56,
+      24
+     ]
+    },
+    {
+     "kind": "rubble",
+     "rect": [
+      366,
+      68,
+      88,
+      34
+     ]
+    },
+    {
+     "kind": "beam",
+     "rect": [
+      300,
+      120,
+      84,
+      14
+     ]
+    },
+    {
+     "kind": "shelf_fallen",
+     "rect": [
+      117,
+      102,
+      98,
+      34
+     ]
+    },
+    {
+     "kind": "overturned_desk",
+     "rect": [
+      20,
+      162,
+      48,
+      20
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -180,
+      576,
+      248
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      470,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      10,
+      242,
+      120,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      158,
+      242,
+      312,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      130,
+      254,
+      28,
+      48
+     ]
+    }
+   ],
+   "door_y": 242,
+   "doors": [
+    {
+     "x0": 130,
+     "x1": 158
+    }
+   ],
+   "drips": [],
+   "floor": [
+    10,
+    68,
+    460,
+    174
+   ],
+   "furniture": [
+    {
+     "atlas": [
+      0,
+      0,
+      64,
+      100
+     ],
+     "name": "shelf_tall_0",
+     "rect": [
+      11,
+      11,
+      64,
+      100
+     ],
+     "sort_y": 105,
+     "type": "shelf_tall"
+    },
+    {
+     "atlas": [
+      65,
+      0,
+      64,
+      100
+     ],
+     "name": "shelf_tall_1",
+     "rect": [
+      75,
+      11,
+      64,
+      100
+     ],
+     "sort_y": 105,
+     "type": "shelf_tall"
+    },
+    {
+     "atlas": [
+      130,
+      0,
+      64,
+      100
+     ],
+     "name": "shelf_tall_2",
+     "rect": [
+      195,
+      11,
+      64,
+      100
+     ],
+     "sort_y": 105,
+     "type": "shelf_tall"
+    },
+    {
+     "atlas": [
+      195,
+      0,
+      96,
+      64
+     ],
+     "name": "rubble_9",
+     "rect": [
+      362,
+      42,
+      96,
+      64
+     ],
+     "sort_y": 102,
+     "type": "rubble"
+    },
+    {
+     "atlas": [
+      292,
+      0,
+      96,
+      32
+     ],
+     "name": "beam_10",
+     "rect": [
+      294,
+      106,
+      96,
+      32
+     ],
+     "sort_y": 134,
+     "type": "beam"
+    },
+    {
+     "atlas": [
+      389,
+      0,
+      110,
+      54
+     ],
+     "name": "shelf_fallen_11",
+     "rect": [
+      109,
+      88,
+      110,
+      54
+     ],
+     "sort_y": 136,
+     "type": "shelf_fallen"
+    },
+    {
+     "atlas": [
+      500,
+      0,
+      56,
+      34
+     ],
+     "name": "overturned_desk_12",
+     "rect": [
+      16,
+      152,
+      56,
+      34
+     ],
+     "sort_y": 182,
+     "type": "overturned_desk"
+    }
+   ],
+   "id": "library",
+   "lights": [],
+   "mood": "dim",
+   "name": "藏经阁废墟内部",
+   "size": [
+    480,
+    256
+   ],
+   "spots": {},
+   "start": [
+    128,
+    192
+   ],
+   "variants": {},
+   "wall_rows": 2,
+   "water": {}
+  },
+  {
+   "anchors": {
+    "gong": [
+     324,
+     102
+    ],
+    "junk": [
+     120,
+     107
+    ]
+   },
+   "colliders": [
+    {
+     "kind": "crate",
+     "rect": [
+      15,
+      69,
+      30,
+      22
+     ]
+    },
+    {
+     "kind": "weapon_barrel",
+     "rect": [
+      60,
+      80,
+      27,
+      22
+     ]
+    },
+    {
+     "kind": "hoe",
+     "rect": [
+      104,
+      91,
+      12,
+      8
+     ]
+    },
+    {
+     "kind": "hoe",
+     "rect": [
+      121,
+      93,
+      12,
+      8
+     ]
+    },
+    {
+     "kind": "broom",
+     "rect": [
+      139,
+      92,
+      12,
+      8
+     ]
+    },
+    {
+     "kind": "broom",
+     "rect": [
+      151,
+      94,
+      12,
+      8
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      178,
+      76,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "basket_stack",
+     "rect": [
+      226,
+      74,
+      30,
+      18
+     ]
+    },
+    {
+     "kind": "gong",
+     "rect": [
+      303,
+      90,
+      42,
+      8
+     ]
+    },
+    {
+     "kind": "sack",
+     "rect": [
+      355,
+      91,
+      24,
+      14
+     ]
+    },
+    {
+     "kind": "sack",
+     "rect": [
+      379,
+      96,
+      24,
+      14
+     ]
+    },
+    {
+     "kind": "crate",
+     "rect": [
+      431,
+      166,
+      30,
+      22
+     ]
+    },
+    {
+     "kind": "weapon_rack",
+     "rect": [
+      385,
+      158,
+      56,
+      22
+     ]
+    },
+    {
+     "kind": "broken_stool",
+     "rect": [
+      278,
+      154,
+      24,
+      12
+     ]
+    },
+    {
+     "kind": "jar",
+     "rect": [
+      17,
+      183,
+      36,
+      22
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -180,
+      576,
+      248
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      470,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      10,
+      242,
+      120,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      158,
+      242,
+      312,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      130,
+      254,
+      28,
+      48
+     ]
+    }
+   ],
+   "door_y": 242,
+   "doors": [
+    {
+     "x0": 130,
+     "x1": 158
+    }
+   ],
+   "drips": [],
+   "floor": [
+    10,
+    68,
+    460,
+    174
+   ],
+   "furniture": [
+    {
+     "atlas": [
+      0,
+      0,
+      36,
+      52
+     ],
+     "name": "crate_8",
+     "rect": [
+      13,
+      43,
+      36,
+      52
+     ],
+     "sort_y": 91,
+     "type": "crate"
+    },
+    {
+     "atlas": [
+      37,
+      0,
+      36,
+      64
+     ],
+     "name": "weapon_barrel_9",
+     "rect": [
+      56,
+      42,
+      36,
+      64
+     ],
+     "sort_y": 102,
+     "type": "weapon_barrel"
+    },
+    {
+     "atlas": [
+      74,
+      0,
+      22,
+      60
+     ],
+     "name": "junk",
+     "rect": [
+      98,
+      43,
+      22,
+      60
+     ],
+     "sort_y": 99,
+     "type": "hoe"
+    },
+    {
+     "atlas": [
+      97,
+      0,
+      22,
+      60
+     ],
+     "name": "hoe_11",
+     "rect": [
+      115,
+      45,
+      22,
+      60
+     ],
+     "sort_y": 101,
+     "type": "hoe"
+    },
+    {
+     "atlas": [
+      120,
+      0,
+      20,
+      52
+     ],
+     "name": "broom_12",
+     "rect": [
+      134,
+      50,
+      20,
+      52
+     ],
+     "sort_y": 100,
+     "type": "broom"
+    },
+    {
+     "atlas": [
+      141,
+      0,
+      20,
+      52
+     ],
+     "name": "broom_13",
+     "rect": [
+      146,
+      52,
+      20,
+      52
+     ],
+     "sort_y": 102,
+     "type": "broom"
+    },
+    {
+     "atlas": [
+      162,
+      0,
+      44,
+      40
+     ],
+     "name": "chest_14",
+     "rect": [
+      176,
+      62,
+      44,
+      40
+     ],
+     "sort_y": 96,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      207,
+      0,
+      34,
+      30
+     ],
+     "name": "basket_stack_15",
+     "rect": [
+      224,
+      64,
+      34,
+      30
+     ],
+     "sort_y": 92,
+     "type": "basket_stack"
+    },
+    {
+     "atlas": [
+      242,
+      0,
+      46,
+      58
+     ],
+     "name": "gong",
+     "rect": [
+      301,
+      43,
+      46,
+      58
+     ],
+     "sort_y": 98,
+     "type": "gong"
+    },
+    {
+     "atlas": [
+      289,
+      0,
+      30,
+      30
+     ],
+     "name": "sack_17",
+     "rect": [
+      352,
+      77,
+      30,
+      30
+     ],
+     "sort_y": 105,
+     "type": "sack"
+    },
+    {
+     "atlas": [
+      320,
+      0,
+      30,
+      30
+     ],
+     "name": "sack_18",
+     "rect": [
+      376,
+      82,
+      30,
+      30
+     ],
+     "sort_y": 110,
+     "type": "sack"
+    },
+    {
+     "atlas": [
+      351,
+      0,
+      36,
+      32
+     ],
+     "name": "crate_19",
+     "rect": [
+      429,
+      160,
+      36,
+      32
+     ],
+     "sort_y": 188,
+     "type": "crate"
+    },
+    {
+     "atlas": [
+      388,
+      0,
+      64,
+      64
+     ],
+     "name": "weapon_rack_20",
+     "rect": [
+      381,
+      118,
+      64,
+      64
+     ],
+     "sort_y": 180,
+     "type": "weapon_rack"
+    },
+    {
+     "atlas": [
+      453,
+      0,
+      30,
+      22
+     ],
+     "name": "broken_stool_21",
+     "rect": [
+      275,
+      147,
+      30,
+      22
+     ],
+     "sort_y": 166,
+     "type": "broken_stool"
+    },
+    {
+     "atlas": [
+      484,
+      0,
+      42,
+      42
+     ],
+     "name": "jar_22",
+     "rect": [
+      14,
+      166,
+      42,
+      42
+     ],
+     "sort_y": 205,
+     "type": "jar"
+    }
+   ],
+   "id": "storage",
+   "lights": [
+    {
+     "kind": "moon",
+     "pos": [
+      362,
+      195
+     ]
+    }
+   ],
+   "mood": "dim",
+   "name": "杂物间",
+   "size": [
+    480,
+    256
+   ],
+   "spots": {},
+   "start": [
+    128,
+    189
+   ],
+   "variants": {},
+   "wall_rows": 2,
+   "water": {}
+  }
+ ],
+ "tile": 32
+}

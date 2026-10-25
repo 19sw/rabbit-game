@@ -1,0 +1,1220 @@
+{
+ "_说明": "由 pixel2d/two_paths/tools/generate_two_paths.py 生成（修好后的室内，格式同 interiors/output/game/rooms.json；每项多 base_id 和 textures）。坐标都是房间内的像素。",
+ "rooms": [
+  {
+   "anchors": {
+    "bed": [
+     247,
+     132
+    ],
+    "bookshelf": [
+     35,
+     110
+    ],
+    "note": [
+     108,
+     147
+    ],
+    "rag": [
+     43,
+     206
+    ],
+    "senior_bed": [
+     343,
+     136
+    ],
+    "senior_chest": [
+     417,
+     98
+    ],
+    "wardrobe": [
+     170,
+     96
+    ]
+   },
+   "base_id": "dorm_main",
+   "colliders": [
+    {
+     "kind": "wardrobe",
+     "rect": [
+      148,
+      71,
+      44,
+      14
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      16,
+      72,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "bed_player",
+     "rect": [
+      226,
+      66,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "bed_messy_dry",
+     "rect": [
+      322,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      398,
+      74,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "low_table",
+     "rect": [
+      89,
+      125,
+      38,
+      18
+     ]
+    },
+    {
+     "kind": "broom",
+     "rect": [
+      16,
+      221,
+      12,
+      8
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -180,
+      576,
+      248
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      470,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      10,
+      242,
+      152,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      190,
+      242,
+      280,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      162,
+      254,
+      28,
+      48
+     ]
+    }
+   ],
+   "door_y": 242,
+   "doors": [
+    {
+     "x0": 162,
+     "x1": 190
+    }
+   ],
+   "drips": [],
+   "floor": [
+    10,
+    68,
+    460,
+    174
+   ],
+   "furniture": [
+    {
+     "atlas": [
+      0,
+      0,
+      64,
+      84
+     ],
+     "name": "wardrobe",
+     "rect": [
+      138,
+      5,
+      64,
+      84
+     ],
+     "sort_y": 85,
+     "type": "wardrobe"
+    },
+    {
+     "atlas": [
+      65,
+      0,
+      44,
+      40
+     ],
+     "name": "chest_5",
+     "rect": [
+      14,
+      58,
+      44,
+      40
+     ],
+     "sort_y": 92,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      110,
+      0,
+      48,
+      76
+     ],
+     "name": "bed",
+     "rect": [
+      224,
+      58,
+      48,
+      76
+     ],
+     "sort_y": 128,
+     "type": "bed_player"
+    },
+    {
+     "atlas": [
+      159,
+      0,
+      48,
+      80
+     ],
+     "name": "senior_bed",
+     "rect": [
+      320,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_messy_dry"
+    },
+    {
+     "atlas": [
+      208,
+      0,
+      44,
+      40
+     ],
+     "name": "senior_chest",
+     "rect": [
+      396,
+      60,
+      44,
+      40
+     ],
+     "sort_y": 94,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      253,
+      0,
+      48,
+      40
+     ],
+     "name": "note",
+     "rect": [
+      83,
+      109,
+      48,
+      40
+     ],
+     "sort_y": 143,
+     "type": "low_table"
+    },
+    {
+     "atlas": [
+      302,
+      0,
+      20,
+      52
+     ],
+     "name": "broom_17",
+     "rect": [
+      11,
+      179,
+      20,
+      52
+     ],
+     "sort_y": 229,
+     "type": "broom"
+    }
+   ],
+   "id": "dorm_main_fixed",
+   "lights": [
+    {
+     "kind": "oil_lamp",
+     "pos": [
+      119,
+      119
+     ]
+    }
+   ],
+   "mood": "",
+   "name": "主角与师兄的宿舍",
+   "size": [
+    480,
+    256
+   ],
+   "spots": {},
+   "start": [
+    211,
+    139
+   ],
+   "textures": {
+    "base": "dorm_main_fixed.png",
+    "front": "dorm_main_fixed_front.png",
+    "light": "dorm_main_fixed_light.png",
+    "over": "dorm_main_fixed_over.png"
+   },
+   "variants": {
+    "bed_quilt": {
+     "atlas": [
+      372,
+      0,
+      48,
+      50
+     ],
+     "rect": [
+      224,
+      84,
+      48,
+      50
+     ]
+    },
+    "bed_sleeping": {
+     "atlas": [
+      323,
+      0,
+      48,
+      76
+     ],
+     "rect": [
+      224,
+      58,
+      48,
+      76
+     ]
+    },
+    "rag": {
+     "atlas": [
+      486,
+      0,
+      22,
+      14
+     ],
+     "rect": [
+      30,
+      216,
+      22,
+      14
+     ]
+    },
+    "wardrobe_open": {
+     "atlas": [
+      421,
+      0,
+      64,
+      84
+     ],
+     "rect": [
+      138,
+      5,
+      64,
+      84
+     ]
+    }
+   },
+   "wall_rows": 2,
+   "water": {}
+  },
+  {
+   "anchors": {
+    "empty_beds": [
+     37,
+     136
+    ],
+    "lamp": [
+     227,
+     145
+    ],
+    "name_board": [
+     190,
+     108
+    ],
+    "old_clothes": [
+     309,
+     136
+    ]
+   },
+   "base_id": "dorm_old",
+   "colliders": [
+    {
+     "kind": "bed_made",
+     "rect": [
+      16,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "bed_made",
+     "rect": [
+      64,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "bed_made",
+     "rect": [
+      288,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "bed_made",
+     "rect": [
+      336,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "bed_made",
+     "rect": [
+      112,
+      70,
+      42,
+      62
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      389,
+      72,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      424,
+      76,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "chest",
+     "rect": [
+      181,
+      81,
+      38,
+      20
+     ]
+    },
+    {
+     "kind": "lamp_table",
+     "rect": [
+      208,
+      123,
+      38,
+      18
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -180,
+      576,
+      248
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      470,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      10,
+      242,
+      248,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      286,
+      242,
+      184,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      258,
+      254,
+      28,
+      48
+     ]
+    }
+   ],
+   "door_y": 242,
+   "doors": [
+    {
+     "x0": 258,
+     "x1": 286
+    }
+   ],
+   "drips": [],
+   "floor": [
+    10,
+    68,
+    460,
+    174
+   ],
+   "furniture": [
+    {
+     "atlas": [
+      0,
+      0,
+      48,
+      80
+     ],
+     "name": "empty_beds",
+     "rect": [
+      14,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_made"
+    },
+    {
+     "atlas": [
+      49,
+      0,
+      48,
+      80
+     ],
+     "name": "bed_made_2",
+     "rect": [
+      62,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_made"
+    },
+    {
+     "atlas": [
+      98,
+      0,
+      48,
+      80
+     ],
+     "name": "old_clothes",
+     "rect": [
+      286,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_made"
+    },
+    {
+     "atlas": [
+      147,
+      0,
+      48,
+      80
+     ],
+     "name": "bed_made_4",
+     "rect": [
+      334,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_made"
+    },
+    {
+     "atlas": [
+      196,
+      0,
+      48,
+      80
+     ],
+     "name": "bed_made_5",
+     "rect": [
+      110,
+      58,
+      48,
+      80
+     ],
+     "sort_y": 132,
+     "type": "bed_made"
+    },
+    {
+     "atlas": [
+      245,
+      0,
+      44,
+      40
+     ],
+     "name": "chest_6",
+     "rect": [
+      387,
+      58,
+      44,
+      40
+     ],
+     "sort_y": 92,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      290,
+      0,
+      44,
+      40
+     ],
+     "name": "chest_7",
+     "rect": [
+      422,
+      62,
+      44,
+      40
+     ],
+     "sort_y": 96,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      335,
+      0,
+      44,
+      40
+     ],
+     "name": "chest_8",
+     "rect": [
+      179,
+      67,
+      44,
+      40
+     ],
+     "sort_y": 101,
+     "type": "chest"
+    },
+    {
+     "atlas": [
+      380,
+      0,
+      48,
+      40
+     ],
+     "name": "lamp",
+     "rect": [
+      202,
+      107,
+      48,
+      40
+     ],
+     "sort_y": 141,
+     "type": "lamp_table"
+    }
+   ],
+   "id": "dorm_old_clean",
+   "lights": [
+    {
+     "kind": "oil_lamp",
+     "pos": [
+      224,
+      120
+     ]
+    },
+    {
+     "kind": "moon",
+     "pos": [
+      422,
+      192
+     ]
+    }
+   ],
+   "mood": "",
+   "name": "另一间宿舍（旧弟子房 · 整理好）",
+   "size": [
+    480,
+    256
+   ],
+   "spots": {},
+   "start": [
+    256,
+    189
+   ],
+   "textures": {
+    "base": "dorm_old_clean.png",
+    "front": "dorm_old_clean_front.png",
+    "light": "dorm_old_clean_light.png",
+    "over": "dorm_old_clean_over.png"
+   },
+   "variants": {},
+   "wall_rows": 2,
+   "water": {}
+  },
+  {
+   "anchors": {
+    "bowls": [
+     150,
+     116
+    ],
+    "rice": [
+     32,
+     103
+    ],
+    "steamers": [
+     389,
+     207
+    ],
+    "stove": [
+     375,
+     126
+    ]
+   },
+   "base_id": "kitchen",
+   "colliders": [
+    {
+     "kind": "bowl_cupboard",
+     "rect": [
+      124,
+      90,
+      52,
+      22
+     ]
+    },
+    {
+     "kind": "jar",
+     "rect": [
+      14,
+      77,
+      36,
+      22
+     ]
+    },
+    {
+     "kind": "jar_bench",
+     "rect": [
+      54,
+      80,
+      58,
+      18
+     ]
+    },
+    {
+     "kind": "stove_fixed",
+     "rect": [
+      325,
+      86,
+      100,
+      36
+     ]
+    },
+    {
+     "kind": "woodpile",
+     "rect": [
+      423,
+      132,
+      44,
+      28
+     ]
+    },
+    {
+     "kind": "stool",
+     "rect": [
+      342,
+      137,
+      18,
+      12
+     ]
+    },
+    {
+     "kind": "work_table",
+     "rect": [
+      190,
+      106,
+      78,
+      26
+     ]
+    },
+    {
+     "kind": "bench",
+     "rect": [
+      200,
+      152,
+      58,
+      10
+     ]
+    },
+    {
+     "kind": "jar",
+     "rect": [
+      208,
+      201,
+      44,
+      22
+     ]
+    },
+    {
+     "kind": "bucket",
+     "rect": [
+      123,
+      194,
+      24,
+      18
+     ]
+    },
+    {
+     "kind": "broom",
+     "rect": [
+      18,
+      212,
+      12,
+      8
+     ]
+    },
+    {
+     "kind": "veg_basket",
+     "rect": [
+      80,
+      155,
+      28,
+      14
+     ]
+    },
+    {
+     "kind": "steamer_stack",
+     "rect": [
+      377,
+      191,
+      24,
+      12
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -180,
+      576,
+      248
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      -48,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      470,
+      -48,
+      58,
+      352
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      10,
+      242,
+      152,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      190,
+      242,
+      280,
+      62
+     ]
+    },
+    {
+     "kind": "wall",
+     "rect": [
+      162,
+      254,
+      28,
+      48
+     ]
+    }
+   ],
+   "door_y": 242,
+   "doors": [
+    {
+     "x0": 162,
+     "x1": 190
+    }
+   ],
+   "drips": [],
+   "floor": [
+    10,
+    68,
+    460,
+    174
+   ],
+   "furniture": [
+    {
+     "atlas": [
+      0,
+      0,
+      56,
+      96
+     ],
+     "name": "bowls",
+     "rect": [
+      122,
+      18,
+      56,
+      96
+     ],
+     "sort_y": 112,
+     "type": "bowl_cupboard"
+    },
+    {
+     "atlas": [
+      57,
+      0,
+      42,
+      42
+     ],
+     "name": "rice",
+     "rect": [
+      11,
+      60,
+      42,
+      42
+     ],
+     "sort_y": 99,
+     "type": "jar"
+    },
+    {
+     "atlas": [
+      100,
+      0,
+      64,
+      40
+     ],
+     "name": "jar_bench_12",
+     "rect": [
+      51,
+      61,
+      64,
+      40
+     ],
+     "sort_y": 98,
+     "type": "jar_bench"
+    },
+    {
+     "atlas": [
+      165,
+      0,
+      104,
+      70
+     ],
+     "name": "stove",
+     "rect": [
+      323,
+      56,
+      104,
+      70
+     ],
+     "sort_y": 122,
+     "type": "stove_fixed"
+    },
+    {
+     "atlas": [
+      270,
+      0,
+      48,
+      50
+     ],
+     "name": "woodpile_14",
+     "rect": [
+      421,
+      112,
+      48,
+      50
+     ],
+     "sort_y": 160,
+     "type": "woodpile"
+    },
+    {
+     "atlas": [
+      319,
+      0,
+      24,
+      26
+     ],
+     "name": "stool_15",
+     "rect": [
+      339,
+      125,
+      24,
+      26
+     ],
+     "sort_y": 149,
+     "type": "stool"
+    },
+    {
+     "atlas": [
+      344,
+      0,
+      84,
+      50
+     ],
+     "name": "work_table_16",
+     "rect": [
+      187,
+      88,
+      84,
+      50
+     ],
+     "sort_y": 132,
+     "type": "work_table"
+    },
+    {
+     "atlas": [
+      429,
+      0,
+      64,
+      22
+     ],
+     "name": "bench_17",
+     "rect": [
+      197,
+      142,
+      64,
+      22
+     ],
+     "sort_y": 162,
+     "type": "bench"
+    },
+    {
+     "atlas": [
+      494,
+      0,
+      50,
+      50
+     ],
+     "name": "jar_18",
+     "rect": [
+      205,
+      176,
+      50,
+      50
+     ],
+     "sort_y": 223,
+     "type": "jar"
+    },
+    {
+     "atlas": [
+      545,
+      0,
+      30,
+      30
+     ],
+     "name": "bucket_19",
+     "rect": [
+      120,
+      187,
+      30,
+      30
+     ],
+     "sort_y": 212,
+     "type": "bucket"
+    },
+    {
+     "atlas": [
+      576,
+      0,
+      20,
+      52
+     ],
+     "name": "broom_20",
+     "rect": [
+      13,
+      170,
+      20,
+      52
+     ],
+     "sort_y": 220,
+     "type": "broom"
+    },
+    {
+     "atlas": [
+      597,
+      0,
+      34,
+      28
+     ],
+     "name": "veg_basket_21",
+     "rect": [
+      77,
+      144,
+      34,
+      28
+     ],
+     "sort_y": 169,
+     "type": "veg_basket"
+    },
+    {
+     "atlas": [
+      632,
+      0,
+      30,
+      34
+     ],
+     "name": "steamers",
+     "rect": [
+      374,
+      171,
+      30,
+      34
+     ],
+     "sort_y": 203,
+     "type": "steamer_stack"
+    }
+   ],
+   "id": "kitchen_fixed",
+   "lights": [
+    {
+     "kind": "stove_fire",
+     "pos": [
+      352,
+      116
+     ]
+    },
+    {
+     "kind": "stove_fire",
+     "pos": [
+      397,
+      116
+     ]
+    }
+   ],
+   "mood": "",
+   "name": "厨房",
+   "size": [
+    480,
+    256
+   ],
+   "spots": {
+    "bear": {
+     "dir": "right",
+     "pos": [
+      301,
+      112
+     ]
+    }
+   },
+   "start": [
+    160,
+    189
+   ],
+   "textures": {
+    "base": "kitchen_fixed.png",
+    "front": "kitchen_fixed_front.png",
+    "light": "kitchen_fixed_light.png",
+    "over": "kitchen_fixed_over.png"
+   },
+   "variants": {},
+   "wall_rows": 2,
+   "water": {}
+  }
+ ],
+ "tile": 32
+}

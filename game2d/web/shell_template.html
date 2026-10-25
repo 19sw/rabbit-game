@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<!-- 网页版外壳（加载页）模板。tools/sync_assets.py 用 data/title.json 里的标题文字和 assets/title/title_logo.png
+     填好双花括号的几项后写成 web/shell.html；导出时引擎再填美元符号开头的几项（export_presets.cfg: html/custom_html_shell）。
+     加载页只有：深色背景 + 像素标题 + 像素进度条 + “加载中”，不用引擎自带的启动图。 -->
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>{{TITLE}}</title>
+		<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	color: #f3e6c8;
+	background-color: {{BG}};
+	overflow: hidden;
+	touch-action: none;
+}
+
+#canvas {
+	display: block;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#loader {
+	position: absolute;
+	inset: 0;
+	background-color: {{BG}};
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 28px;
+	z-index: 2;
+	transition: opacity 0.35s steps(4);
+}
+
+#loader.done {
+	opacity: 0;
+	pointer-events: none;
+}
+
+#loader-logo {
+	width: {{LOGO_W}}px;
+	height: {{LOGO_H}}px;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+}
+
+#loader-bar {
+	width: 240px;
+	height: 12px;
+	padding: 3px;
+	background: #2a2124;
+	border: 3px solid #e0b23e;
+	box-shadow: 0 3px 0 #5e2422, 0 0 0 3px #2a1a20;
+	image-rendering: pixelated;
+}
+
+#loader-fill {
+	height: 100%;
+	width: 0%;
+	background: repeating-linear-gradient(90deg, #f6dc78 0 9px, #e0b23e 9px 12px);
+}
+
+#loader-bar.indeterminate #loader-fill {
+	width: 30%;
+	animation: sweep 1.2s steps(12) infinite;
+}
+
+@keyframes sweep {
+	from { margin-left: 0%; }
+	to { margin-left: 70%; }
+}
+
+#loader-text {
+	font: 15px/1 "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+	letter-spacing: 2px;
+	color: #e9dcbc;
+	min-height: 18px;
+}
+
+#loader-notice {
+	display: none;
+	max-width: 560px;
+	margin: 0 2rem;
+	padding: 1rem;
+	background: #5b3943;
+	border: 2px solid #9b3943;
+	color: #f0e0e0;
+	font: 14px/1.4 "PingFang SC", "Noto Sans CJK SC", sans-serif;
+	text-align: center;
+}
+		</style>
+		$GODOT_HEAD_INCLUDE
+	</head>
+	<body>
+		<canvas id="canvas">
+			您的浏览器不支持 canvas。
+		</canvas>
+
+		<noscript>
+			需要开启 JavaScript 才能运行。
+		</noscript>
+
+		<div id="loader">
+			<img id="loader-logo" src="{{LOGO_DATA_URI}}" alt="{{TITLE}}">
+			<div id="loader-bar" class="indeterminate"><div id="loader-fill"></div></div>
+			<div id="loader-text">{{LOADING_TEXT}}</div>
+			<div id="loader-notice"></div>
+		</div>
+
+		<script src="$GODOT_URL"></script>
+		<script>
+const GODOT_CONFIG = $GODOT_CONFIG;
+const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	const loader = document.getElementById('loader');
+	const bar = document.getElementById('loader-bar');
+	const fill = document.getElementById('loader-fill');
+	const text = document.getElementById('loader-text');
+	const notice = document.getElementById('loader-notice');
+	const loadingText = text.textContent;
+	let initializing = true;
+
+	function hideLoader() {
+		if (!initializing) {
+			return;
+		}
+		initializing = false;
+		loader.classList.add('done');
+		setTimeout(() => loader.remove(), 400);
+	}
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		let msg = '未知错误';
+		if (err instanceof Error) {
+			msg = err.message;
+		} else if (typeof err === 'string') {
+			msg = err;
+		}
+		notice.textContent = '加载失败：' + msg;
+		notice.style.display = 'block';
+		bar.style.display = 'none';
+		initializing = false;
+	}
+
+	// 室内图进游戏 v1 fix round: loading watchdog. If the engine has not started after 45 s (e.g. a stuck download
+	// after a reload mid-load), offer a reload that bypasses the cache (a fresh ?r= query on the page).
+	const watchdog = setTimeout(function () {
+		if (!initializing) {
+			return;
+		}
+		console.warn('loader: slow start, offering a reload');
+		notice.textContent = '加载有点慢，点此刷新重试';
+		notice.style.display = 'block';
+		notice.style.cursor = 'pointer';
+		notice.dataset.retry = '1';
+		notice.onclick = function () {
+			const u = new URL(window.location.href);
+			u.searchParams.set('r', String(Date.now()));
+			window.location.replace(u.toString());
+		};
+	}, 45000);
+
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
+
+	if (missing.length !== 0) {
+		displayFailureNotice('浏览器缺少运行所需的功能：\n' + missing.join('\n'));
+		return;
+	}
+	engine.startGame({
+		'onProgress': function (current, total) {
+			if (current > 0 && total > 0) {
+				const pct = Math.max(0, Math.min(100, Math.floor((current / total) * 100)));
+				bar.classList.remove('indeterminate');
+				fill.style.width = pct + '%';
+				text.textContent = pct >= 100 ? '{{STARTING_TEXT}}' : loadingText + '  ' + pct + '%';
+			} else {
+				bar.classList.add('indeterminate');
+			}
+		},
+	}).then(() => {
+		clearTimeout(watchdog);
+		fill.style.width = '100%';
+		hideLoader();
+	}, function (err) {
+		clearTimeout(watchdog);
+		displayFailureNotice(err);
+	});
+}());
+		</script>
+	</body>
+</html>

@@ -1,0 +1,43 @@
+; Engine configuration file for the 2D pixel version (区域一 · 破旧山门).
+config_version=5
+
+[application]
+
+config/name="动物武侠 DEMO"
+run/main_scene="res://scenes/title.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://assets/title/icon.png"
+boot_splash/show_image=false
+boot_splash/bg_color=Color(0.101961, 0.0901961, 0.101961, 1)
+boot_splash/image="res://assets/title/boot.png"
+
+[autoload]
+
+ViewFit="*res://scripts/view_fit.gd"
+
+[display]
+
+window/size/viewport_width=480
+window/size/viewport_height=270
+window/size/window_width_override=1440
+window/size/window_height_override=810
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/stretch/scale_mode="integer"
+
+[gui]
+
+theme/custom_font="res://fonts/ui_font.fnt"
+theme/default_font_size=11
+
+[physics]
+
+common/physics_ticks_per_second=60
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/canvas_textures/default_texture_filter=0
+2d/snap/snap_2d_transforms_to_pixel=true
+environment/defaults/default_clear_color=Color(0.1, 0.09, 0.1, 1)

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CombatRules" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat_rules.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+back_multiplier = 1.0
+difficulty_multiplier = 1.0
+hitstop = 0.05
+counter_hitstop = 0.08
+respawn_heal_fraction = 1.0
+death_seconds = 1.5
+spar_result_seconds = 2.5

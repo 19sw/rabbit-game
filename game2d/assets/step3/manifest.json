@@ -1,0 +1,662 @@
+{
+ "_说明": "第③步 新增美术接口（pixel2d/step3/tools/generate_step3.py 生成，别手改）。所有 file 路径相对本文件所在目录 pixel2d/step3/output/；map_px 是区域一地图像素（左上角 0,0，每格 32）；in_frame 是图片内像素；矩形都是 [x, y, 宽, 高]。",
+ "characters": {
+  "monkey": {
+   "combat_meta": "combat/monkey_combat.json",
+   "combat_sheet": "combat/monkey_combat.png",
+   "foot_anchor_in_frame": [
+    16,
+    30
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "game2d_copy_to": {
+    "combat_meta": "game2d/assets/combat/monkey_combat.json",
+    "combat_sheet": "game2d/assets/combat/monkey_combat.png",
+    "portrait": "game2d/assets/portraits/monkey.png",
+    "sheet_meta": "game2d/assets/characters/monkey.json",
+    "sprite_sheet": "game2d/assets/characters/monkey.png"
+   },
+   "idle": {
+    "first_column": 0,
+    "fps": 2,
+    "frames": 2
+   },
+   "name": "灵猴门 · 猴子",
+   "portrait": "characters/portraits/monkey.png",
+   "portrait_size": [
+    64,
+    64
+   ],
+   "role": "第 1 轮对手",
+   "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+   ],
+   "sheet_meta": "characters/sprites/monkey.json",
+   "sheet_size": [
+    192,
+    128
+   ],
+   "sprite_sheet": "characters/sprites/monkey.png",
+   "walk": {
+    "first_column": 2,
+    "fps": 8,
+    "frames": 4
+   },
+   "walk_preview": "characters/walk/monkey.gif"
+  },
+  "snake": {
+   "combat_meta": "combat/snake_combat.json",
+   "combat_sheet": "combat/snake_combat.png",
+   "foot_anchor_in_frame": [
+    16,
+    30
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "game2d_copy_to": {
+    "combat_meta": "game2d/assets/combat/snake_combat.json",
+    "combat_sheet": "game2d/assets/combat/snake_combat.png",
+    "portrait": "game2d/assets/portraits/snake.png",
+    "sheet_meta": "game2d/assets/characters/snake.json",
+    "sprite_sheet": "game2d/assets/characters/snake.png"
+   },
+   "idle": {
+    "first_column": 0,
+    "fps": 2,
+    "frames": 2
+   },
+   "name": "青蛇派 · 蛇",
+   "note": "long robe (legs style 'robe'): only the tail coils show under the hem; a little tail tip sticks out behind",
+   "portrait": "characters/portraits/snake.png",
+   "portrait_size": [
+    64,
+    64
+   ],
+   "role": "第 3 轮对手",
+   "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+   ],
+   "sheet_meta": "characters/sprites/snake.json",
+   "sheet_size": [
+    192,
+    128
+   ],
+   "sprite_sheet": "characters/sprites/snake.png",
+   "walk": {
+    "first_column": 2,
+    "fps": 8,
+    "frames": 4
+   },
+   "walk_preview": "characters/walk/snake.gif"
+  },
+  "squirrel": {
+   "combat_meta": "combat/squirrel_combat.json",
+   "combat_sheet": "combat/squirrel_combat.png",
+   "foot_anchor_in_frame": [
+    16,
+    30
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "game2d_copy_to": {
+    "combat_meta": "game2d/assets/combat/squirrel_combat.json",
+    "combat_sheet": "game2d/assets/combat/squirrel_combat.png",
+    "portrait": "game2d/assets/portraits/squirrel.png",
+    "sheet_meta": "game2d/assets/characters/squirrel.json",
+    "sprite_sheet": "game2d/assets/characters/squirrel.png"
+   },
+   "idle": {
+    "first_column": 0,
+    "fps": 2,
+    "frames": 2
+   },
+   "name": "师弟 · 小松鼠",
+   "note": "small on purpose (hip row 26 like 老周, head ~4 px lower than the rabbit); wears the sect's old patched training uniform",
+   "portrait": "characters/portraits/squirrel.png",
+   "portrait_size": [
+    64,
+    64
+   ],
+   "role": "第一个弟子（陪练）",
+   "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+   ],
+   "sheet_meta": "characters/sprites/squirrel.json",
+   "sheet_size": [
+    192,
+    128
+   ],
+   "sprite_sheet": "characters/sprites/squirrel.png",
+   "walk": {
+    "first_column": 2,
+    "fps": 8,
+    "frames": 4
+   },
+   "walk_preview": "characters/walk/squirrel.gif"
+  },
+  "yak": {
+   "combat_meta": "combat/yak_combat.json",
+   "combat_sheet": "combat/yak_combat.png",
+   "foot_anchor_in_frame": [
+    16,
+    30
+   ],
+   "frame_size": [
+    32,
+    32
+   ],
+   "game2d_copy_to": {
+    "combat_meta": "game2d/assets/combat/yak_combat.json",
+    "combat_sheet": "game2d/assets/combat/yak_combat.png",
+    "portrait": "game2d/assets/portraits/yak.png",
+    "sheet_meta": "game2d/assets/characters/yak.json",
+    "sprite_sheet": "game2d/assets/characters/yak.png"
+   },
+   "idle": {
+    "first_column": 0,
+    "fps": 2,
+    "frames": 2
+   },
+   "name": "铁牛帮 · 牦牛",
+   "note": "wide horns: the horn tips reach x 5..26 of the frame - still inside 1..30",
+   "portrait": "characters/portraits/yak.png",
+   "portrait_size": [
+    64,
+    64
+   ],
+   "role": "第 2 轮对手",
+   "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+   ],
+   "sheet_meta": "characters/sprites/yak.json",
+   "sheet_size": [
+    192,
+    128
+   ],
+   "sprite_sheet": "characters/sprites/yak.png",
+   "walk": {
+    "first_column": 2,
+    "fps": 8,
+    "frames": 4
+   },
+   "walk_preview": "characters/walk/yak.gif"
+  }
+ },
+ "combat": {
+  "format": "identical to pixel2d/characters/output/combat/<id>_combat.json (game2d CharSheet reads it unchanged): rows = directions down,left,right,up; actions {start, count, fps, hit_frame, loop}; frame 32x32, foot anchor (16, 30)",
+  "sheets": {
+   "monkey": {
+    "actions": {
+     "attack1": {
+      "count": 5,
+      "fps": 14,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 0
+     },
+     "attack2": {
+      "count": 5,
+      "fps": 14,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 5
+     },
+     "down": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 16
+     },
+     "hurt": {
+      "count": 3,
+      "fps": 10,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 13
+     },
+     "windup": {
+      "count": 3,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 10
+     }
+    },
+    "columns": 20,
+    "meta": "combat/monkey_combat.json",
+    "note": "windup is 3 frames at 8 fps (0.375 s) then holds its last frame - fits the 0.5 s windup",
+    "sheet": "combat/monkey_combat.png",
+    "size": [
+     640,
+     128
+    ]
+   },
+   "snake": {
+    "actions": {
+     "attack1": {
+      "count": 5,
+      "fps": 14,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 0
+     },
+     "attack2": {
+      "count": 5,
+      "fps": 12,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 5
+     },
+     "down": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 16
+     },
+     "hurt": {
+      "count": 3,
+      "fps": 10,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 13
+     },
+     "sidestep": {
+      "count": 4,
+      "fps": 12,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 20
+     },
+     "windup": {
+      "count": 3,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 10
+     }
+    },
+    "columns": 24,
+    "meta": "combat/snake_combat.json",
+    "note": "sidestep = 4 frames at 12 fps (0.33 s), loop=false: play it when the 40 % sidestep triggers while the game slides the sprite sideways (perpendicular to its facing); hold the last frame",
+    "sheet": "combat/snake_combat.png",
+    "size": [
+     768,
+     128
+    ]
+   },
+   "squirrel": {
+    "actions": {
+     "attack1": {
+      "count": 5,
+      "fps": 12,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 0
+     },
+     "attack2": {
+      "count": 5,
+      "fps": 12,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 5
+     },
+     "down": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 17
+     },
+     "hurt": {
+      "count": 3,
+      "fps": 10,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 14
+     },
+     "windup": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 10
+     }
+    },
+    "columns": 21,
+    "meta": "combat/squirrel_combat.json",
+    "note": "spar partner: enemy-style sheet (windup + attacks hit on frame 1) like the fox's",
+    "sheet": "combat/squirrel_combat.png",
+    "size": [
+     672,
+     128
+    ]
+   },
+   "yak": {
+    "actions": {
+     "attack1": {
+      "count": 5,
+      "fps": 10,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 0
+     },
+     "attack2": {
+      "count": 5,
+      "fps": 10,
+      "hit_frame": 1,
+      "loop": false,
+      "start": 5
+     },
+     "charge": {
+      "count": 4,
+      "fps": 14,
+      "hit_frame": -1,
+      "loop": true,
+      "start": 21
+     },
+     "down": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 17
+     },
+     "hurt": {
+      "count": 3,
+      "fps": 10,
+      "hit_frame": -1,
+      "loop": false,
+      "start": 14
+     },
+     "windup": {
+      "count": 4,
+      "fps": 8,
+      "hit_frame": -1,
+      "loop": true,
+      "start": 10
+     }
+    },
+    "columns": 25,
+    "meta": "combat/yak_combat.json",
+    "note": "windup loops (pawing) for the 0.9 s windup; charge loops for the whole dash (same as the boar); 霸体: no special art - keep playing attack/charge, optionally flash hurt frame 0 for 1-2 ticks",
+    "sheet": "combat/yak_combat.png",
+    "size": [
+     800,
+     128
+    ]
+   }
+  }
+ },
+ "exterior": {
+  "notice_board": {
+   "collision_in_frame": [
+    7,
+    48,
+    34,
+    6
+   ],
+   "collision_map_px": [
+    583,
+    1748,
+    34,
+    6
+   ],
+   "file": "exterior/notice_board.png",
+   "foot_anchor_in_frame": [
+    24,
+    53
+   ],
+   "frame_size": [
+    48,
+    56
+   ],
+   "frames": {
+    "closed": 0,
+    "open": 1
+   },
+   "frames_note": "closed = 比武 notice (show 下届比武大会：第 N 天午时 in the UI); open = registration time: a red 报名 banner hangs between the posts",
+   "interact_note": "stand south of the board and press E (like the trial sign); radius ~ 20 px",
+   "interact_point_map_px": [
+    600,
+    1764
+   ],
+   "map_px": [
+    576,
+    1700
+   ],
+   "name": "比武大会告示牌",
+   "note": "west of the ring, one tile south of the road; clear of the rock at (19,52), the bush at (19,56) and the pine at (16-17,55-57).",
+   "size": [
+    96,
+    56
+   ],
+   "sort_y": 1753
+  },
+  "ring": {
+   "collision_map_px": [
+    [
+     648,
+     1686,
+     272,
+     210
+    ],
+    [
+     676,
+     1896,
+     40,
+     14
+    ]
+   ],
+   "collision_note": "solid when there is NO match (nobody walks onto the platform). During a match the fighters are placed on the deck and clamped to floor_rect_map_px instead.",
+   "deck_map_px": [
+    648,
+    1686,
+    272,
+    192
+   ],
+   "exit_note": "suggested foot point after a match ends / on 弃权 (in front of the notice board)",
+   "exit_point_map_px": [
+    600,
+    1770
+   ],
+   "floor_note": "walkable rect for a fighter's FOOT point during a match (clamp both fighters to it); a 32x32 body standing anywhere in it never crosses a rope or post. ~6.5 x 4.75 tiles.",
+   "floor_rect_in_frame": [
+    40,
+    46,
+    209,
+    153
+   ],
+   "floor_rect_map_px": [
+    680,
+    1710,
+    209,
+    153
+   ],
+   "hide_note": "The only fight-sized open grass at 村口 lies west of the big tree, south of the east-west road. Two non-story scenery objects stand inside the footprint: hide both map objects and remove their two tree colliders while the ring exists (always, from the step-3 build on). Their ground shadows are completely covered by the opaque deck/face, so ground.png needs no change. Road rows 49-51, the arch, tea stall (tanuki), villager (duck), lanterns, fences, the big tree and every other object stay untouched and unblocked.",
+   "hide_objects": [
+    {
+     "game2d_collider_at_time_of_writing": {
+      "kind": "tree",
+      "rect": [
+       761,
+       1875,
+       13,
+       8
+      ]
+     },
+     "game2d_object_at_time_of_writing": {
+      "kind": "pine",
+      "sort_y": 1885,
+      "tex": "obj_11.png",
+      "type": "tree",
+      "x": 741,
+      "y": 1794
+     },
+     "layout": {
+      "at": [
+       23,
+       13
+      ],
+      "kind": "pine",
+      "location": "road",
+      "seed": 1,
+      "type": "tree"
+     },
+     "map_tile": [
+      23,
+      56
+     ],
+     "what": "tree pine (山脚松林)"
+    },
+    {
+     "game2d_collider_at_time_of_writing": {
+      "kind": "tree",
+      "rect": [
+       836,
+       1835,
+       25,
+       16
+      ]
+     },
+     "game2d_object_at_time_of_writing": {
+      "kind": "bush",
+      "sort_y": 1853,
+      "tex": "obj_42.png",
+      "type": "tree",
+      "x": 836,
+      "y": 1832
+     },
+     "layout": {
+      "at": [
+       26,
+       14
+      ],
+      "kind": "bush",
+      "location": "road",
+      "seed": 2,
+      "type": "tree"
+     },
+     "map_tile": [
+      26,
+      57
+     ],
+     "what": "tree bush (山脚灌木)"
+    }
+   ],
+   "layers": {
+    "base": {
+     "file": "exterior/ring_base.png",
+     "z": "below every actor (like a ground decal): deck, face skirt, steps, back posts + pennants, soft shadow (alpha < 255)"
+    },
+    "front": {
+     "file": "exterior/ring_front.png",
+     "z": "y-sorted with sort_y below: the two front posts (drawn over fighters standing on the deck)"
+    },
+    "ropes_back": {
+     "file": "exterior/ring_ropes_back.png",
+     "z": "below every actor, shown ONLY during a match (back rope + both side ropes)"
+    },
+    "ropes_front": {
+     "file": "exterior/ring_ropes_front.png",
+     "z": "y-sorted with the same sort_y as `front`, shown ONLY during a match (front rope)"
+    }
+   },
+   "map_px": [
+    640,
+    1664
+   ],
+   "map_tiles": [
+    20,
+    52,
+    9,
+    8
+   ],
+   "name": "村口擂台（比武大会）",
+   "rope_rect_map_px": [
+    660,
+    1697,
+    248,
+    177
+   ],
+   "rope_rect_note": "post centre to post centre at deck level = where the ropes stand",
+   "size": [
+    288,
+    256
+   ],
+   "sort_y": 1874,
+   "start_map_px": {
+    "opponent": [
+     840,
+     1792
+    ],
+    "player": [
+     728,
+     1792
+    ]
+   },
+   "start_note": "suggested foot points at the start of each round (player west, opponent east, facing each other)"
+  }
+ },
+ "files": [
+  "characters/portraits/monkey.png",
+  "characters/portraits/snake.png",
+  "characters/portraits/squirrel.png",
+  "characters/portraits/yak.png",
+  "characters/sprites/monkey.json",
+  "characters/sprites/monkey.png",
+  "characters/sprites/snake.json",
+  "characters/sprites/snake.png",
+  "characters/sprites/squirrel.json",
+  "characters/sprites/squirrel.png",
+  "characters/sprites/yak.json",
+  "characters/sprites/yak.png",
+  "characters/walk/monkey.gif",
+  "characters/walk/snake.gif",
+  "characters/walk/squirrel.gif",
+  "characters/walk/yak.gif",
+  "combat/monkey_combat.gif",
+  "combat/monkey_combat.json",
+  "combat/monkey_combat.png",
+  "combat/snake_combat.gif",
+  "combat/snake_combat.json",
+  "combat/snake_combat.png",
+  "combat/squirrel_combat.gif",
+  "combat/squirrel_combat.json",
+  "combat/squirrel_combat.png",
+  "combat/yak_combat.gif",
+  "combat/yak_combat.json",
+  "combat/yak_combat.png",
+  "combat_overview.png",
+  "exterior/notice_board.png",
+  "exterior/ring_base.png",
+  "exterior/ring_front.png",
+  "exterior/ring_on_map.png",
+  "exterior/ring_ropes_back.png",
+  "exterior/ring_ropes_front.png",
+  "manifest.json",
+  "overview.png"
+ ],
+ "regenerate": "cd pixel2d && .venv/bin/python step3/tools/generate_step3.py [--check]",
+ "tile": 32
+}

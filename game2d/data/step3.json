@@ -1,0 +1,213 @@
+{
+  "_说明": "第③步（外部文件层）：比武大会擂台 + 招收第一个弟子（docs/design/第三步-擂台与收徒-方案-v1.md）。数字（报名费、奖金、伙食费、活计效果）在 data/economy.json 的 arena / disciple 里，对手和师弟的战斗数值在 cards/monkey|yak|snake|squirrel.tres；这里只放人物称呼、位置和台词。speakers = 新说话人（portrait = 头像文件名）；ring = 村口擂台（地图像素：outer 整个台子 [x, y, 宽, 高]，未比赛时整块有碰撞；fight = 比赛时双方脚下能站的范围；player_start / enemy_start = 每轮开始时双方站的位置；exit = 出局 / 夺冠后站到哪里）；board = 擂台旁的告示牌（pos 按 E 的位置，radius 多近能按 E，radius_art = 有正式美术时）；美术到位后以 assets/step3/manifest.json 里的位置为准。opponents = 三轮对手（intro 上台时头顶说的话，win = 他赢了时说的话，lose = 他输了时说的话）；youngster = 来拜师的少年（gate = 山门外站的位置，yard_rects = 收下以后白天在宿舍院子里走动的范围 [x, y, 宽, 高]，spar_spot = 陪练那天在练武场等你的位置，night_room / night_spot = 夜里在旧弟子房里的位置（房间内像素））。scenes = 台词（写法同 story.json：who / kind / text，choice 选项，do = arena_signup 报名（difficulty = normal 普通 / hard 困难）/ disciple_accept 收下 / disciple_think 再想想 / disciple_job 派活（job = cook 帮厨 / spar 陪练 / sweep 打扫）/ disciple_spar 切磋；选项的 show_if = 满足才出现，grey_unless = 不满足就变灰不能选）。台词里的 {fee} {between_heal} {upkeep} {cook_income} {stall_income} {spar_coins} {spar_wins} {sweep_days} {first_win_coins} {win_coins} {hard_first_coins} 等换成 economy.json 里的数字；{day} {next_day} {edition} 换成当天的日子。ui = 界面文字；book = 门派簿新增的条目和状态行。",
+  "speakers": {
+    "monkey": { "name": "猴子", "portrait": "monkey" },
+    "yak": { "name": "牦牛", "portrait": "yak" },
+    "snake": { "name": "蛇", "portrait": "snake" },
+    "youngster": { "name": "少年", "portrait": "squirrel" },
+    "squirrel": { "name": "师弟", "portrait": "squirrel" }
+  },
+  "ring": {
+    "outer": [648, 1686, 272, 210],
+    "fight": [680, 1710, 209, 153],
+    "player_start": [728, 1792],
+    "enemy_start": [840, 1792],
+    "exit": [600, 1770]
+  },
+  "board": { "pos": [600, 1764], "radius": 34, "radius_art": 28 },
+  "opponents": {
+    "monkey": {
+      "title": "猴子", "name": "灵猴门 · 猴子", "stand_in": "tanuki", "tint": [1.0, 0.82, 0.55],
+      "intro": "灵猴门，猴子！嘻嘻，追得上我，算你本事！",
+      "win": "太慢啦太慢啦！回去多蹦跶几天再来。",
+      "lose": "哎哟哟……你这闪身，比我们门里的师兄还滑溜。"
+    },
+    "yak": {
+      "title": "牦牛", "name": "铁牛帮 · 牦牛", "stand_in": "boar", "tint": [0.7, 0.62, 0.55],
+      "intro": "铁牛帮，牦牛。我只会往前撞，接得住就算你赢。",
+      "win": "站不稳，就别上台。",
+      "lose": "哞……让开了还能打回来，佩服。"
+    },
+    "snake": {
+      "title": "蛇", "name": "青蛇派 · 蛇", "stand_in": "wolf", "tint": [0.6, 0.95, 0.6],
+      "intro": "青蛇派，蛇。嘶——你打得中我的影子吗？",
+      "win": "嘶……出手太直了，打不中的。",
+      "lose": "嘶……绕到我背后？好眼力。这一届，你是魁首。"
+    }
+  },
+  "youngster": {
+    "id": "squirrel",
+    "stand_in": "mouse",
+    "tint": [1.0, 0.78, 0.55],
+    "title_before": "少年",
+    "name_before": "来拜师的少年 · 小松鼠",
+    "title_after": "师弟",
+    "name_after": "师弟 · 小松鼠",
+    "gate": [944, 1404],
+    "gate_dir": "up",
+    "yard_rects": [[184, 952, 400, 84], [376, 1036, 200, 194]],
+    "yard_home": [470, 1000],
+    "spar_spot": [1184, 904],
+    "spar_player": [1184, 960],
+    "night_room": "dorm_old",
+    "night_spot": [85, 152],
+    "walk_speed": 46
+  },
+  "talk": {
+    "dog_waiting": "D-老伯-有人拜师",
+    "youngster_first": "D-少年-拜师",
+    "youngster_again": "D-少年-再问",
+    "disciple": "D-师弟"
+  },
+  "scenes": {
+    "A-告示牌-报名": [
+      { "kind": "碑文", "text": "比武大会 · 第 {edition} 届：今日午时至酉时报名，报名费 {fee} 文。三轮闯关：灵猴门、铁牛帮、青蛇派。" },
+      { "kind": "碑文", "text": "点到为止：生命掉到两成就算输。两轮之间回 {between_heal} 点生命。头一回夺魁赏 {first_win_coins} 文，之后每回 {win_coins} 文。" },
+      { "kind": "提示", "text": "交 {fee} 文报名比武大会？" },
+      { "choice": [
+        { "text": "报名", "then": [
+          { "kind": "提示", "text": "选哪种难度？（只算这一届，报名费都是 {fee} 文）" },
+          { "choice": [
+            { "text": "普通", "then": [ { "do": "arena_signup", "difficulty": "normal" } ] },
+            { "text": "困难（夺魁 {hard_first_coins} 文）", "then": [ { "do": "arena_signup", "difficulty": "hard" } ] }
+          ] }
+        ] },
+        { "text": "算了", "then": [] }
+      ] }
+    ],
+    "A-告示牌-已参加": [
+      { "kind": "碑文", "text": "本届比武大会你已经上过台了。今天是第 {day} 天。" },
+      { "kind": "碑文", "text": "下届比武大会：第 {next_day} 天午时。" }
+    ],
+    "A-告示牌-平时": [
+      { "kind": "碑文", "text": "比武大会告示：每 {interval} 天一届，午时至酉时在此报名。今天是第 {day} 天。" },
+      { "kind": "碑文", "text": "下届比武大会：第 {next_day} 天午时。" }
+    ],
+    "A-钱不够": [
+      { "who": "rabbit", "text": "报名费还差一点……先去攒攒铜钱吧。" }
+    ],
+    "D-老伯-有人拜师": [
+      { "who": "dog", "text": "小兔，山门外有人想拜师！一个毛头小子，天刚亮就在石阶下候着了。" },
+      { "who": "dog", "text": "好些年没人上门拜师了……你快去瞧瞧吧。" }
+    ],
+    "D-少年-拜师": [
+      { "who": "youngster", "text": "（搓着手）请、请问，这里就是山上的那个门派吗？" },
+      { "who": "youngster", "text": "山下都在传，说这里又有人练武了，屋子也修得亮亮堂堂的。" },
+      { "who": "youngster", "text": "我力气不大，可我跑得快，什么活都肯干！求您收下我吧！" },
+      { "kind": "提示", "text": "收下这个少年当弟子？（每天伙食费 {upkeep} 文）" },
+      { "choice": [
+        { "text": "收下", "then": [ { "do": "disciple_accept" },
+          { "who": "squirrel", "text": "真、真的？谢谢师兄！我这就把行李搬进旧弟子房！" },
+          { "who": "rabbit", "text": "以后你就是师弟了。有活儿的时候，我来找你。" },
+          { "who": "squirrel", "text": "是！师兄吩咐什么，我就干什么！" }
+        ] },
+        { "text": "再想想", "then": [ { "do": "disciple_think" },
+          { "who": "youngster", "text": "那……我就在这儿等着。您想好了，再来告诉我。" }
+        ] }
+      ] }
+    ],
+    "D-少年-再问": [
+      { "who": "youngster", "text": "您……想好了吗？我还在这儿等着呢。" },
+      { "kind": "提示", "text": "收下这个少年当弟子？（每天伙食费 {upkeep} 文）" },
+      { "choice": [
+        { "text": "收下", "then": [ { "do": "disciple_accept" },
+          { "who": "squirrel", "text": "太好了！谢谢师兄！我这就把行李搬进旧弟子房！" },
+          { "who": "rabbit", "text": "以后你就是师弟了。有活儿的时候，我来找你。" }
+        ] },
+        { "text": "再想想", "then": [ { "do": "disciple_think" },
+          { "who": "youngster", "text": "嗯，我不急。山门外的风景也挺好看的。" }
+        ] }
+      ] }
+    ],
+    "D-师弟": [
+      { "who": "squirrel", "text": "{greeting}" },
+      { "kind": "提示", "text": "跟师弟说什么？" },
+      { "choice": [
+        { "text": "切磋一场", "show_if": "spar_now", "then": [ { "do": "disciple_spar" } ] },
+        { "text": "派活", "then": [
+          { "kind": "提示", "text": "派什么活？（明天辰时起）" },
+          { "choice": [
+            { "text": "帮厨", "grey_unless": "kitchen", "then": [ { "do": "disciple_job", "job": "cook" } ] },
+            { "text": "陪练", "then": [ { "do": "disciple_job", "job": "spar" } ] },
+            { "text": "打扫", "then": [ { "do": "disciple_job", "job": "sweep" } ] },
+            { "text": "算了", "then": [] }
+          ] }
+        ] },
+        { "text": "随便聊聊", "then": [ { "who": "squirrel", "text": "{chat}" } ] }
+      ] }
+    ],
+    "D-师弟-派活-cook": [
+      { "who": "squirrel", "text": "好嘞！明天起我去厨房给厨娘打下手，小食摊一天能卖 {cook_income} 文！" }
+    ],
+    "D-师弟-派活-spar": [
+      { "who": "squirrel", "text": "陪练？好！明天起我就在练武场等师兄，一天陪您过一回招。" }
+    ],
+    "D-师弟-派活-sweep": [
+      { "who": "squirrel", "text": "打扫交给我！明天起院子里一片落叶都不留。" }
+    ],
+    "D-师弟-派活-same": [
+      { "who": "squirrel", "text": "我已经在干这个啦，师兄放心。" }
+    ]
+  },
+  "greetings": {
+    "none": "师兄！今天有什么活要我干吗？",
+    "cook": "师兄，我在厨房给厨娘打下手呢，馒头蒸得可香了！",
+    "spar": "师兄，今天还练吗？我准备好了！",
+    "spar_used": "今天已经练过啦……腿还酸着呢，明天再来！",
+    "sweep": "院子我一早就扫过了，落叶都堆到墙角啦。",
+    "pending": "师兄吩咐的活，我明天一早就去！"
+  },
+  "chats": [
+    "这件旧练功服是旧弟子房里的，有点大，袖子挽两道就好了。",
+    "厨娘的馒头真好吃……我每天只吃一个，伙食钱可不能白花。",
+    "听说村口有比武大会，等我练好了，也想上台试试！",
+    "老伯说，以前门里的弟子能站满一院子。以后会的吧？"
+  ],
+  "spar": {
+    "win": ["哎呀，又输了……师兄好厉害！", "我看见您身上没发红，还以为……原来是我太慢了。"],
+    "lose": ["我、我赢了？师兄是让着我吧！", "嘿嘿，今天总算碰到您一下了。"]
+  },
+  "ui": {
+    "prompt_board": "按 E 看告示",
+    "board_open": "比武大会 · 报名中",
+    "round_banner": "第 %d 轮：%s %s",
+    "round_win": "第 %d 轮 · 胜！",
+    "round_lose": "第 %d 轮 · 出局",
+    "heal_next": "生命 +%d，准备下一轮",
+    "champion": "比武大会 · 夺魁！",
+    "champion_hard": "比武大会 · 夺魁！（困难）",
+    "hard_tag": "困难",
+    "reward_coins": "铜钱 +%d",
+    "reward_fame": "名望 +%d 格",
+    "fame_full": "名望已满",
+    "out_refill": "已出局，生命回满",
+    "forfeit": "弃权",
+    "forfeited": "已弃权，本届比武大会结束",
+    "not_enough": "铜钱不够，还差 %d 文。",
+    "fee_paid": "报名费 -%d",
+    "youngster_came": "山门外好像来了一个少年",
+    "upkeep": "师弟伙食费 -%d",
+    "upkeep_short": "伙食钱不够了（欠 %d 文）",
+    "upkeep_repaid": "补上伙食钱 -%d",
+    "spar_title_win": "陪练 · 胜！",
+    "spar_title_lose": "陪练 · 输了",
+    "spar_reward": "铜钱 +%d",
+    "spar_fame": "陪练满 %d 胜 · 名望 +1 格",
+    "sweep_estate": "师弟打扫满 %d 天 · 家业 +1 格",
+    "joined_toast": "家业 +%d 格",
+    "job_names": { "none": "还没派活", "cook": "帮厨", "spar": "陪练", "sweep": "打扫" }
+  },
+  "book": {
+    "arena_win": "比武大会·夺魁（第 %s 届）",
+    "arena_win_hard": "比武大会·夺魁·困难（第 %s 届）",
+    "joined": "收下第一个弟子",
+    "spar_fame": "师弟陪练累计 %d 胜",
+    "sweep_estate": "师弟打扫院子 %d 天",
+    "next_arena": "下届比武大会：第 %d 天午时（今天第 %d 天）",
+    "open_arena": "比武大会报名中：今天（第 %d 天）午时至酉时",
+    "disciple_job": "师弟：%s",
+    "disciple_job_next": "师弟：%s（明天起：%s）",
+    "disciple_progress": "陪练胜 %d/%d · 打扫 %d/%d 天",
+    "debt": "欠伙食钱 %d 文"
+  }
+}

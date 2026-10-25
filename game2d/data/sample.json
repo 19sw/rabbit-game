@@ -1,0 +1,429 @@
+{
+  "_说明": "两条路小样 v1（外部文件层）：序章结束（选“继续逛逛”）之后才开放的内容。speakers = 新人物（老周 = 灰色老鼠瓦匠，id mouse）；mouse = 老周站在哪里（地图像素）；trial_sign = 练武场试炼木牌的位置和按 E 的距离；talk = 解锁后各人物按 E 说哪一段（unless = 这个标记已经有了就跳过这条，用下一条）；thing_overrides = 修好以后某个物件改说哪一段；hide_things = 修好以后不能再查看的物件；scenes = 全部新台词（台词里的 {roof_cost} {dorm_old_cost} {kitchen_cost} {stall_hour} {stall_income} {time_limit} {gold_s} {silver_s} {bronze_s} 等会换成 economy.json / 试炼卡里的数字，改数字不用改台词）（写法同 story.json：who / kind / text，choice 是/否，do = repair 修缮 / trial_start 报名试炼）；ui = 界面文字；book_entries = 门派簿新增的记录条目（flag 有了才显示；加几格写在 data/economy.json）。数字（价钱、奖励）在 data/economy.json，试炼规则在 cards/trial_plum.tres。",
+  "speakers": {
+    "mouse": {
+      "name": "老周",
+      "portrait": "mouse"
+    }
+  },
+  "mouse": {
+    "id": "mouse",
+    "title": "老周",
+    "name": "瓦匠老周 · 老鼠",
+    "x": 412,
+    "y": 950,
+    "dir": "left",
+    "area": "宿舍门口"
+  },
+  "trial_sign": {
+    "pos": [
+      1110,
+      1120
+    ],
+    "radius": 34
+  },
+  "food_stall": {
+    "pos": [
+      1568,
+      960
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sort_y": 1022,
+    "collider": [
+      1569,
+      1008,
+      58,
+      14
+    ]
+  },
+  "talk": {
+    "mouse": [
+      {
+        "scene": "X-老周-修屋顶",
+        "unless": "repair_roof"
+      },
+      {
+        "scene": "X-老周-修好之后"
+      }
+    ],
+    "dog": [
+      {
+        "scene": "X-老伯-旧弟子房",
+        "unless": "repair_dorm_old"
+      },
+      {
+        "scene": "X-老伯-整理之后"
+      }
+    ],
+    "bear": [
+      {
+        "scene": "X-厨娘-修厨房",
+        "unless": "repair_kitchen"
+      },
+      {
+        "scene": "X-厨娘-修好之后"
+      }
+    ],
+    "crane": [
+      {
+        "scene": "X-师父-两条路"
+      }
+    ]
+  },
+  "thing_overrides": {
+    "empty_beds": {
+      "if": "repair_dorm_old",
+      "scene": "X-空床-整理后"
+    },
+    "stove": {
+      "if": "repair_kitchen",
+      "scene": "X-灶台-修好"
+    }
+  },
+  "hide_things": {
+    "dorm_bucket": "repair_roof"
+  },
+  "ui": {
+    "coins": "铜钱 %d",
+    "start_coins": "师父给的本钱：铜钱 +%d",
+    "not_enough": "铜钱不够，还差 %d 文。",
+    "paid": "铜钱 -%d",
+    "stall_income": "小食摊今日收入 +%d",
+    "prompt_sign": "按 E 看木牌",
+    "book_coins": "铜钱：%d 文",
+    "trial_title": "梅花桩试炼",
+    "trial_go": "梅花桩试炼 · 开始！",
+    "trial_poles": "梅花桩 %d / %d",
+    "trial_time": "用时 %.1f 秒",
+    "trial_lines": "金 %d 秒内 · 银 %d 秒内 · 铜 %d 秒内",
+    "tier_gold": "金",
+    "tier_silver": "银",
+    "tier_bronze": "铜",
+    "trial_medal": "梅花桩试炼 · %s",
+    "trial_timeout": "超时 · 这次失败",
+    "trial_knocked": "被木人桩扫倒 · 这次失败",
+    "trial_abandoned": "已放弃试炼",
+    "trial_fail_sub": "生命回满，随时可以再来",
+    "trial_reward_coins": "铜钱 +%d",
+    "trial_reward_fame": "名望 +%d 格",
+    "trial_no_reward": "这次没有奖励",
+    "trial_close": "E 关闭",
+    "abandon": "放弃试炼",
+    "save_broken": "存档无法读取，已重新开始"
+  },
+  "scenes": {
+    "X-老周-修屋顶": [
+      {
+        "who": "mouse",
+        "text": "小兔来啦。你从竹林里找回来的瓦，我一片片都码好了。"
+      },
+      {
+        "who": "mouse",
+        "text": "宿舍那屋顶，破洞可不小。下雨天，你那木桶接得过来吗？"
+      },
+      {
+        "who": "rabbit",
+        "text": "接不过来……昨晚还漫了一地。"
+      },
+      {
+        "who": "mouse",
+        "text": "瓦是现成的，就收个工钱，{roof_cost} 文。今天就给你补上。"
+      },
+      {
+        "kind": "提示",
+        "text": "花 {roof_cost} 铜钱请老周修屋顶？"
+      },
+      {
+        "choice": [
+          {
+            "text": "是",
+            "then": [
+              {
+                "do": "repair",
+                "repair": "roof",
+                "done_scene": "X-老周-修好了",
+                "short_scene": "X-老周-钱不够"
+              }
+            ]
+          },
+          {
+            "text": "否",
+            "then": [
+              {
+                "who": "mouse",
+                "text": "不急不急，想好了再来找我。我就在这儿晒晒太阳。"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "X-老周-钱不够": [
+      {
+        "who": "mouse",
+        "text": "钱不够也不打紧，我就在这儿，凑够了再来。"
+      }
+    ],
+    "X-老周-修好了": [
+      {
+        "who": "mouse",
+        "text": "补好了！新瓦压旧瓦，往后下多大的雨，屋里都是干的。"
+      },
+      {
+        "who": "rabbit",
+        "text": "谢谢老周！木桶也能收起来了。"
+      },
+      {
+        "who": "mouse",
+        "text": "你师祖当年背我蹚过大水，这点活，本该是我还的。"
+      }
+    ],
+    "X-老周-修好之后": [
+      {
+        "who": "mouse",
+        "text": "屋顶我又上去看了一遍，结实着呢。"
+      },
+      {
+        "who": "mouse",
+        "text": "瓦匠这行，最怕屋子没人住。你们住着，我就高兴。"
+      }
+    ],
+    "X-老伯-旧弟子房": [
+      {
+        "who": "dog",
+        "text": "旧弟子房那边，好些年没人住了，灰都积了一指厚。"
+      },
+      {
+        "who": "dog",
+        "text": "买把新扫帚、打点灯油、再补补窗纸，{dorm_old_cost} 文就够。"
+      },
+      {
+        "who": "dog",
+        "text": "收拾出来，以后门里来了新弟子，也有个落脚的地方。"
+      },
+      {
+        "kind": "提示",
+        "text": "花 {dorm_old_cost} 铜钱整理旧弟子房？"
+      },
+      {
+        "choice": [
+          {
+            "text": "是",
+            "then": [
+              {
+                "do": "repair",
+                "repair": "dorm_old",
+                "done_scene": "X-老伯-整理好了",
+                "short_scene": "X-老伯-钱不够"
+              }
+            ]
+          },
+          {
+            "text": "否",
+            "then": [
+              {
+                "who": "dog",
+                "text": "嗯，等你手头宽裕些再说。屋子跑不了。"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "X-老伯-钱不够": [
+      {
+        "who": "dog",
+        "text": "不够就先攒着，我这把扫帚，天天都在。"
+      }
+    ],
+    "X-老伯-整理好了": [
+      {
+        "who": "dog",
+        "text": "瞧瞧，蛛网扫了，被褥铺上了，灯也点上了。"
+      },
+      {
+        "who": "rabbit",
+        "text": "跟新的一样！就等师弟师妹们来了。"
+      },
+      {
+        "who": "dog",
+        "text": "（眯着眼笑）好些年没见那扇窗亮过灯了。"
+      }
+    ],
+    "X-老伯-整理之后": [
+      {
+        "who": "dog",
+        "text": "那屋子亮堂了，我夜里守门，心里也踏实。"
+      },
+      {
+        "who": "dog",
+        "text": "招弟子的事不急。先把屋子备好，人自然会来。"
+      }
+    ],
+    "X-厨娘-修厨房": [
+      {
+        "who": "bear",
+        "text": "小兔，你看这灶台，裂了好几道缝，一烧火烟就往屋里倒。屋顶也漏。"
+      },
+      {
+        "who": "bear",
+        "text": "要是修好了，我就在门口摆个小摊卖馒头，每天还能给门里挣几个铜钱。"
+      },
+      {
+        "who": "bear",
+        "text": "修灶台、补屋顶、再搭个摊子，一共要 {kitchen_cost} 文。"
+      },
+      {
+        "kind": "提示",
+        "text": "花 {kitchen_cost} 铜钱修厨房、开小食摊？"
+      },
+      {
+        "choice": [
+          {
+            "text": "是",
+            "then": [
+              {
+                "do": "repair",
+                "repair": "kitchen",
+                "done_scene": "X-厨娘-修好了",
+                "short_scene": "X-厨娘-钱不够"
+              }
+            ]
+          },
+          {
+            "text": "否",
+            "then": [
+              {
+                "who": "bear",
+                "text": "行，钱攒够了再来。我这馒头，可等着出笼呢。"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "X-厨娘-钱不够": [
+      {
+        "who": "bear",
+        "text": "不够啊？不急，去练武场试试身手，师父说那块木牌底下有赏钱。"
+      }
+    ],
+    "X-厨娘-修好了": [
+      {
+        "who": "bear",
+        "text": "灶膛不倒烟了，屋顶也不漏了！"
+      },
+      {
+        "who": "bear",
+        "text": "门口的摊子也搭好了。往后每天辰时（{stall_hour} 点）收一回钱，记到门里账上。"
+      },
+      {
+        "who": "rabbit",
+        "text": "那我每天早上都来闻闻馒头香。"
+      },
+      {
+        "who": "bear",
+        "text": "闻可以，偷吃不行。"
+      }
+    ],
+    "X-厨娘-修好之后": [
+      {
+        "who": "bear",
+        "text": "小食摊生意还不错。每天早上 {stall_hour} 点，钱就记到门里账上。"
+      },
+      {
+        "who": "bear",
+        "text": "馒头刚出笼，香吧？可不许偷吃，留着卖钱。"
+      }
+    ],
+    "X-师父-两条路": [
+      {
+        "who": "crane",
+        "text": "练武场那块木牌，是梅花桩试炼。走得快、躲得巧，名望自会来。"
+      },
+      {
+        "who": "crane",
+        "text": "门里的屋子，也该修一修了。老周、老伯、厨娘，都等着你拿主意。"
+      },
+      {
+        "who": "crane",
+        "text": "钱要花在刀刃上。先修哪一处，你自己定。"
+      }
+    ],
+    "X-试炼木牌": [
+      {
+        "kind": "碑文",
+        "text": "梅花桩试炼：桩一根根亮起，依次踩上去。小心转动的木人桩，闪避可穿过。"
+      },
+      {
+        "kind": "碑文",
+        "text": "限时 {time_limit} 秒。{gold_s} 秒内为金，{silver_s} 秒内为银，{bronze_s} 秒内为铜。"
+      },
+      {
+        "kind": "提示",
+        "text": "报名梅花桩试炼？"
+      },
+      {
+        "choice": [
+          {
+            "text": "是",
+            "then": [
+              {
+                "do": "trial_start"
+              }
+            ]
+          },
+          {
+            "text": "否",
+            "then": []
+          }
+        ]
+      }
+    ],
+    "X-空床-整理后": [
+      {
+        "who": "rabbit",
+        "text": "床铺都铺好了被褥，干干净净的。就等新弟子来了。"
+      }
+    ],
+    "X-灶台-修好": [
+      {
+        "who": "rabbit",
+        "text": "灶台补好了，火苗旺旺的，一点不倒烟。厨娘说，火旺了，日子也旺。"
+      }
+    ]
+  },
+  "book_entries": {
+    "fame": [
+      {
+        "text": "梅花桩试炼·铜",
+        "flag": "trial_bronze"
+      },
+      {
+        "text": "梅花桩试炼·银",
+        "flag": "trial_silver"
+      },
+      {
+        "text": "梅花桩试炼·金",
+        "flag": "trial_gold"
+      }
+    ],
+    "estate": [
+      {
+        "text": "请老周修好了宿舍屋顶",
+        "flag": "repair_roof"
+      },
+      {
+        "text": "整理好了旧弟子房",
+        "flag": "repair_dorm_old"
+      },
+      {
+        "text": "厨房小食摊开张",
+        "flag": "repair_kitchen"
+      }
+    ]
+  }
+}

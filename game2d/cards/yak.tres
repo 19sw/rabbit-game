@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+max_hp = 130
+move_speed = 80.0
+body_radius = 11.0
+attack_range = 96.0
+stop_distance = 80.0
+attack_kind = "charge"
+hit_offset = 0.0
+hit_radius = 20.0
+windup = 0.9
+lock_fraction = 0.5
+strike_time = 0.3
+strike_lunge = 96.0
+recover = 0.9
+interval_min = 1.4
+interval_max = 2.2
+damage = 20
+super_armor = true
+stagger = 0.25
+stagger_delays_attack = true
+stagger_attack_delay = 0.5
+poise = 2.0
+knock_resist = 0.8
+sidestep_chance = 0.0
+sidestep_cooldown = 0.0
+sidestep_distance = 0.0
+sidestep_time = 0.0
+sidestep_trigger = 0.0
+turn_time = 0.5
+can_swap = false
+end_fraction = 0.2
+aggro_range = 0.0
+leash_range = 0.0
+defeat_fade = 0.0

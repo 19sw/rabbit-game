@@ -1,0 +1,29 @@
+{
+  "_说明": "调参数据（外部文件层，非战斗设置）。改完保存，执行 game2d/tools/update.sh --no-tests 即可生效，详见 说明.md 第 8 节。颜色 [红, 绿, 蓝]，每个 0~1。",
+  "_已迁移": "走路速度（walk_speed）从 v1.1 起不在这里了，已迁到主角数值卡 game2d/cards/player.tres（战斗数据方案 v1.1 的决定）。这个文件只放昼夜、小地图等非战斗设置。",
+  "day_length_minutes": 48,
+  "start_hour": 8.0,
+  "time_skip_hours": 1.0,
+  "minimap": { "_说明": "圆形小地图（打磨 v1）：diameter 直径（像素，基础分辨率 480×270 下）；range = 室外以小兔为中心显示多远（世界像素，圆的半径）；range_indoor = 屋里显示多远；covered_alpha = 小兔、人物或能按 E 的东西被小地图盖住时的透明度（0 全透明 ~ 1 不透明）；cover_margin = 离圆边多少像素以内也算盖住；dialogue_alpha = 对话框出现时的透明度（0 = 收起）；fade_per_second = 透明度变化速度；star_inset = 星星贴边时离圆边多远。", "diameter": 56, "margin": 6, "blink_per_second": 2.0, "range": 340, "range_indoor": 210, "covered_alpha": 0.12, "cover_margin": 6, "dialogue_alpha": 0.0, "fade_per_second": 6.0, "star_inset": 5 },
+  "shichen": ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"],
+  "lamps": { "on_start": 17.0, "on_full": 18.5, "off_start": 5.5, "off_end": 6.5 },
+  "indoor": { "_说明": "室内光照（打磨 v1）：屋里的颜色 = 外面当时的颜色往暖白色拉一些（白天拉 mix_day，夜里只拉 mix_night，所以黄昏偏暖、夜里变暗），亮度在 night_min_luminance 和 max_luminance 之间（rooms 里可以给某间屋子单独设，旧弟子房和杂物间没有灯，保底高一些）。blend_seconds = 进出门时颜色过渡用多久。shafts = 窗光、门光、漏光那一层：白天 day_alpha（1 = 原图亮度），夜里只剩 night_alpha 的淡淡月光。lights = 夜里屋里的光源：oil_lamp 油灯、candle 蜡烛、eternal_lamp 长明灯、stove_fire 灶火、moon 窗口月光（color 颜色、energy 亮度、radius 照多远，像素）；位置在 pixel2d/interiors/layout 的 [[light]]。", "warm": [1.0, 0.93, 0.84], "mix_day": 0.55, "mix_night": 0.12, "night_min_luminance": 0.46, "max_luminance": 0.97, "desaturate": 0.06, "vignette": 0.3, "blend_seconds": 0.5, "rooms": { "dorm_old": { "night_min_luminance": 0.56 }, "storage": { "night_min_luminance": 0.56 } }, "shafts": { "day_color": [1.0, 1.0, 1.0], "day_alpha": 1.0, "night_color": [0.62, 0.72, 1.0], "night_alpha": 0.14 }, "lights": { "oil_lamp": { "color": [1.0, 0.7, 0.4], "energy": 0.9, "radius": 170 }, "candle": { "color": [1.0, 0.74, 0.44], "energy": 0.7, "radius": 150 }, "eternal_lamp": { "color": [1.0, 0.68, 0.38], "energy": 0.6, "radius": 120 }, "stove_fire": { "color": [1.0, 0.55, 0.3], "energy": 1.0, "radius": 180 }, "moon": { "color": [0.6, 0.7, 1.0], "energy": 0.45, "radius": 150 } } },
+  "dorm_water": { "_说明": "宿舍开场的木桶和水渍（打磨 v1）：start_level 开场时桶里的水（0 空 ~ 1 满）；fill_seconds 开场滴满用几秒；overflow_seconds 水漫出来铺开用几秒；per_drop 之后每滴一滴涨多少；refill_cap 倒掉以后最多再接到多满（不会再溢出）；wipe_sizes 擦第 0/1/2/3 下以后水渍剩多大（1 = 原样）。", "start_level": 0.55, "fill_seconds": 2.6, "overflow_seconds": 1.4, "per_drop": 0.02, "refill_cap": 0.6, "wipe_sizes": [1.0, 0.66, 0.34, 0.0] },
+  "occlusion": { "_说明": "室外遮挡淡化（打磨 v1）：小兔、人物走到屋顶、墙瓦、树冠后面时，挡住他的那块图在他身边变成半透明。coverage = 兔子身上（按他当前这一帧的真实像素算）被挡住多少（0~1）就淡化，0.03 = 挡住一点点就淡化；radius = 淡化圆的半径（像素）；soft = 圆边渐变宽度；min_alpha = 圆中心的透明度；fade_per_second = 淡入淡出速度。只改显示，不改碰撞和图片。", "coverage": 0.03, "radius": 26, "soft": 7, "min_alpha": 0.3, "fade_per_second": 8.0 },
+  "lantern": { "color": [1.0, 0.58, 0.28], "energy": 1.15, "radius": 80 },
+  "stone": { "color": [1.0, 0.78, 0.45], "energy": 0.95, "radius": 56 },
+  "periods": [
+    { "hour": 0.0,  "name": "深夜", "tint": [0.30, 0.37, 0.60], "desaturate": 0.20, "vignette": 0.40 },
+    { "hour": 4.0,  "name": "深夜", "tint": [0.31, 0.38, 0.61], "desaturate": 0.20, "vignette": 0.40 },
+    { "hour": 5.5,  "name": "黎明", "tint": [0.52, 0.52, 0.72], "desaturate": 0.15, "vignette": 0.38 },
+    { "hour": 6.5,  "name": "清晨", "tint": [0.86, 0.74, 0.82], "desaturate": 0.08, "vignette": 0.30 },
+    { "hour": 8.0,  "name": "上午", "tint": [0.94, 0.88, 0.80], "desaturate": 0.04, "vignette": 0.22 },
+    { "hour": 12.0, "name": "正午", "tint": [1.00, 1.00, 0.98], "desaturate": 0.00, "vignette": 0.10 },
+    { "hour": 16.0, "name": "午后", "tint": [1.00, 0.93, 0.80], "desaturate": 0.04, "vignette": 0.22 },
+    { "hour": 18.0, "name": "黄昏", "tint": [0.90, 0.60, 0.46], "desaturate": 0.12, "vignette": 0.40 },
+    { "hour": 19.5, "name": "傍晚", "tint": [0.56, 0.46, 0.62], "desaturate": 0.16, "vignette": 0.42 },
+    { "hour": 21.0, "name": "夜晚", "tint": [0.40, 0.47, 0.72], "desaturate": 0.18, "vignette": 0.42 },
+    { "hour": 23.0, "name": "夜晚", "tint": [0.33, 0.40, 0.64], "desaturate": 0.20, "vignette": 0.40 },
+    { "hour": 24.0, "name": "深夜", "tint": [0.30, 0.37, 0.60], "desaturate": 0.20, "vignette": 0.40 }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "黑虎发怒气焰",
+  "file": "fx/rage_aura.png",
+  "size": [
+    192,
+    48
+  ],
+  "frame_size": [
+    48,
+    48
+  ],
+  "frames": 4,
+  "fps": 10,
+  "loop": true,
+  "foot_anchor_in_frame": [
+    24,
+    38
+  ],
+  "note": "draw BEHIND the tiger while enraged; aura top-left = tiger frame top-left - (8, 8)"
+}

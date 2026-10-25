@@ -1,0 +1,33 @@
+extends "res://tests/run_tests.gd"
+## Writes a real step-2 (save version 1) file with the unchanged step-2 code: prologue done, roof + old dorm repaired,
+## trial bronze/silver, some coins, day 2 afternoon, standing in the yard.
+
+func _run() -> void:
+	await frames(3)
+	root.remove_child(main)
+	var s = load("res://tests/sample_suite.gd").new(self)
+	SaveGame.erase()
+	await s.new_game()
+	await s.finish_scene()
+	await s.reach_unlock()
+	print("UNLOCKED ", s.smp.unlocked, " coins ", s.smp.coins)
+	s.set_coins(80)
+	await s.talk("mouse")      # roof (30)
+	await s.talk("dog")        # old dorm (20)
+	s.story.flags["trial_bronze"] = true
+	s.story.flags["trial_silver"] = true
+	s.g.sample.trial.runs = 2
+	s.g.sample.trial.best_time = 47.25
+	s.g.daynight.set_hour(8.0)
+	s.g.daynight.advance_hours(24.0 + 6.5)      # day 2 (counted from 0), 14:30
+	await frames(3)
+	await teleport(Vector2(1180, 1040))
+	await frames(3)
+	s.g.sample.save_now("fixture")
+	var txt := FileAccess.get_file_as_string(SaveGame.path())
+	print("FLAGS ", s.story.flags)
+	print("COINS ", s.g.sample.coins, " hour ", s.g.daynight.hour, " total ", s.g.daynight.total_hours)
+	var f := FileAccess.open(OS.get_environment("FIXTURE_OUT"), FileAccess.WRITE)
+	f.store_string(txt)
+	f.close()
+	quit(0)

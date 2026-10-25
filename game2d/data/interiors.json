@@ -1,0 +1,17 @@
+{
+  "_说明": "室内场景（外部文件层）。房间的图、家具、碰撞、站位都来自 pixel2d/interiors（assets/interiors/rooms.json，由 generate_interiors.py 生成）；这里只写游戏怎么用：每间屋子放在世界里的哪里（origin，在外景地图右边，玩家看不到），外景哪扇门通向它（door：门中心 x、外景墙脚 y、half = 离门中心多远（像素）往门里走就算进门，屋里出门也一样），小地图上这栋屋子占的范围（footprint：x, y, 宽, 高，像素），哪个人物站在哪间屋里（npcs）。坐标单位都是像素（1 格 = 32 像素）。藏经阁序章里封着：没有门，门口按 E 播放 S5-藏经阁封条（见 story.json）。详见 说明.md 第 12 节。",
+  "fade_seconds": 0.22,
+  "cooldown_seconds": 0.35,
+  "opening_room": "dorm_main",
+  "rooms": {
+    "dorm_main": { "origin": [2816, 0],    "door": { "x": 370, "bottom": 925, "half": 22 },  "footprint": [304, 788, 144, 137] },
+    "storage":   { "origin": [2816, 800],  "door": { "x": 242, "bottom": 925, "half": 22 },  "footprint": [160, 788, 144, 137] },
+    "dorm_old":  { "origin": [2816, 1600], "door": { "x": 274, "bottom": 1213, "half": 22 }, "footprint": [160, 1076, 192, 137] },
+    "hall":      { "origin": [4096, 0],    "door": { "x": 1040, "bottom": 637, "half": 50 }, "footprint": [832, 436, 416, 201] },
+    "kitchen":   { "origin": [4096, 800],  "door": { "x": 1522, "bottom": 925, "half": 22 }, "footprint": [1440, 788, 224, 137] }
+  },
+  "npcs": {
+    "crane": { "room": "hall", "spot": "crane" },
+    "bear":  { "room": "kitchen", "spot": "bear" }
+  }
+}
