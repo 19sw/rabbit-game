@@ -18,6 +18,9 @@ var tex: Texture2D
 var index := 0
 var anchors: Dictionary = {}      # "rabbit" / "crane" -> feet position (motes)
 var drawn_items := 0              # how many things were drawn last frame (tests)
+## 封面两侧延伸画 v1: the x range the mist strip covers (it wraps every texture width, anchored at x = 0). Default 0..w
+## (exactly the picture, as before); the title widens it when the side extensions are there.
+var span := Vector2.ZERO
 
 
 func setup(p_kind: String, p_cfg: Dictionary, p_intensity: float, p_tex: Texture2D = null, p_index := 0) -> TitleFx:
@@ -77,10 +80,16 @@ func _draw_mist() -> void:
 	var h := tex.get_height()
 	var y := int(cfg["y"])
 	var c := Color(1, 1, 1, clampf(float(cfg["alpha"]) * intensity, 0.0, 1.0))
-	# two pieces that together cover exactly x 0..w (the strip wraps; nothing is drawn outside the picture)
-	draw_texture_rect_region(tex, Rect2(0, y, w - k, h), Rect2(k, 0, w - k, h), c)
-	if k > 0:
-		draw_texture_rect_region(tex, Rect2(w - k, y, k, h), Rect2(0, 0, k, h), c)
+	# pieces that together cover exactly x span.x..span.y (default 0..w: two pieces, nothing outside the picture);
+	# the strip wraps, screen x shows strip column (x + k) mod w
+	var x0 := int(span.x)
+	var x1 := int(span.y) if span.y > span.x else w
+	var x := x0
+	while x < x1:
+		var src := posmod(x + k, w)
+		var n := mini(w - src, x1 - x)
+		draw_texture_rect_region(tex, Rect2(x, y, n, h), Rect2(src, 0, n, h), c)
+		x += n
 	drawn_items = 1
 
 

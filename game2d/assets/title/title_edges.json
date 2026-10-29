@@ -1,0 +1,34 @@
+{
+ "_说明": "由 pixel2d/title_edges/tools/generate_title_edges.py 生成，不要手改。封面两侧的延伸画：left 放在 x = -width，right 放在 x = 480；每侧三层，和原图三层一一对应（天空 / 近山 / 院子）；最外面 cap 像素宽是素的一条，游戏把它继续往外平铺。",
+ "width": 160,
+ "height": 270,
+ "cap": 32,
+ "left": {
+  "x": -160,
+  "sky": "edge_sky_left.png",
+  "hills": "edge_hills_left.png",
+  "sect": "edge_sect_left.png"
+ },
+ "right": {
+  "x": 480,
+  "sky": "edge_sky_right.png",
+  "hills": "edge_hills_right.png",
+  "sect": "edge_sect_right.png"
+ },
+ "sect_tile": "bg_sect_edge.png",
+ "seam_check": {
+  "mean_rgb_distance": {
+   "left": 29.4,
+   "right": 18.56,
+   "baseline_left": 36.76,
+   "baseline_right": 20.62
+  },
+  "rows_jump_over_60": {
+   "left": 40,
+   "right": 35,
+   "baseline_left": 51,
+   "baseline_right": 32
+  },
+  "sect_cap_is_bg_sect_edge": true
+ }
+}

@@ -19,7 +19,7 @@ done
 [ -x "$PY" ] || { echo "pixel2d/.venv missing: cd \"$PIX\" && python3 -m venv .venv && .venv/bin/pip install Pillow"; exit 1; }
 if [ "$REGEN" = 1 ]; then
   echo "== 1/4 redraw pixel2d map, characters, title-screen art and interiors"
-  (cd "$PIX" && "$PY" tools/generate.py && "$PY" tools/generate_story_art.py && "$PY" characters/tools/generate_characters.py && "$PY" title/tools/generate_title_art.py && "$PY" interiors/tools/generate_interiors.py)
+  (cd "$PIX" && "$PY" tools/generate.py && "$PY" tools/generate_story_art.py && "$PY" characters/tools/generate_characters.py && "$PY" title/tools/generate_title_art.py && "$PY" title_edges/tools/generate_title_edges.py && "$PY" interiors/tools/generate_interiors.py)
 else
   echo "== 1/4 (skipped redraw)"
 fi

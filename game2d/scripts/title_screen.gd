@@ -16,12 +16,15 @@ const ART := "res://assets/title/"
 const MAIN_SCENE := "res://scenes/main.tscn"
 const MainScript := preload("res://scripts/main.gd")
 const VIEW := Vector2(480, 270)
+const EDGE_FAR := 4000.0          # how far the side caps / mist reach beyond the extensions (= the surround's reach)
 
 var data: Dictionary
 var art: Dictionary
 ## 坐姿-高清过场-运镜 方案 v1: the HD title rabbit (2x pixel density, pixel2d/title_hd -> assets/title/title_hd.json),
 ## shown at scale 0.5 on the same feet; {} = the old 80x104 standee.
 var art_hd: Dictionary = {}
+## 封面两侧延伸画 v1: assets/title/title_edges.json (160 px left / right continuation layers), {} = old edge fallback.
+var edges: Dictionary = {}
 var fx: Dictionary = {}           # kind -> TitleFx
 var standees: Dictionary = {}     # "rabbit" / "crane" -> AnimatedSprite2D
 var onlookers: Array[AnimatedSprite2D] = []
@@ -153,14 +156,39 @@ func _effects_cfg() -> Dictionary:
 func _build_backdrop() -> void:
 	# when the window is not 16:9 (or larger than a whole-number multiple of 480x270) the picture's edges are
 	# continued outwards instead of leaving dark bars
+	edges = _load_edges()
 	var surround := Node2D.new()
 	surround.name = "Surround"
 	surround.draw.connect(_draw_surround.bind(surround))
 	add_child(surround)
-	# wall + yard continue as a tiled plain strip (separate sprites: tiling needs texture_repeat)
+	var bg := Node2D.new()
+	bg.name = "Backdrop"
+	add_child(bg)
+	var eff := _effects_cfg()
+	var k := float(eff["intensity"])
+	bg.add_child(_sprite("bg_sky.png", "Sky"))
+	_add_edge_layer(bg, "sky", "SkyEdges")
+	var mists: Array = eff["mist"]
+	var m0: TitleFx = TitleFx.new().setup("mist", mists[0], k, _tex("mist_0.png"), 0)
+	bg.add_child(m0)
+	bg.add_child(_sprite("bg_hills.png", "Hills"))
+	_add_edge_layer(bg, "hills", "HillsEdges")
+	var m1: TitleFx = TitleFx.new().setup("mist", mists[1], k, _tex("mist_1.png"), 1)
+	bg.add_child(m1)
+	bg.add_child(_sprite("bg_sect.png", "Sect"))
+	var sect_edges := _add_edge_layer(bg, "sect", "SectEdges")
+	fx["mist0"] = m0
+	fx["mist1"] = m1
+	if not edges.is_empty():
+		# the mist drifts over the side extensions too (and on over the tiled plain caps beyond them)
+		for m in [m0, m1]:
+			m.span = Vector2(-EDGE_FAR, VIEW.x + EDGE_FAR)
+	# wall + yard continue as a tiled plain strip (separate sprites: tiling needs texture_repeat): beyond the side
+	# extensions when they are there (their outermost columns are this very strip), else right at the picture's edges
 	var edge := _tex("bg_sect_edge.png")
 	var span := float(edge.get_width()) * 128.0
-	for x in [-span, VIEW.x]:
+	var ew := edge_width()
+	for x in [-span - ew, VIEW.x + ew]:
 		var tile := Sprite2D.new()
 		tile.name = "EdgeLeft" if x < 0 else "EdgeRight"
 		tile.texture = edge
@@ -169,35 +197,71 @@ func _build_backdrop() -> void:
 		tile.region_enabled = true
 		tile.region_rect = Rect2(0, 0, span, VIEW.y)
 		tile.position = Vector2(x, 0)
-		surround.add_child(tile)
-	var bg := Node2D.new()
-	bg.name = "Backdrop"
-	add_child(bg)
-	var eff := _effects_cfg()
-	var k := float(eff["intensity"])
-	bg.add_child(_sprite("bg_sky.png", "Sky"))
-	var mists: Array = eff["mist"]
-	var m0: TitleFx = TitleFx.new().setup("mist", mists[0], k, _tex("mist_0.png"), 0)
-	bg.add_child(m0)
-	bg.add_child(_sprite("bg_hills.png", "Hills"))
-	var m1: TitleFx = TitleFx.new().setup("mist", mists[1], k, _tex("mist_1.png"), 1)
-	bg.add_child(m1)
-	bg.add_child(_sprite("bg_sect.png", "Sect"))
-	fx["mist0"] = m0
-	fx["mist1"] = m1
+		(sect_edges if sect_edges != null else surround).add_child(tile)
 
 
-## Continues the picture outwards when the view is wider / taller than 480x270 (see ViewFit): sky and hills by
-## stretching their outermost pixel columns (flat bands; the wall and yard are the tiled Edge sprites on top);
-## above / below by the top sky row and the bottom yard row. Everything stays on whole pixels.
+## 封面两侧延伸画 v1: assets/title/title_edges.json + its 6 layer pictures (pixel2d/title_edges), or {} = the old edge
+## fallback (stretched outermost columns + the tiled wall strip right at the picture's edges).
+func _load_edges() -> Dictionary:
+	if not FileAccess.file_exists(ART + "title_edges.json"):
+		return {}
+	var e = JSON.parse_string(FileAccess.get_file_as_string(ART + "title_edges.json"))
+	if not (e is Dictionary and e.has("left") and e.has("right") and e.has("width")):
+		return {}
+	for side in ["left", "right"]:
+		for layer in ["sky", "hills", "sect"]:
+			if not ResourceLoader.exists(ART + String(e[side][layer])):
+				return {}
+	return e
+
+
+## Width of each side extension in game pixels (0 without them).
+func edge_width() -> float:
+	return 0.0 if edges.is_empty() else float(edges["width"])
+
+
+## One backdrop layer's side extensions, right above that layer (so the mist passes between them exactly as on the
+## picture): <Layer>Left at x = -width, <Layer>Right at x = 480, and beyond them (sky / hills) the extension's plain
+## outermost `cap` columns repeated out to EDGE_FAR. The sect layer's caps are the EdgeLeft / EdgeRight tiles.
+func _add_edge_layer(bg: Node2D, layer: String, node_name: String) -> Node2D:
+	if edges.is_empty():
+		return null
+	var n := Node2D.new()
+	n.name = node_name
+	bg.add_child(n)
+	var w := edge_width()
+	for side in ["left", "right"]:
+		var s := _sprite(String(edges[side][layer]), layer.capitalize() + side.capitalize())
+		s.position = Vector2(-w if side == "left" else VIEW.x, 0)
+		n.add_child(s)
+	if layer != "sect":
+		n.draw.connect(_draw_edge_caps.bind(n, layer))
+	return n
+
+
+func _draw_edge_caps(n: Node2D, layer: String) -> void:
+	var w := edge_width()
+	var cap := float(edges["cap"])
+	var lt := _tex(String(edges["left"][layer]))
+	var rt := _tex(String(edges["right"][layer]))
+	var reps := int(ceil(EDGE_FAR / cap))
+	for i in reps:
+		n.draw_texture_rect_region(lt, Rect2(-w - cap * (i + 1), 0, cap, VIEW.y), Rect2(0, 0, cap, VIEW.y))
+		n.draw_texture_rect_region(rt, Rect2(VIEW.x + w + cap * i, 0, cap, VIEW.y), Rect2(w - cap, 0, cap, VIEW.y))
+
+
+## Continues the picture outwards when the view is wider / taller than 480x270 (see ViewFit): above / below by the top
+## sky row and the bottom yard row. Without the side extensions also left / right, by stretching the sky and hills'
+## outermost pixel columns (flat bands; the wall and yard are the tiled Edge sprites on top). Whole pixels throughout.
 func _draw_surround(n: Node2D) -> void:
 	const FAR := 4000.0
 	var W := VIEW.x
 	var H := VIEW.y
-	for file in ["bg_sky.png", "bg_hills.png"]:
-		var t := _tex(file)
-		n.draw_texture_rect_region(t, Rect2(-FAR, 0, FAR, H), Rect2(0, 0, 1, H))
-		n.draw_texture_rect_region(t, Rect2(W, 0, FAR, H), Rect2(W - 1, 0, 1, H))
+	if edges.is_empty():
+		for file in ["bg_sky.png", "bg_hills.png"]:
+			var t := _tex(file)
+			n.draw_texture_rect_region(t, Rect2(-FAR, 0, FAR, H), Rect2(0, 0, 1, H))
+			n.draw_texture_rect_region(t, Rect2(W, 0, FAR, H), Rect2(W - 1, 0, 1, H))
 	var sky := _tex("bg_sky.png")
 	n.draw_texture_rect_region(sky, Rect2(-FAR, -FAR, W + 2.0 * FAR, FAR), Rect2(0, 0, 1, 1))
 	n.draw_texture_rect_region(_tex("bg_sect.png"), Rect2(-FAR, H, W + 2.0 * FAR, FAR), Rect2(0, H - 1, 1, 1))

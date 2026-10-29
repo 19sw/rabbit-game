@@ -25,7 +25,8 @@ What it does (writes ONLY inside game2d/, never into pixel2d/):
   5. Title screen (启动画面): copies pixel2d/title/output/ (standees, backdrop layers, mist, leaves) to assets/title/,
      the pixel title logo -> assets/title/title_logo.png (+ .json stamp of the text): 改名与起名 v1 copies the brush logo
      of pixel2d/title/logo/output/ when its text is data/title.json "title", else renders one from that text, the project icon / boot image, and the web loading page web/shell.html from web/shell_template.html
-     (export_presets.cfg uses it as html/custom_html_shell: no Godot logo while the page loads).
+     (export_presets.cfg uses it as html/custom_html_shell: no Godot logo while the page loads); 封面两侧延伸画: the
+     160 px left / right continuation layers of pixel2d/title_edges/output/ -> assets/title/edge_*.png + title_edges.json.
 """
 import base64
 import glob
@@ -963,6 +964,27 @@ def sync_title_art():
     print(f"  title art: {len(TITLE_FILES) - len(missing)} files -> assets/title/")
 
 
+# ------------------------------------------------------------------ 封面两侧延伸画 (pixel2d-title-edges v1)
+TITLE_EDGES_SRC = os.path.join(PIX, "title_edges", "output")
+
+
+def sync_title_edges():
+    """封面两侧延伸画: pixel2d/title_edges/output (6 layers of 160x270 + title_edges.json) -> assets/title/.
+    Missing source = the game keeps the old edge fallback (stretched columns + tiled wall strip)."""
+    meta_path = os.path.join(TITLE_EDGES_SRC, "title_edges.json")
+    if not os.path.exists(meta_path):
+        print("  WARNING title edge art missing in pixel2d/title_edges/output "
+              "(run: cd pixel2d && .venv/bin/python title_edges/tools/generate_title_edges.py)")
+        return
+    with open(meta_path, encoding="utf-8") as f:
+        meta = json.load(f)
+    files = [meta[side][k] for side in ("left", "right") for k in ("sky", "hills", "sect")] + ["title_edges.json"]
+    os.makedirs(TITLE_DIR, exist_ok=True)
+    for fn in files:
+        shutil.copyfile(os.path.join(TITLE_EDGES_SRC, fn), os.path.join(TITLE_DIR, fn))
+    print(f"  title edge art: {len(files)} files -> assets/title/")
+
+
 # ------------------------------------------------------------------ 开场过场动画 v1
 OPENING_SRC = os.path.join(PIX, "opening", "output")
 OPENING_DIR = os.path.join(GAME, "assets", "opening")
@@ -1134,6 +1156,7 @@ def sync_project_name(data):
 
 def sync_title():
     sync_title_art()
+    sync_title_edges()
     data, logo = build_title_logo()
     sync_project_name(data)
     build_icons(logo)

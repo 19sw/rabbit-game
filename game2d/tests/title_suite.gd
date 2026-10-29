@@ -7,6 +7,9 @@ extends RefCounted
 ##       a direct launch (spawn, 08:00, full initial-state comparison); 按键与玩法 = the Esc page's content, returns
 ##   AC5 Esc on the title does nothing; Esc in the game started from the title pauses as before
 ##   AC6 settings come from data/title.json (moving a value moves the thing)
+##   封面两侧延伸画 v1: at 16:9 / 19.5:9 / 21:9 windows the 160 px side extensions (pixel2d/title_edges) sit right
+##       next to the picture in the right layer order, cover what the window shows, continue the picture's border
+##       columns (as smoothly as the picture's own neighbouring columns), end in a plain cap that tiles; 4:3 unchanged
 
 var r
 var title: TitleScreen
@@ -28,6 +31,7 @@ func run() -> void:
 	await new_title()
 	await test_composition()
 	await test_effects()
+	await test_wide_edges()
 	await test_settings_from_data()
 	await test_keyboard_menu()
 	await test_mouse_menu()
@@ -305,6 +309,129 @@ func test_effects() -> void:
 	lf.intensity = float(e["intensity"])
 	mo.intensity = float(e["intensity"])
 	r.check(none and not lf.leaf_states().is_empty(), "title AC6: effects.intensity scales the effects (0 = off)")
+
+
+# ------------------------------------------------------------------ 封面两侧延伸画 v1
+## Composited colour (sky, hills, sect alpha-over) of one column of three layer images, 0..255 RGB per row.
+func layer_column(imgs: Array, x: int) -> Array:
+	var out := []
+	for y in TitleScreen.VIEW.y:
+		var c := Color(0, 0, 0, 1)
+		for img in imgs:
+			var p: Color = img.get_pixel(x, y)
+			c = Color(c.r + (p.r - c.r) * p.a, c.g + (p.g - c.g) * p.a, c.b + (p.b - c.b) * p.a, 1)
+		out.append(c)
+	return out
+
+
+## [mean RGB distance (0..765), rows jumping by more than 60] between two columns.
+func column_jump(a: Array, b: Array) -> Array:
+	var total := 0.0
+	var jumps := 0
+	for y in a.size():
+		var d: float = (absf(a[y].r - b[y].r) + absf(a[y].g - b[y].g) + absf(a[y].b - b[y].b)) * 255.0
+		total += d
+		jumps += 1 if d > 60.0 else 0
+	return [total / a.size(), jumps]
+
+
+## Rows where one column is opaque and the other is not (silhouettes: ridges, wall top, trees, bamboo).
+func alpha_mismatch(a: Image, ax: int, b: Image, bx: int) -> int:
+	var n := 0
+	for y in a.get_height():
+		if (a.get_pixel(ax, y).a > 0.0) != (b.get_pixel(bx, y).a > 0.0):
+			n += 1
+	return n
+
+
+func test_wide_edges() -> void:
+	r.check(not title.edges.is_empty(), "title edges: the side extensions are loaded (assets/title/title_edges.json + 6 layers)")
+	if title.edges.is_empty():
+		return
+	var ew := int(title.edges["width"])
+	var cap := int(title.edges["cap"])
+	var bg: Node = title.get_node("Backdrop")
+	var order := []
+	for c in bg.get_children():
+		order.append(String(c.name))
+	r.check(order == ["Sky", "SkyEdges", "Mist0", "Hills", "HillsEdges", "Mist1", "Sect", "SectEdges"],
+		"title edges: each extension layer sits right above its picture layer (mist drifts between them as before)", str(order))
+	var placed := true
+	for layer in ["Sky", "Hills", "Sect"]:
+		var n: Node = bg.get_node(layer + "Edges")
+		var lt: Sprite2D = n.get_node(layer + "Left")
+		var rt: Sprite2D = n.get_node(layer + "Right")
+		placed = placed and lt.position == Vector2(-ew, 0) and rt.position == Vector2(TitleScreen.VIEW.x, 0) \
+			and lt.texture.get_size() == Vector2(ew, TitleScreen.VIEW.y) and rt.texture.get_size() == Vector2(ew, TitleScreen.VIEW.y)
+	var el: Sprite2D = bg.get_node("SectEdges/EdgeLeft")
+	var er: Sprite2D = bg.get_node("SectEdges/EdgeRight")
+	placed = placed and el.position.x + el.region_rect.size.x == -ew and er.position.x == TitleScreen.VIEW.x + ew
+	r.check(placed, "title edges: left extension at x = -%d, right at x = 480 (%dx270 each), the tiled wall strip starts beyond them" % [ew, ew])
+	# window widths: 16:9, ~19.5:9, 21:9 (3x scale like the default window) and 4:3 (narrower: unchanged)
+	var keep: Vector2i = r.root.size
+	var report := []
+	for w in [[Vector2i(1440, 810), "16:9", 480], [Vector2i(1755, 810), "19.5:9", 585], [Vector2i(1890, 810), "21:9", 630],
+			[Vector2i(1440, 1080), "4:3", 480]]:
+		r.root.size = w[0]
+		await r.frames(3)
+		var vis: Rect2 = title.get_viewport().get_visible_rect()
+		var x0: float = title.camera.position.x - vis.size.x * 0.5
+		var x1: float = title.camera.position.x + vis.size.x * 0.5
+		var ok: bool = int(vis.size.x) == int(w[2])
+		if w[1] == "4:3" or w[1] == "16:9":
+			ok = ok and x0 >= 0.0 and x1 <= TitleScreen.VIEW.x      # nothing of the extensions is in view
+		else:
+			ok = ok and x0 < 0.0 and x1 > TitleScreen.VIEW.x and x0 >= -ew and x1 <= TitleScreen.VIEW.x + ew
+		var m: TitleFx = title.fx["mist0"]
+		ok = ok and m.span.x <= x0 and m.span.y >= x1
+		r.check(ok, "title edges: %s window %dx%d shows x %d..%d - %s" % [w[1], w[0].x, w[0].y, int(x0), int(x1),
+			"inside the 480 px picture (unchanged)" if x0 >= 0.0 else "covered by the side extensions + mist"],
+			"view %s" % vis.size)
+		report.append("%s:%d" % [w[1], int(vis.size.x)])
+	r.root.size = keep
+	await r.frames(3)
+	# continuity: the extension's border column vs the picture's border column, all three layers composited, must
+	# jump no more than the picture's own neighbouring columns do (dither + specks), and the silhouettes line up
+	var orig := []
+	var left := []
+	var right := []
+	for layer in ["sky", "hills", "sect"]:
+		orig.append(title._tex("bg_%s.png" % layer).get_image())
+		left.append(title._tex(String(title.edges["left"][layer])).get_image())
+		right.append(title._tex(String(title.edges["right"][layer])).get_image())
+	var W := int(TitleScreen.VIEW.x)
+	var jl := column_jump(layer_column(left, ew - 1), layer_column(orig, 0))
+	var jr := column_jump(layer_column(orig, W - 1), layer_column(right, 0))
+	var bl := column_jump(layer_column(orig, 0), layer_column(orig, 1))
+	var br := column_jump(layer_column(orig, W - 2), layer_column(orig, W - 1))
+	r.check(jl[0] <= bl[0] * 1.25 + 4.0 and jl[1] <= bl[1] + 8 and jr[0] <= br[0] * 1.25 + 4.0 and jr[1] <= br[1] + 8,
+		"title edges: the border columns continue the picture (colour jump no bigger than between its own neighbouring columns)",
+		"left %.1f/%d rows (picture 0|1: %.1f/%d), right %.1f/%d rows (picture 478|479: %.1f/%d)" % [jl[0], jl[1], bl[0], bl[1],
+		jr[0], jr[1], br[0], br[1]])
+	var sil := ""
+	for i in 3:
+		var ml := alpha_mismatch(left[i], ew - 1, orig[i], 0)
+		var mr := alpha_mismatch(orig[i], W - 1, right[i], 0)
+		var b0 := alpha_mismatch(orig[i], 0, orig[i], 1)
+		var b1 := alpha_mismatch(orig[i], W - 2, orig[i], W - 1)
+		if ml > b0 + 4 or mr > b1 + 4:
+			sil += "%s L%d(%d) R%d(%d) " % [["sky", "hills", "sect"][i], ml, b0, mr, b1]
+	r.check(sil == "", "title edges: ridges, tree line, wall top, ginkgo crown and bamboo line up across both borders", sil)
+	# the plain caps: the wall strip there is bg_sect_edge.png itself; sky / hills caps tile (column 0 follows column
+	# cap-1 as smoothly as neighbouring columns do)
+	var strip: Image = title._tex("bg_sect_edge.png").get_image()
+	var same := true
+	for y in TitleScreen.VIEW.y:
+		for x in cap:
+			same = same and left[2].get_pixel(x, y) == strip.get_pixel(x, y) and right[2].get_pixel(ew - cap + x, y) == strip.get_pixel(x, y)
+	var tl := column_jump(layer_column(left, cap - 1), layer_column(left, 0))
+	var tr := column_jump(layer_column(right, ew - 1), layer_column(right, ew - cap))
+	var flat := alpha_mismatch(left[0], 0, left[0], cap - 1) + alpha_mismatch(left[1], 0, left[1], cap - 1) \
+		+ alpha_mismatch(right[0], ew - cap, right[0], ew - 1) + alpha_mismatch(right[1], ew - cap, right[1], ew - 1)
+	r.check(same and flat == 0 and tl[1] <= 12 and tr[1] <= 12,
+		"title edges: the outermost %d px are plain and tile on without a seam (wall = bg_sect_edge.png, flat ranges)" % cap,
+		"wall strip same %s, ridge mismatch %d, tile jump rows L%d R%d" % [same, flat, tl[1], tr[1]])
+	print("title edges: views ", ", ".join(report))
 
 
 # ------------------------------------------------------------------ AC6

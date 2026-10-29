@@ -285,6 +285,16 @@ PASS  title AC3: the mist strip wraps without a visible seam  (0 rows differ a l
 PASS  title AC3: qi motes around both of them  (["rabbit", "crane"])
 PASS  title AC3: effects stay restrained (≤30 leaves, motes ≤0.8 opacity, ripple ≤0.5, no slash / spark effects)  (leaves 19, mote max 0.75, ripple 0.50, combat fx 0)
 PASS  title AC6: effects.intensity scales the effects (0 = off)
+PASS  title edges: the side extensions are loaded (assets/title/title_edges.json + 6 layers)
+PASS  title edges: each extension layer sits right above its picture layer (mist drifts between them as before)  (["Sky", "SkyEdges", "Mist0", "Hills", "HillsEdges", "Mist1", "Sect", "SectEdges"])
+PASS  title edges: left extension at x = -160, right at x = 480 (160x270 each), the tiled wall strip starts beyond them
+PASS  title edges: 16:9 window 1440x810 shows x 0..480 - inside the 480 px picture (unchanged)  (view (480.0, 270.0))
+PASS  title edges: 19.5:9 window 1755x810 shows x -52..532 - covered by the side extensions + mist  (view (585.0, 270.0))
+PASS  title edges: 21:9 window 1890x810 shows x -75..555 - covered by the side extensions + mist  (view (630.0, 270.0))
+PASS  title edges: 4:3 window 1440x1080 shows x 0..480 - inside the 480 px picture (unchanged)  (view (480.0, 360.0))
+PASS  title edges: the border columns continue the picture (colour jump no bigger than between its own neighbouring columns)  (left 29.4/41 rows (picture 0|1: 36.8/51), right 18.6/35 rows (picture 478|479: 20.6/32))
+PASS  title edges: ridges, tree line, wall top, ginkgo crown and bamboo line up across both borders
+PASS  title edges: the outermost 32 px are plain and tile on without a seam (wall = bg_sect_edge.png, flat ranges)  (wall strip same true, ridge mismatch 0, tile jump rows L8 R8)
 PASS  title AC6: a new title text is never shown with the old logo (falls back to text until the logo is regenerated)
 PASS  title AC6: positions and effect counts come from data/title.json (edited copy moves / changes them)
 PASS  title AC4: 开始游戏 is selected first and clearly highlighted  (selected (1.0, 0.92, 0.7, 0.97) / other (0.12, 0.09, 0.1, 0.72))
@@ -729,7 +739,7 @@ PASS  step3 AC5: condition met at 15:00 -> nobody at 07:57 next morning -> at 08
 PASS  step3 AC5: 老伯 now says '山门外有人想拜师'  (["D-老伯-有人拜师"])
 PASS  step3 AC5: 再想想 leaves him at the gate; talking again asks again; 收下 -> 师弟, 家业 +1 (5 -> 6), 门派簿 '收下第一个弟子'  (["打跑山路上的山贼", "解开竹林断碑", "找回了老周的瓦", "请老周修好了宿舍屋顶", "整理好了旧弟子房", "厨房小食摊开张", "收下第一个弟子"])
 PASS  step3 AC5: by day 师弟 is in the dorm yard; talking to him = the 师弟 talk; 老伯 back to his usual lines
-PASS  step3 AC5: he walks about the dorm yard by day (moved 164 px, never left the yard)
+PASS  step3 AC5: he walks about the dorm yard by day (moved 123 px, never left the yard)
 PASS  step3 AC5: at night he is in the old dorm room
 PASS  step3 AC5: condition met at 06:00 -> he is there at the next 08:00 (two hours later)
 PASS  step3 AC6: 08:00 each day takes 5 (12 -> 7 -> 2); then 2 pays part, 3 become debt with '伙食钱不够了', coins stay at 0  ([[7, 0], [2, 0], [0, 3]])
@@ -813,7 +823,7 @@ PASS  step4a AC3: back at his place he is calm again (rage is per fight)
 PASS  step4a AC4: a real-key GP bot (tests/combat_suite.gd, 试玩反馈 v1) wins the 黄鼠狼 5/5 and the three 狼山贼 5/5 (from walking in to the last knock-out)  ({ "weasel": ["won", "won", "won", "won", "won"], "wolves": ["won", "won", "won", "won", "won"] })
 PASS  step4a AC4 (试玩反馈 v1): 黑虎 is beaten by real-key GP bots: K as the blow comes 10/10; a human-like bot (K 0.30-0.55 s after the wind-up starts, 25 % of the attacks unguarded) 7/10 (>= 7)  ({ "perfect": ["won", "won", "won", "won", "won", "won", "won", "won", "won", "won"], "human": ["won", "won", "won", "lost", "won", "won", "won", "lost", "won", "lost"], "masher": ["lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost"] })
 PASS  step4a AC4: the attack-masher (J only, never guards) beats 黑虎 0/10 (< 30 %)  (["lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost"])
-PASS  step4a AC6: 2 different 委托 a day from seed + day (the same seed and day always give the same two); 送馒头 is never drawn before the kitchen is repaired, and is after; the grove spots of one day never overlap  (["jade", "fence"] ["shoots", "fence"] ["letter", "chicken", "shoots", "jade", "fence"])
+PASS  step4a AC6: 2 different 委托 a day from seed + day (the same seed and day always give the same two); 送馒头 is never drawn before the kitchen is repaired, and is after; the grove spots of one day never overlap  (["letter", "chicken"] ["shoots", "fence"] ["letter", "chicken", "shoots", "jade", "fence"])
 PASS  step4a AC6: between midnight and 08:00 the board has no 委托; 08:00 draws the day's two once
       walk stopped at (1317.0, 1045.0) (room '') -> (1596.0, 1036.0)
       walk stopped at (926.0, 1685.0) (room '') -> (300.0, 1716.0)
@@ -829,11 +839,11 @@ PASS  step4a AC6: a 委托 not turned in by 24:00 is void (even when done; no pa
 今天的委托辰时（8 点）才贴出来。)
 PASS  step4a AC6: 08:00 brings the new day's two
 PASS  step4a AC6: every 5th 委托 turned in gives 家业 +1 (1 -> 2); the 门派簿 shows 'x/5'  ([1, 1, 1, 1, 2, 2]["下届比武大会：第 3 天午时（今天第 3 天）", "悬赏 0/3 条 · 委托 6 条（家业进度 1/5）"])
-PASS  step4a AC6: 名望 4 pays 12 / 8 / 10; 名望 5 pays x1.5 (18 / 12 / 15 / 18) rounded half up (x1.25: 12.5 -> 13, 10 -> 12.5 -> 13 ...); the board says so  ([12, 8, 10] [18, 12, 15, 18] [15, 13, 10] 15)
+PASS  step4a AC6: 名望 4 pays 12 / 8 / 10; 名望 5 pays x1.5 (18 / 12 / 15 / 18) rounded half up (x1.25: 12.5 -> 13, 10 -> 12.5 -> 13 ...); the board says so  ([12, 8, 10] [18, 12, 15, 18] [15, 13, 10] 12)
 PASS  step4a AC6: 家业 never past 10 (the 10th 委托 at 10: the coins are paid, '家业已满')  (江湖告示榜：左边红纸是悬赏，右边黄纸是委托。
 今日委托（子时前回榜交差）：（名望已有 5 格：报酬 ×1.5）
 1. 送信 · 12 文 — 办妥了，可以交差
-2. 挖竹笋 · 15 文 — 可接
+2. 补篱笆 · 15 文 — 可接
 茶摊老板留话：『老伯托人捎话：信收到了，替他谢谢你。』
 报酬 12 文。
 累计完成 10 条委托（家业已满）。)
@@ -953,7 +963,7 @@ PASS  audio settings: changing the volume writes no save and the save holds no v
 PASS  audio web: nothing plays before the first key / click (a mouse move is not enough); the music asked for starts with it  (silent true still true started true)
 PASS  i18n: data/i18n/en*.json have 1081 Chinese -> English lines (255 templates with {0} {1}...), none empty, no Chinese left in the English  ([])
 PASS  i18n: all 1106 Chinese texts of the data files and the Esc / HUD wording translate to English (nothing left Chinese)  ([])
-PASS  i18n: the title screen has 「中文 | English」 in its top-right corner; a click on English shows 'New Game' and the English name under the logo; ← / → switches back  ([[P: (416.0, 3.0), S: (58.0, 14.0)], "en", "New Game", true, "zh", 76.0, ^"/root/Title/LangSwitch/@Control@157784/@HBoxContainer@157785/@Button@157788"])
+PASS  i18n: the title screen has 「中文 | English」 in its top-right corner; a click on English shows 'New Game' and the English name under the logo; ← / → switches back  ([[P: (416.0, 3.0), S: (58.0, 14.0)], "en", "New Game", true, "zh", 76.0, ^"/root/Title/LangSwitch/@Control@157783/@HBoxContainer@157784/@Button@157787"])
 PASS  i18n: the title's 按键与玩法 page has no language row, and the corner switch hides while that page is open (it would sit on the page)
 PASS  i18n: on the Esc page ↑ / ↓ switch the language as well (the row says 'Language (↑↓):')  (["zh", "en", "Language (↑↓):"])
 PASS  i18n: the Esc page's 「中文 | English」 switches the whole game at once (Esc page, objective line 'Goal: Tutorial 1/5: Spar with Senior Brother: guard (GP) once, win'); the page still fits; the game state and the save are untouched  ([true, "Paused · Controls & Tips", true, "Goal: Tutorial 1/5: Spar with Senior Brother: guard (GP) once, win"])
@@ -1050,7 +1060,7 @@ PASS  schedule AC2/AC3: before the prologue is done nobody sleeps at 23:00 (and 
 PASS  schedule AC2: the story-less sandbox of the older suites keeps everybody at every hour
 PASS  schedule AC2: talking to 村民 past 19:00 -> he stays until the conversation is over, then goes  ([true, true, true])
 PASS  schedule AC2: during a 梅花桩 trial, a 比武 bout or a fight with an engaged bandit nobody disappears; they go when it ends  ([{ "trial_active": true, "bout_session": true }, true])
-PASS  schedule AC2: a 切磋 with 师兄 going past 22:00 -> he stays through the choice and the whole fight, then goes to his bed  ([true, 295, true, true, true])
+PASS  schedule AC2: a 切磋 with 师兄 going past 22:00 -> he stays through the choice and the whole fight, then goes to his bed  ([true, 299, true, true, true])
 PASS  schedule AC2: by day 师兄's bed is empty (its own 按 E 查看)  ({ "kind": "thing", "id": "senior_bed", "scene": "S10-师兄的床", "action": "", "prompt": "按 E 查看", "prompt_pos": (3159.0, 106.0) })
 PASS  schedule AC2: at night 师兄 is not in the 练武场 but asleep in his own bed (the new picture); E there: '（呼……谁动我萝卜……）' as a bubble  ([false, true, true, true])
 PASS  schedule AC2: the sleeping picture covers the bed exactly and is drawn over it  ([(3136.0, 132.1), (3136.0, 132.0)])
@@ -1212,7 +1222,7 @@ PASS  naming 一 (zh): the title screen shows the pixel logo 山门小院; nothi
 PASS  naming 一 (en): the title screen shows the pixel logo 山门小院 and the English line 'The Mountain Courtyard' under it; nothing on it says DEMO / 动物武侠 / Animal Wuxia  ([true, "The Mountain Courtyard", []])
 PASS  naming 二: 新游戏 opens the naming box first (「给这只小兔起个名字吧」, filled with 小兔 and selected, keyboard in the box) - no opening yet  ([true, "小兔", "给这只小兔起个名字吧"])
 PASS  naming 二: the box has 确定 / 随机 and 「最多 5 个汉字或 12 个字母」 (the plan's layout; R1: the rule names both)  (["给这只小兔起个名字吧", "最多 5 个汉字或 12 个字母"])
-PASS  naming 二: 随机 (mouse) fills the box with names from data/naming.json, a different one each time  (["小满", "白小楼", "阿糯", "云白", "团子"])
+PASS  naming 二: 随机 (mouse) fills the box with names from data/naming.json, a different one each time  (["云白", "团子", "月白", "白小楼", "阿糯"])
 PASS  naming 二: typing 阿糯 + Enter takes the name and the game starts  (["阿糯", "阿糯"])
 PASS  naming 二: then the opening plays (after the name, before the game)
 PASS  naming 二: the opening scene in the dorm - his speaker plate says 阿糯 (with his portrait)  (["阿糯"])
@@ -1244,7 +1254,7 @@ PASS  naming Esc 改名: 改名 (mouse) -> 团子 takes effect at once: the page
 PASS  naming Esc 改名: back in the game the plate says 团子 and the name is saved at the next calm moment (the save file says 团子)  (["团子", ["story", "rename+story"], "团子"])
 PASS  naming R1: English mode, 12 汉字 typed -> only 5 go in (the same 5-汉字 limit as in Chinese)  (一二三四五)
 PASS  naming R1: ... and those 5 are what Enter takes  (一二三四五)
-PASS  naming English: the box says 'Name this little rabbit', is filled with 'Little Rabbit', 'Up to 12 letters' (a 13th letter does not go in); 随机 gives English names  (["Little Rabbit", "Name this little rabbit", "Up to 12 letters (5 Chinese characters)", "Abcdefghijkl", "Moonpale"])
+PASS  naming English: the box says 'Name this little rabbit', is filled with 'Little Rabbit', 'Up to 12 letters' (a 13th letter does not go in); 随机 gives English names  (["Little Rabbit", "Name this little rabbit", "Up to 12 letters (5 Chinese characters)", "Abcdefghijkl", "Cloudy"])
 PASS  naming English: name Momo - every line that said Little Rabbit says Momo (e.g. 'Here comes Momo. I've stacked every tile you brought back from the grove.'), the plate says Momo  ([])
 PASS  naming English: with the default name every one of these lines says Little Rabbit (as before) and the plate too  ([])
 PASS  naming R1: Esc 改名 in English mode: 12 汉字 typed -> 5 go in  (一二三四五)
@@ -1261,4 +1271,4 @@ PASS  hd portraits: every speaker's portrait is the 128x128 HD picture, drawn 64
 PASS  hd portraits: all 16 portraits have a 128x128 HD version (the old 64x64 ones stay)  ([])
 PASS  hd title: the title rabbit is the HD texture (160x208 frames, 2x density) at scale 0.5 on the same feet - the same on-screen box as the old 80x104 standee  ((160.0, 208.0) scale (0.5, 0.5) box [P: (110.0, 133.0), S: (80.0, 104.0)] old [P: (110.0, 133.0), S: (80.0, 104.0)])
 
-RESULT: 1094 passed, 0 failed
+RESULT: 1104 passed, 0 failed
