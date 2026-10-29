@@ -1,0 +1,16 @@
+{
+  "_说明": "坐下与人物作息 v1 的英文（data/schedule.json 的 ui 和梦话、data/interiors.json seats 的两句小气泡）。格式同 en.json：lines 里 中文 -> English。",
+  "lines": {
+    "呼……": "Zzz…",
+    "按 E 坐下": "E: Sit",
+    "等到天亮（辰时 08:00）": "Wait till morning (08:00)",
+    "大家都醒着": "Everyone's awake",
+    "跳过去后，今天没做完的委托会作废。": "Errands not finished today will be void after the skip.",
+    "一夜过去……": "The night passes…",
+    "（呼……谁动我萝卜……）": "(Zzz… who touched my radish…)",
+    "（坐上去软塌塌的，师父坐了几十年。）": "(It's squashed flat. Master has sat here for decades.)",
+    "（灶火暖烘烘的，有点想睡。）": "(The stove is so warm… getting sleepy.)",
+    "{0}：对方已睡，明早再来": "{0}: asleep, come back in the morning",
+    "对方已睡，明早再来": "Asleep, come back in the morning"
+  }
+}

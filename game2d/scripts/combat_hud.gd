@@ -418,6 +418,16 @@ func _refresh_choice() -> void:
 		choice_opts[i].add_theme_color_override("font_color", Color(0.75, 0.2, 0.1) if sel else Color(0.27, 0.14, 0.1))
 
 
+## 试玩反馈 v1: index of the option under `pos` (viewport position of a mouse event), -1 when none.
+func choice_at(pos: Vector2) -> int:
+	if not choice.visible:
+		return -1
+	for i in choice_opts.size():
+		if choice_opts[i].get_global_rect().has_point(pos):
+			return i
+	return -1
+
+
 func hide_choice() -> void:
 	choice.visible = false
 

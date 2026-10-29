@@ -9,6 +9,7 @@ extends CanvasLayer
 
 signal opened
 signal closed
+signal hero_renamed(name: String)     # 改名与起名 v1: the hero was renamed on this page (main saves, the dialogue refreshes)
 
 const TITLE := "暂停 · 按键与玩法"
 const KEYS_TITLE := "全部按键"
@@ -19,28 +20,38 @@ const RESUME_TEXT := "继续（Esc）"
 const PAGE_TEXT := "%d / %d  ← → 翻页"
 const PAGE_BUTTON_TEXT := "▶"
 const ABANDON_KEY_TEXT := "（Q）"
+## 音效 + 背景音乐 v1: two small buttons in the bottom row, 「音乐：中」 / 「音效：中」, four levels each (关 / 小 / 中 / 大, names
+## from data/audio.json). A click moves the level on, or Tab picks a button (lit; the page hint then reads SOUND_HINT) and
+## ← / → change it; with none picked ← / → turn
+## the tips page as before (↑ / ↓ stay the language). A setting, not part of the save (AudioService keeps it, Sfx reaches
+## it). The bottom row is used because the page is already as tall as 480x270 allows.
+const SOUND_ROWS := [["music", "音乐"], ["sfx", "音效"]]
+const SOUND_LEVELS := ["关", "小", "中", "大"]
+const SOUND_HINT := "Tab 选 · ← → 调音量"
+const LANG_TEXT := "语言（↑↓）："      # 中英文切换 v1: the language row - a click, or ↑ / ↓ while the page is open
 ## [key, use]
 const KEYS := [
 	["WASD / 方向键", "移动"],
 	["J / 鼠标左键", "攻击（连按 = 两连击）"],
 	["空格 / Shift", "闪避"],
+	["K / 鼠标右键", "格挡（GP）"],
 	["E", "交谈 / 查看 / 拿起 / 擦 / 打开 / 确认"],
 	["走到门口", "进屋 / 出屋（朝门走就行）"],
-	["E / 回车 / 空格", "对话：整句显示 / 下一句"],
+	["E / 回车 / 空格", "对话：下一句（鼠标左键也行）"],
 	["1 / 2 或 ↑↓", "选择（对话 / 切磋 / 派活 1–4）"],
 	["B", "门派簿（序章收尾后可看）"],
+	["Q", "任务面板（指引、委托……）"],
 	["T", "时间快进 1 小时"],
-	["L", "氛围灯光开关"],
-	["H", "显示 / 隐藏屏幕提示"],
+	["L / H", "氛围灯光 / 屏幕提示 开关"],
 	["Esc", "暂停 / 回到游戏"],
 ]
 ## [name, text]
 const TIPS := [
 	["两连击", "J 连按两下，第二下更重（8 + 12）。"],
 	["闪避无敌", "闪避的一瞬间不会受伤；用完要稍等才能再闪。"],
-	["看破与反击", "敌人发红、头顶出“!”时闪开就是“看破”；0.8 秒内还手，整套伤害 ×1.5。"],
+	["格挡（GP）", "敌人头顶出“!”时按 K：挡住不掉血，自动反击 30；按早了会僵住。"],
 	["自动换位", "朝 2 格内的敌人闪避，会绕到它背后。"],
-	["闪身追击", "闪避后 0.6 秒内按 J，冲向 3 格内最近的敌人出手；看破后追击也算反击。"],
+	["闪身追击", "闪避后 0.6 秒内按 J，冲向 3 格内最近的敌人，一定打中。"],
 	["切磋", "在练武场找师兄按 E；任一方生命降到 20% 就结束，双方回满。"],
 	["回血", "脱离战斗、5 秒没受伤后，每秒回 3 点。"],
 	["山贼与复活", "山路上的狼和野猪走近就开打；被打倒在山门外复活，山贼回原位。"],
@@ -92,8 +103,17 @@ var page := 0
 var page_label: Label
 var page_button: Button
 var abandon_button: Button
+var lang_box: HBoxContainer          # 中英文切换 v1 (hidden on the title's help page: the title has its own switch)
+var lang_buttons := {}
 var _abandon_action: Callable = Callable()
+var sound_buttons := {}              # "music" / "sfx" -> Button "音乐：中" (a click moves the level on; lit while Tab picked it)
+var sound_focus := -1                # -1 = none, 0 = 音乐, 1 = 音效
 var _was_paused := false
+## 改名与起名 v1: the title row has the hero's name on the left ("名字：小兔") and 「改名（R）」 on the right (not on the title
+## screen's help page); the button / R opens the naming box (rename mode: free, at once; Esc / 取消 leaves it as it was).
+var name_label: Label
+var rename_button: Button
+var rename_panel: NamingPanel
 
 
 func _init() -> void:
@@ -122,7 +142,29 @@ func _init() -> void:
 
 	var title := _label(TITLE, 12, Color(1.0, 0.88, 0.5))
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(title)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var head_row := HBoxContainer.new()
+	head_row.add_theme_constant_override("separation", 4)
+	name_label = _label("", 9, Color(0.85, 0.78, 0.6))
+	name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	name_label.clip_text = false
+	head_row.add_child(name_label)
+	head_row.add_child(title)
+	rename_button = Button.new()
+	rename_button.name = "Rename"
+	rename_button.text = PlayerName.ui("rename_button")
+	rename_button.focus_mode = Control.FOCUS_NONE
+	rename_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	rename_button.add_theme_font_size_override("font_size", 9)
+	rename_button.add_theme_color_override("font_color", Color(1.0, 0.93, 0.7))
+	rename_button.add_theme_color_override("font_hover_color", Color(1.0, 0.88, 0.5))
+	rename_button.add_theme_color_override("font_pressed_color", Color(1.0, 0.88, 0.5))
+	rename_button.add_theme_stylebox_override("normal", _box(Color(0.2, 0.15, 0.13, 0.9), Color(0.75, 0.6, 0.4), 3, 0))
+	rename_button.add_theme_stylebox_override("hover", _box(Color(0.3, 0.2, 0.15, 0.95), Color(1.0, 0.86, 0.5), 3, 0))
+	rename_button.add_theme_stylebox_override("pressed", _box(Color(0.3, 0.2, 0.15, 0.95), Color(1.0, 0.86, 0.5), 3, 0))
+	rename_button.pressed.connect(open_rename)
+	head_row.add_child(rename_button)
+	col.add_child(head_row)
 	title_label = title
 	col.add_child(_rule())
 
@@ -232,6 +274,31 @@ func _init() -> void:
 	abandon_button.pressed.connect(abandon)
 	foot.add_child(abandon_button)
 	foot.add_theme_constant_override("separation", 10)
+	# 中英文切换 v1: 「中文 | English」 on the pause page - a click switches the language of everything at once
+	lang_box = HBoxContainer.new()
+	lang_box.add_theme_constant_override("separation", 2)
+	lang_box.add_child(_label(LANG_TEXT, 9, Color(0.85, 0.78, 0.6)))
+	for opt in [["zh", "中文"], ["en", "English"]]:
+		if opt[0] == "en":
+			var bar := _label("|", 9, Color(0.8, 0.76, 0.7, 0.7))
+			bar.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+			lang_box.add_child(bar)
+		var lb := Button.new()
+		lb.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+		lb.text = opt[1]
+		lb.flat = true
+		lb.focus_mode = Control.FOCUS_NONE
+		lb.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+		lb.add_theme_font_size_override("font_size", 9)
+		var empty := StyleBoxEmpty.new()
+		for st in ["normal", "hover", "pressed", "focus", "hover_pressed"]:
+			lb.add_theme_stylebox_override(st, empty)
+		var code: String = opt[0]
+		lb.pressed.connect(func(): Lang.set_lang(code))
+		lang_box.add_child(lb)
+		lang_buttons[code] = lb
+	_build_sound_rows(foot)
+	foot.add_child(lang_box)
 	show_page(0)
 
 
@@ -284,6 +351,9 @@ static func all_text() -> String:
 	for t in TIPS_JIANGHU:
 		s += t[0] + "：" + Jianghu.fill(t[1], Jianghu.numbers())
 	s += PAGE_TEXT + PAGE_BUTTON_TEXT + ABANDON_KEY_TEXT + "0123456789"
+	for row in SOUND_ROWS:
+		s += row[1]
+	s += "".join(sound_level_names()) + SOUND_HINT
 	return s
 
 
@@ -293,6 +363,7 @@ func show_page(i: int) -> void:
 	for j in tip_pages.size():
 		tip_pages[j].visible = j == page
 	page_label.text = PAGE_TEXT % [page + 1, tip_pages.size()]
+	_refresh_sound()
 	if is_open:
 		_layout()
 
@@ -325,14 +396,21 @@ func configure_as_help(heading: String, back_text: String) -> void:
 	name = "HelpPage"
 	title_label.text = heading
 	resume_button.text = back_text
+	rename_button.visible = false      # 改名与起名 v1: only in the game (the title screen names the hero at 新游戏)
+	name_label.visible = false
+	lang_box.visible = false
 
 
 func _input(event: InputEvent) -> void:
+	if rename_panel != null and rename_panel.is_open:
+		return     # 改名与起名 v1: the naming box has the keyboard (it takes Esc itself; typed E / Q / arrows are letters)
 	if help_only:
 		if is_open and (event.is_action_pressed("pause", false) or event.is_action_pressed("interact", false)
 				or (event is InputEventKey and event.pressed and not event.echo
 				and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER or event.physical_keycode == KEY_ENTER))):
 			close()
+			get_viewport().set_input_as_handled()
+		elif is_open and _sound_key(event):
 			get_viewport().set_input_as_handled()
 		elif is_open and (event.is_action_pressed("move_left", false) or event.is_action_pressed("move_right", false)):
 			turn_page(-1 if event.is_action_pressed("move_left", false) else 1)
@@ -343,17 +421,46 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause", false):
 		toggle()
 		get_viewport().set_input_as_handled()
+	elif is_open and _sound_key(event):
+		get_viewport().set_input_as_handled()
 	elif is_open and (event.is_action_pressed("move_left", false) or event.is_action_pressed("move_right", false)):
 		turn_page(-1 if event.is_action_pressed("move_left", false) else 1)
+		get_viewport().set_input_as_handled()
+	elif is_open and (event.is_action_pressed("move_up", false) or event.is_action_pressed("move_down", false)):
+		Lang.toggle()
 		get_viewport().set_input_as_handled()
 	elif is_open and abandon_button.visible and event is InputEventKey and event.pressed and not event.echo \
 			and (event.physical_keycode == KEY_Q or event.keycode == KEY_Q):
 		abandon()
 		get_viewport().set_input_as_handled()
+	elif is_open and rename_button.visible and event is InputEventKey and event.pressed and not event.echo \
+			and (event.physical_keycode == KEY_R or event.keycode == KEY_R):
+		open_rename()
+		get_viewport().set_input_as_handled()
 	elif is_open and (event.is_action_pressed("interact", false) or (event is InputEventKey and event.pressed and not event.echo
 			and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER or event.physical_keycode == KEY_ENTER))):
 		close()
 		get_viewport().set_input_as_handled()
+
+
+func _ready() -> void:
+	var au := Sfx.service()
+	if au != null and au.has_signal("levels_changed"):
+		au.levels_changed.connect(_refresh_sound)
+	_refresh_sound()
+	Lang.on_changed(_on_lang_changed)
+	_on_lang_changed(Lang.current())
+
+
+func _on_lang_changed(_l: String) -> void:
+	for code in lang_buttons:
+		var c := Color(1.0, 0.88, 0.5) if code == Lang.current() else Color(0.8, 0.76, 0.7, 0.7)
+		for fc in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
+			lang_buttons[code].add_theme_color_override(fc, c)
+	_refresh_sound()                   # 音效 + 背景音乐 v1: the volume buttons are written in the new language
+	_refresh_name()
+	if is_open:
+		_layout.call_deferred()        # the texts changed length: fit the page to the screen again
 
 
 func _modal_open() -> bool:
@@ -378,6 +485,8 @@ func open() -> void:
 		_was_paused = get_tree().paused
 		get_tree().paused = true
 	root.visible = true
+	sound_focus = -1
+	_refresh_name()
 	show_page(0)
 	_layout()
 	opened.emit()
@@ -400,18 +509,19 @@ const SCREEN_MARGIN := 3.0
 
 
 func _layout() -> void:
+	_balance_head()
 	var vp := get_viewport().get_visible_rect().size
 	var room := vp - Vector2(SCREEN_MARGIN, SCREEN_MARGIN) * 2.0
 	panel.scale = Vector2.ONE
 	var tw := TIP_WIDTH
 	_set_tip_width(tw)
 	var sz := panel.get_combined_minimum_size()
-	while sz.y > room.y and sz.x + 12.0 <= room.x:
+	while sz.y > room.y + 0.5 and sz.x + 12.0 <= room.x:
 		tw += 12.0
 		_set_tip_width(tw)
 		sz = panel.get_combined_minimum_size()
 	panel.size = sz
-	var k := minf(1.0, minf(room.x / sz.x, room.y / sz.y))
+	var k := minf(1.0, minf((room.x + 0.5) / sz.x, (room.y + 0.5) / sz.y))   # (half a pixel: text heights are not whole pixels)
 	panel.scale = Vector2(k, k)
 	panel.position = ((vp - sz * k) * 0.5).round()
 
@@ -422,3 +532,126 @@ func _set_tip_width(w: float) -> void:
 			if l is Label:
 				l.custom_minimum_size = Vector2(w, 0)
 	panel.reset_size()
+
+
+# ------------------------------------------------------------------ 改名与起名 v1: rename
+## The name on the left and the button on the right get the same width, so the heading stays in the middle.
+func _balance_head() -> void:
+	if name_label == null or rename_button == null:
+		return
+	name_label.custom_minimum_size = Vector2.ZERO
+	rename_button.custom_minimum_size = Vector2.ZERO
+	if not rename_button.visible:
+		return
+	var w := maxf(name_label.get_combined_minimum_size().x, rename_button.get_combined_minimum_size().x)
+	name_label.custom_minimum_size = Vector2(w, 0)
+	rename_button.custom_minimum_size = Vector2(w, 0)
+
+
+func _refresh_name() -> void:
+	if name_label != null:
+		name_label.text = PlayerName.ui("name_line").replace("{0}", PlayerName.value())
+
+
+## 「改名（R）」: the naming box over the page (the game stays paused); 确定 renames at once (free), Esc / 取消 does not.
+func open_rename() -> void:
+	if help_only or not is_open or not rename_button.visible:
+		return
+	if rename_panel == null:
+		rename_panel = NamingPanel.new()
+		add_child(rename_panel)
+		rename_panel.confirmed.connect(_on_renamed)
+	if not rename_panel.is_open:
+		rename_panel.open("rename")
+
+
+func _on_renamed(n: String) -> void:
+	_refresh_name()
+	_layout.call_deferred()
+	if OS.has_feature("web"):
+		print("naming: renamed")
+	hero_renamed.emit(n)
+
+
+# ------------------------------------------------------------------ 音效 + 背景音乐 v1: volume in the bottom row
+## The level names (data/audio.json "volume_levels"; 关 / 小 / 中 / 大 without it).
+static func sound_level_names() -> Array:
+	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/audio.json"))
+	if d is Dictionary and d.get("volume_levels") is Array and not (d["volume_levels"] as Array).is_empty():
+		return (d["volume_levels"] as Array).map(func(v): return String(v.get("name", "")))
+	return SOUND_LEVELS
+
+
+func _build_sound_rows(foot: HBoxContainer) -> void:
+	var box := HBoxContainer.new()
+	box.name = "Sound"
+	box.add_theme_constant_override("separation", 2)
+	for row in SOUND_ROWS:
+		var kind: String = row[0]
+		var b := Button.new()
+		b.name = "Sound_" + kind
+		b.focus_mode = Control.FOCUS_NONE
+		b.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED   # written in the current language by _refresh_sound
+		b.add_theme_font_size_override("font_size", 9)
+		b.pressed.connect(_on_sound_clicked.bind(kind))
+		box.add_child(b)
+		sound_buttons[kind] = b
+	foot.add_child(box)
+
+
+## A click moves the level on: 关 -> 小 -> 中 -> 大 -> 关.
+func _on_sound_clicked(kind: String) -> void:
+	_on_sound_pressed(kind, (Sfx.volume(kind) + 1) % sound_level_names().size())
+
+
+func _on_sound_pressed(kind: String, level: int) -> void:
+	Sfx.set_volume(kind, level)
+	_refresh_sound()
+	if kind == "sfx":
+		Sfx.play("choice_move")          # the new loudness, heard at once
+
+
+## Tab picks a volume button (音乐 -> 音效 -> none); ← / → change the picked one. True when the key was used.
+func _sound_key(event: InputEvent) -> bool:
+	if event is InputEventKey and event.pressed and not event.echo and (event.keycode == KEY_TAB or event.physical_keycode == KEY_TAB):
+		sound_focus = posmod(sound_focus + 2, SOUND_ROWS.size() + 1) - 1
+		_refresh_sound()
+		return true
+	if sound_focus >= 0 and (event.is_action_pressed("move_left", true) or event.is_action_pressed("move_right", true)):
+		var kind: String = SOUND_ROWS[sound_focus][0]
+		var step := -1 if event.is_action_pressed("move_left", true) else 1
+		var lv := clampi(Sfx.volume(kind) + step, 0, sound_level_names().size() - 1)
+		if lv != Sfx.volume(kind):
+			_on_sound_pressed(kind, lv)
+		return true
+	return false
+
+
+## The text of a volume button now: "音乐：中" / "Music: Mid".
+func sound_text(kind: String) -> String:
+	var row: Array = SOUND_ROWS[0] if kind == SOUND_ROWS[0][0] else SOUND_ROWS[1]
+	var names := sound_level_names()
+	var lv := clampi(Sfx.volume(kind), 0, names.size() - 1)
+	if Lang.is_en():
+		return "%s: %s" % [Lang.t(row[1]), Lang.t(names[lv])]
+	return "%s：%s" % [row[1], names[lv]]
+
+
+func _refresh_sound() -> void:
+	if page_label != null and not tip_pages.is_empty():
+		page_label.text = SOUND_HINT if sound_focus >= 0 else PAGE_TEXT % [page + 1, tip_pages.size()]
+	for i in SOUND_ROWS.size():
+		var kind: String = SOUND_ROWS[i][0]
+		if not sound_buttons.has(kind):
+			continue
+		var b: Button = sound_buttons[kind]
+		b.text = sound_text(kind)
+		var picked := sound_focus == i
+		var fc := Color(0.27, 0.14, 0.1) if picked else Color(1.0, 0.93, 0.7)
+		for c in ["font_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
+			b.add_theme_color_override(c, fc)
+		b.add_theme_color_override("font_hover_color", fc if picked else Color(1.0, 0.88, 0.5))
+		var sb := _box(Color(1.0, 0.88, 0.5), Color(0.6, 0.18, 0.08), 3, 0) if picked \
+			else _box(Color(0.2, 0.15, 0.13, 0.9), Color(0.75, 0.6, 0.4), 3, 0)
+		for st in ["normal", "hover", "pressed", "focus", "hover_pressed"]:
+			b.add_theme_stylebox_override(st, sb)

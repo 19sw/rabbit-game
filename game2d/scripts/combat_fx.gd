@@ -1,7 +1,7 @@
 class_name CombatFx
 extends Node2D
 ## World-space combat effects: attack arcs (刀光/掌风), hit sparks, the red "!" over enemies whose wind-up has
-## locked, and the gold "反击!" popup. Uses the effect sheets from pixel2d (assets/fx/fx.json + PNGs, copied by
+## locked, the gold "反击!" popup, and (试玩反馈 v1) the blue GP ring + sparks - always drawn in code. Uses the effect sheets from pixel2d (assets/fx/fx.json + PNGs, copied by
 ## tools/sync_assets.py) when they exist; otherwise draws simple placeholder shapes, so the game never depends on art.
 
 const FX_JSON := "res://assets/fx/fx.json"
@@ -91,6 +91,23 @@ func spark(at: Vector2) -> void:
 	_drawn.append({"kind": "spark", "pos": at, "dir": Vector2.ZERO, "t": 0.0, "life": 0.12, "color": Color(1, 0.95, 0.6), "r": 7.0})
 
 
+## 试玩反馈 v1: a caught blow (GP) - a blue ring opening in front of the rabbit and blue sparks flying out towards
+## `dir` (where the blow came from). Drawn in code (no art needed).
+const GP_BLUE := Color(0.45, 0.78, 1.0)
+const GP_CORE := Color(0.85, 0.95, 1.0)
+
+
+func gp_flash(at: Vector2, dir: Vector2) -> void:
+	_note("gp_ring")
+	_drawn.append({"kind": "ring", "pos": at, "dir": dir, "t": 0.0, "life": 0.3, "color": GP_BLUE, "r": 15.0})
+	_note("gp_spark")
+	var base := dir.angle()
+	for i in 7:
+		var a := base + (float(i) - 3.0) * 0.38
+		_drawn.append({"kind": "gp_spark", "pos": at, "dir": Vector2.from_angle(a), "t": 0.0, "life": 0.24 + 0.02 * float(i % 3),
+			"color": GP_CORE if i % 2 == 0 else GP_BLUE, "r": 9.0 + 3.0 * float(i % 3)})
+
+
 ## Gold "反击!" floating up from `at` (art) - returns false when there is no art (the HUD shows text instead).
 func counter_popup(at: Vector2) -> bool:
 	_note("counter_text")
@@ -147,7 +164,16 @@ func _draw() -> void:
 		var k: float = d["t"] / d["life"]
 		var c: Color = d["color"]
 		c.a = 1.0 - k
-		if d["kind"] == "arc":
+		if d["kind"] == "ring":
+			var rr: float = d["r"] * (0.55 + 0.6 * k)
+			draw_arc(d["pos"], rr, 0.0, TAU, 24, c, 2.0)
+			draw_arc(d["pos"], rr - 2.0, 0.0, TAU, 24, Color(GP_CORE.r, GP_CORE.g, GP_CORE.b, c.a * 0.7), 1.0)
+			draw_circle(d["pos"], 4.0 * (1.0 - k), Color(GP_CORE.r, GP_CORE.g, GP_CORE.b, c.a * 0.8))
+		elif d["kind"] == "gp_spark":
+			var dv: Vector2 = d["dir"]
+			var p0: Vector2 = d["pos"] + dv * (4.0 + d["r"] * k)
+			draw_line(p0, p0 + dv * (4.0 * (1.0 - k) + 1.0), c, 2.0)
+		elif d["kind"] == "arc":
 			var base: float = (d["dir"] as Vector2).angle()
 			draw_arc(d["pos"], d["r"] * (0.8 + 0.2 * k), base - 1.0, base + 1.0, 10, c, 3.0)
 			draw_arc(d["pos"], d["r"] * (0.6 + 0.2 * k), base - 0.7, base + 0.7, 8, Color(1, 1, 1, c.a * 0.6), 1.0)

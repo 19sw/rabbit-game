@@ -280,6 +280,9 @@ func book_extras() -> Dictionary:
 		out["entries"]["fame"].append_array(jh.book_entries("fame"))      # 第④步第一批: 揭榜 / 巡山, 委托
 		out["entries"]["estate"].append_array(jh.book_entries("estate"))
 		out["lines"].append_array(jh.book_lines())
+	var gd = main.get("guide")
+	if gd != null:
+		out["entries"]["fame"].append_array(gd.book_entries())          # 新手指引·出师
 	return out
 
 

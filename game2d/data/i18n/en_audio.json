@@ -1,0 +1,12 @@
+{
+ "_说明": "音效 + 背景音乐 v1 新增文字的英文（格式同 en.json；翻译器把 data/i18n/en*.json 全部读进来）。Esc 页的音量两行。",
+ "lines": {
+  "音乐": "Music",
+  "音效": "SFX",
+  "关": "Off",
+  "小": "Low",
+  "中": "Mid",
+  "大": "High",
+  "Tab 选 · ← → 调音量": "Tab pick · ← → volume"
+ }
+}

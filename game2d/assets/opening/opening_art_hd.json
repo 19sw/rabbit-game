@@ -1,0 +1,37 @@
+{
+ "_说明": "由 pixel2d/opening/tools/generate_opening_hd.py 生成，不要手改。高清版（960×540，像素点是 480×270 版的两倍），游戏按一半大小铺满 480×270 的画面。画面里没有文字；字幕由游戏显示。panels_scene6 是第 6 张三格在这张图里的像素位置。",
+ "size": [
+  960,
+  540
+ ],
+ "scale": 2,
+ "scenes": [
+  "opening_hd_01_jianghu.png",
+  "opening_hd_02_ring.png",
+  "opening_hd_03_sect_glory.png",
+  "opening_hd_04_that_year.png",
+  "opening_hd_05_sect_now.png",
+  "opening_hd_06_three.png",
+  "opening_hd_07_dorm_rain.png"
+ ],
+ "panels_scene6": [
+  [
+   18,
+   18,
+   300,
+   504
+  ],
+  [
+   330,
+   18,
+   300,
+   504
+  ],
+  [
+   642,
+   18,
+   300,
+   504
+  ]
+ ]
+}

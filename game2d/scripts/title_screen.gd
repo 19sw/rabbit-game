@@ -19,6 +19,9 @@ const VIEW := Vector2(480, 270)
 
 var data: Dictionary
 var art: Dictionary
+## 坐姿-高清过场-运镜 方案 v1: the HD title rabbit (2x pixel density, pixel2d/title_hd -> assets/title/title_hd.json),
+## shown at scale 0.5 on the same feet; {} = the old 80x104 standee.
+var art_hd: Dictionary = {}
 var fx: Dictionary = {}           # kind -> TitleFx
 var standees: Dictionary = {}     # "rabbit" / "crane" -> AnimatedSprite2D
 var onlookers: Array[AnimatedSprite2D] = []
@@ -39,6 +42,13 @@ var confirm_buttons: Array[Button] = []
 var confirm_open := false
 var confirm_selected := 1             # 0 = 确定, 1 = 取消 (the safe answer first)
 var start_mode := ""                  # "new" | "continue" (tests)
+var lang_switch: LangSwitch           # 中英文切换 v1: 「中文 | English」 top right
+var logo_en: Label                    # the English name under the (Chinese) pixel logo, English only
+var replay_button: Button             # 开场过场动画 v1: 「重看序幕」 bottom-left (plays only the opening, data/opening.json)
+var replaying := false                # the opening is being re-watched (the title takes no input meanwhile)
+var opening: Opening                  # the opening playing over the title (新游戏 / 重看序幕), else null
+var naming: NamingPanel               # 改名与起名 v1: 新游戏 -> name the hero (before the opening); off -> 小兔 at once
+var _named := false                   # the name of this 新游戏 was chosen in the panel (else 小兔)
 
 
 func _ready() -> void:
@@ -47,8 +57,11 @@ func _ready() -> void:
 	if has_meta("data_override"):     # tests: build from an edited copy of title.json
 		data = get_meta("data_override")
 	art = JSON.parse_string(FileAccess.get_file_as_string(ART + "title_art.json"))
+	var hd = JSON.parse_string(FileAccess.get_file_as_string(ART + "title_hd.json")) if FileAccess.file_exists(ART + "title_hd.json") else null
+	if hd is Dictionary and hd.has("rabbit_hd") and ResourceLoader.exists(ART + String(hd["rabbit_hd"]["file"])):
+		art_hd = hd["rabbit_hd"]
 	name = "Title"
-	DisplayServer.window_set_title(str(data["title"]))
+	_set_window_title()
 	camera = Camera2D.new()
 	camera.position = VIEW * 0.5      # keeps the 480x270 picture centred when the window is wider / taller
 	add_child(camera)
@@ -60,10 +73,16 @@ func _ready() -> void:
 	has_save = SaveGame.exists()
 	_build_menu()
 	_build_confirm()
+	_build_replay()
+	naming = NamingPanel.new()
+	add_child(naming)
+	naming.confirmed.connect(_on_named)
+	naming.cancelled.connect(_on_naming_cancelled)
 	help = PauseMenu.new()
 	help.configure_as_help(str(data["help_title"]), str(data["help_back"]))
 	add_child(help)
 	help.closed.connect(_on_help_closed)
+	help.opened.connect(_on_help_opened)
 	fade_layer = CanvasLayer.new()
 	fade_layer.name = "Fade"
 	fade_layer.layer = 50
@@ -74,9 +93,44 @@ func _ready() -> void:
 	fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fade_layer.add_child(fade_rect)
 	select(index_of("continue") if has_save else index_of("start"))
+	Lang.sync_web()
+	lang_switch = LangSwitch.new()
+	add_child(lang_switch)
+	Lang.on_changed(_on_lang_changed)
+	_on_lang_changed(Lang.current())
 	get_viewport().size_changed.connect(_on_view_changed)
 	_on_view_changed()
 	print("title: ready (%s)" % data["title"])
+
+
+## 中英文切换 v1: the pixel logo stays Chinese (art); in English its name is written under it.
+func _on_lang_changed(_l: String) -> void:
+	_set_window_title()
+	if logo_en == null:
+		logo_en = Label.new()
+		logo_en.name = "LogoEnglish"
+		logo_en.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+		logo_en.add_theme_font_size_override("font_size", 11)
+		logo_en.add_theme_color_override("font_color", Color(1.0, 0.9, 0.6))
+		logo_en.add_theme_color_override("font_outline_color", Color(0.16, 0.1, 0.12))
+		logo_en.add_theme_constant_override("outline_size", 4)
+		logo_en.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		add_child(logo_en)
+	logo_en.text = Lang.t(str(data["title"]))
+	logo_en.visible = Lang.is_en()
+	var lg: Dictionary = data["logo"]
+	var under := float(lg["center"][1]) + 22.0
+	if logo != null:
+		under = logo.position.y + logo.texture.get_size().y * logo.scale.y + 1.0
+	var sz := logo_en.get_combined_minimum_size()
+	logo_en.position = Vector2(float(lg["center"][0]) - sz.x * 0.5, under).round()
+
+
+func _set_window_title() -> void:
+	var t := Lang.t(str(data["title"]))
+	DisplayServer.window_set_title(t)
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("document.title = %s" % JSON.stringify(t))
 
 
 # ------------------------------------------------------------------ building
@@ -210,12 +264,18 @@ func _build_effects() -> void:
 	add_child(stand)
 	var anchors := {}
 	for who in ["rabbit", "crane"]:
-		var info: Dictionary = art[who]
+		var info: Dictionary = art_hd if who == "rabbit" and not art_hd.is_empty() else art[who]
 		var s := AnimatedSprite2D.new()
 		s.name = who.capitalize()
 		s.sprite_frames = _standee_frames(info)
 		s.centered = false
 		s.offset = -Vector2(int(info["feet"][0]), int(info["feet"][1]))
+		if info.has("scale"):       # the HD rabbit: half size on the same feet, even pixels at the 3x window
+			s.scale = Vector2.ONE * float(info["scale"])
+			var m := ShaderMaterial.new()
+			m.shader = load("res://scripts/hd_pixel.gdshader")
+			s.material = m
+			s.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		var feet := Vector2(int(data["standees"][who]["feet"][0]), int(data["standees"][who]["feet"][1]))
 		s.position = feet
 		s.play("idle")
@@ -424,9 +484,42 @@ func _confirm_answer(yes: bool) -> void:
 	confirm_open = false
 	confirm_box.visible = false
 	if yes:
-		start_game("new")
+		ask_name()
 	else:
 		select(selected)
+
+
+## 改名与起名 v1: 新游戏 (after the overwrite question) first asks for the hero's name - the box comes filled with 小兔,
+## so 确定 / Enter right away keeps it; then the game starts as before (the opening, the prologue). Esc in the box goes
+## back to the menu: nothing started, an old save untouched. NamingPanel.enabled off (older tests) = 小兔 at once.
+func ask_name() -> void:
+	if starting:
+		return
+	PlayerName.reset()
+	if not NamingPanel.enabled:
+		start_game("new")
+		return
+	activations.append("naming")
+	_set_corner_buttons(false)
+	naming.open("new")
+
+
+func _on_named(_n: String) -> void:
+	_named = true
+	_set_corner_buttons(true)
+	start_game("new")
+
+
+func _on_naming_cancelled() -> void:
+	_set_corner_buttons(true)
+	select(selected)
+
+
+func _set_corner_buttons(on: bool) -> void:
+	if lang_switch:
+		lang_switch.visible = on
+	if replay_button:
+		replay_button.visible = on
 
 
 # ------------------------------------------------------------------ menu logic
@@ -465,7 +558,7 @@ func select(i: int) -> void:
 
 
 func activate(i: int) -> void:
-	if starting or help.is_open or confirm_open or not usable(i):
+	if starting or replaying or help.is_open or confirm_open or naming.is_open or not usable(i):
 		return
 	select(i)
 	var key: String = buttons[i].get_meta("key")
@@ -476,18 +569,30 @@ func activate(i: int) -> void:
 		if has_save:
 			open_confirm()
 		else:
-			start_game("new")
+			ask_name()
 	else:
 		help.open()
 
 
+## 中英文切换 v1: the corner switch would sit on the help page - hidden while it is open.
+func _on_help_opened() -> void:
+	if lang_switch:
+		lang_switch.visible = false
+	if replay_button:
+		replay_button.visible = false
+
+
 func _on_help_closed() -> void:
+	if lang_switch:
+		lang_switch.visible = true
+	if replay_button:
+		replay_button.visible = true
 	select(selected)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if starting or help.is_open:
-		return
+	if starting or replaying or help.is_open or naming.is_open:
+		return     # (the naming box: every key belongs to it - typed letters never move the menu)
 	if confirm_open:
 		if event.is_action_pressed("move_left", true) or event.is_action_pressed("move_right", true) \
 				or event.is_action_pressed("move_up", true) or event.is_action_pressed("move_down", true):
@@ -506,6 +611,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("interact", false) or _is_confirm_key(event):
 		activate(selected)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("move_left", false) or event.is_action_pressed("move_right", false):
+		Lang.toggle()                       # 中英文切换 v1: ← / → on the title switches the language
 		get_viewport().set_input_as_handled()
 	# Esc ("pause") is deliberately ignored here: there is nothing to pause on the title screen.
 
@@ -540,10 +648,72 @@ func start_game(mode := "new") -> void:
 			SaveGame.pending_broken = true
 	else:
 		SaveGame.erase()
+		if not _named:
+			PlayerName.reset()     # 改名与起名 v1: a new game without the naming box (tests) is 小兔
+	if SaveGame.pending_broken:
+		PlayerName.reset()         # the save could not be read: a fresh game, the default name
 	print("title: start (%s)" % mode)
 	var tw := create_tween()
 	tw.tween_property(fade_rect, "color:a", 1.0, float(data["fade_out_seconds"]))
-	tw.tween_callback(_enter_game)
+	tw.tween_callback(_after_fade_out)
+
+
+## 开场过场动画 v1: after the fade to black, 新游戏 first plays the opening (scripts/opening.gd), which then calls
+## _enter_game - the game is built only after it, so the prologue starts exactly as before. 继续游戏 goes straight in.
+func _after_fade_out() -> void:
+	if start_mode == "new" and Opening.enabled:
+		opening = Opening.play(self, _enter_game, "new")
+	else:
+		_enter_game()
+
+
+## 开场过场动画 v1: the small 「重看序幕」 button in the bottom-left corner (mouse; text / place in data/opening.json).
+func _build_replay() -> void:
+	var od = JSON.parse_string(FileAccess.get_file_as_string(Opening.DATA))
+	var rb: Dictionary = od["replay_button"]
+	replay_button = Button.new()
+	replay_button.name = "Replay"
+	replay_button.text = str(rb["text"])
+	replay_button.focus_mode = Control.FOCUS_NONE
+	replay_button.custom_minimum_size = Vector2(int(rb["size"][0]), int(rb["size"][1]))
+	replay_button.position = Vector2(int(rb["pos"][0]), int(rb["pos"][1]))
+	replay_button.add_theme_font_size_override("font_size", int(rb["font_size"]))
+	replay_button.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	var normal := _menu_box(Color(0.12, 0.09, 0.1, 0.55), Color(0.86, 0.7, 0.4, 0.45), 1)
+	normal.content_margin_left = 4
+	normal.content_margin_right = 4
+	var hover := _menu_box(Color(0.2, 0.14, 0.12, 0.8), Color(1.0, 0.86, 0.5, 0.9), 1)
+	hover.content_margin_left = 4
+	hover.content_margin_right = 4
+	for st in ["normal", "focus"]:
+		replay_button.add_theme_stylebox_override(st, normal)
+	for st in ["hover", "pressed", "hover_pressed"]:
+		replay_button.add_theme_stylebox_override(st, hover)
+	replay_button.add_theme_color_override("font_color", Color(0.9, 0.84, 0.72, 0.9))
+	for fc in ["font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
+		replay_button.add_theme_color_override(fc, Color(1.0, 0.93, 0.75))
+	replay_button.pressed.connect(replay)
+	add_child(replay_button)
+
+
+## 「重看序幕」: fade to black, play only the opening, then fade the title back in (nothing else changes).
+func replay() -> void:
+	if starting or replaying or help.is_open or confirm_open or naming.is_open:
+		return
+	replaying = true
+	activations.append("replay")
+	var tw := create_tween()
+	tw.tween_property(fade_rect, "color:a", 1.0, float(data["fade_out_seconds"]))
+	tw.tween_callback(func(): opening = Opening.play(self, _on_replay_done, "replay"))
+
+
+func _on_replay_done() -> void:
+	opening = null
+	var tw := create_tween()
+	tw.tween_property(fade_rect, "color:a", 0.0, float(data["fade_in_seconds"]))
+	tw.tween_callback(func():
+		replaying = false
+		select(selected))
 
 
 ## Swap this scene for a fresh scenes/main.tscn (the same way the engine would launch it directly), then fade in

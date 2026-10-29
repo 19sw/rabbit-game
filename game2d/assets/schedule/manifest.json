@@ -1,0 +1,42 @@
+{
+ "fox_asleep_bed": {
+  "file": "fox_asleep_bed.png",
+  "over": "senior_bed",
+  "rect": [
+   320,
+   58,
+   48,
+   80
+  ],
+  "room": "dorm_main",
+  "size": [
+   48,
+   80
+  ],
+  "sort_y": 132
+ },
+ "rabbit_sit": {
+  "file": "rabbit_sit.png",
+  "frame": [
+   32,
+   32
+  ],
+  "frames": 2,
+  "size": [
+   64,
+   32
+  ]
+ },
+ "regenerate": "cd pixel2d && .venv/bin/python schedule/tools/generate_schedule_art.py [--check]",
+ "seats_checked": [
+  "dorm_cushion_1",
+  "dorm_cushion_2",
+  "hall_futon_1",
+  "hall_futon_master",
+  "hall_futon_3",
+  "hall_futon_4",
+  "kitchen_stool",
+  "kitchen_bench"
+ ],
+ "sync": "pixel2d/.venv/bin/python game2d/tools/sync_assets.py  (-> game2d/assets/schedule/)"
+}

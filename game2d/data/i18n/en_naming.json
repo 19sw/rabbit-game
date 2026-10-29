@@ -1,0 +1,25 @@
+{
+  "_说明": "改名与起名 v1：起名框、Esc 页改名、门派簿名字行的英文，以及随机名字的英文（英文模式下“随机”显示这些；玩家起了这些名字后切到英文也显示它们）。格式同 en.json：lines 里 中文 -> English，{0} 是占位。主角是男性（he / him）。",
+  "lines": {
+    "给这只小兔起个名字吧": "Name this little rabbit",
+    "给他改个名字": "Give him a new name",
+    "最多 {0} 个汉字或 {1} 个字母": "Up to {1} letters ({0} Chinese characters)",
+    "随机": "Random",
+    "回车 确定 · Esc 返回": "Enter: OK · Esc: Back",
+    "改名（R）": "Rename (R)",
+    "名字改好了：{0}": "Name changed: {0}",
+    "名字：{0}": "Name: {0}",
+    "弟子：{0}": "Disciple: {0}",
+    "名字不能是空的": "The name can't be empty",
+    "名字太长了": "That name is too long",
+    "这个字显示不了，换一个吧": "That character can't be shown — try another",
+    "阿糯": "Mochi",
+    "白小楼": "Bai Xiaolou",
+    "月白": "Moonpale",
+    "团子": "Dumpling",
+    "云白": "Cloudy",
+    "长耳": "Longears",
+    "小满": "Xiaoman",
+    "豆豆": "Beanie"
+  }
+}

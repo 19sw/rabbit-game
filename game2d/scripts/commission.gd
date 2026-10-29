@@ -211,6 +211,8 @@ func accept(i: int) -> String:
 		return ""
 	if taken_count() >= int(Jianghu.rules().get("max_commission", 2)):
 		return ""
+	if main.get("schedule") != null and main.schedule.commission_asleep(String(offers[i]["kind"])):
+		return ""      # 坐下与人物作息 v1 F1: the person it needs is asleep (the board shows it grey)
 	var o: Dictionary = offers[i]
 	o["state"] = "taken"
 	o["step"] = 0
@@ -265,7 +267,7 @@ func turn_in(i: int) -> String:
 		print("commission: paid %s %d" % [k, coins])
 	jh.request_save("commission")
 	var kd: Dictionary = jh.data.get("kinds", {}).get(k, {})
-	return jh.ui("commission_paid") % [String(kd.get("client", "")), String(kd.get("thanks", "")), coins] + extra
+	return jh.ui("commission_paid") % [String(kd.get("client", "")), PlayerName.fill(String(kd.get("thanks", ""))), coins] + extra   # ({name}: 改名与起名 v1)
 
 
 ## A step done inside one of our scenes ("do": "jh", "op": "c_step", "cid": kind).

@@ -486,8 +486,12 @@ func _place_coin_panel() -> void:
 	var r := hp.get_global_rect()
 	coin_panel.position = Vector2(r.end.x + 4, r.position.y)
 	coin_panel.size = coin_panel.get_combined_minimum_size()
-	# the toast goes under the top row (HP bar + coins) so the coin counter never covers it
-	main.hud.set_toast_top(roundf(maxf(r.end.y, coin_panel.position.y + coin_panel.size.y) + 3.0))
+	# the toast goes under the top row (HP bar + coins) so the coin counter never covers it - and under the objective
+	# line too (新手指引 v1: the guide's objective reaches the middle of the screen, where the toast is centred)
+	var bottom := maxf(r.end.y, coin_panel.position.y + coin_panel.size.y)
+	if main.hud.objective.visible:
+		bottom = maxf(bottom, main.hud.objective.get_global_rect().end.y)
+	main.hud.set_toast_top(roundf(bottom + 3.0))
 
 
 func _check_income() -> void:

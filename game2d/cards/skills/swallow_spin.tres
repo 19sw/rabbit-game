@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SkillSpinStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/skill_spin_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+damage = 15
+radius = 48.0
+impact = 0.15
+length = 0.5
+knockback = 24.0
+stagger = 0.3
+cooldown = 4.0

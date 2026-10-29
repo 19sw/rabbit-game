@@ -28,6 +28,12 @@ var story: Story
 var sample: Sample              # 两条路小样 v1 (scripts/sample.gd): coins, repairs, the trial, saving
 var step3: Step3                # 第③步 (scripts/step3.gd): the 比武大会 ring, the first disciple
 var jianghu: Jianghu            # 第④步第一批 (scripts/jianghu.gd): the 江湖告示榜, 悬赏, 委托
+var guide: Guide                # 新手指引 v1 (scripts/guide.gd): the five steps, captions, tracking, the board's content
+var quest_board: QuestBoard     # 任务面板 (Q, scripts/quest_board.gd)
+var seats: Seats                # 坐下与人物作息 v1 (scripts/seats.gd): the 8 seats
+var schedule: Schedule          # 坐下与人物作息 v1 (scripts/schedule.gd): who sleeps when, 等到天亮
+var skills: Skills              # 武学与经营 第一批 · 武学 (A, scripts/skills.gd): U / I moves, 师父传功, max-HP bonuses
+var farm: Farm                  # 武学与经营 第一批 · 经营 (B, scripts/farm.gd): 菜园, 库房, 采集, 药膳
 var prompt_npc: Npc = null      # NPC whose prompt is showing
 var prompt_target: Dictionary = {}   # what E would use right now (Story.interaction_target())
 var camera_target: Node2D = null     # 序章 v1 ending: the camera rests on 师父 while the rabbit walks out
@@ -41,10 +47,12 @@ static func ensure_input_actions() -> void:
 	var keys := {
 		"move_up": [KEY_W, KEY_UP], "move_down": [KEY_S, KEY_DOWN],
 		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT],
-		"dash": [KEY_SPACE, KEY_SHIFT], "interact": [KEY_E], "attack": [KEY_J],
+		"dash": [KEY_SPACE, KEY_SHIFT], "interact": [KEY_E], "attack": [KEY_J], "gp": [KEY_K],
 		"choice_1": [KEY_1], "choice_2": [KEY_2], "choice_3": [KEY_3], "choice_4": [KEY_4], "sect_book": [KEY_B],
 		"toggle_ambience": [KEY_L], "toggle_hint": [KEY_H], "time_skip": [KEY_T], "pause": [KEY_ESCAPE],
 	}
+	keys.merge({"skill_1": [KEY_U], "skill_2": [KEY_I], "skill_3": [KEY_O]})   # 武学 (A): the move slots U / I (O: none yet)
+	keys.merge({"choice_5": [KEY_5]})   # 经营 (B): 派活 has a 5th option (种地) once the farm is open
 	for action in keys:
 		if InputMap.has_action(action):
 			continue
@@ -53,9 +61,9 @@ static func ensure_input_actions() -> void:
 			var ev := InputEventKey.new()
 			ev.physical_keycode = k
 			InputMap.action_add_event(action, ev)
-		if action == "attack":
+		if action == "attack" or action == "gp":
 			var mb := InputEventMouseButton.new()
-			mb.button_index = MOUSE_BUTTON_LEFT
+			mb.button_index = MOUSE_BUTTON_LEFT if action == "attack" else MOUSE_BUTTON_RIGHT   # 试玩反馈 v1: right = 格挡
 			InputMap.action_add_event(action, mb)
 
 
@@ -123,12 +131,31 @@ func _ready() -> void:
 	add_child(step3)
 	jianghu = Jianghu.new()
 	add_child(jianghu)
+	guide = Guide.new()
+	add_child(guide)
+	farm = Farm.new()               # 经营 (B): a child before Story.setup (it adds 厨娘's menu / 师弟's 种地 to the scenes)
+	add_child(farm)
 	story = Story.new()
 	add_child(story)
 	story.setup(self)
 	sample.setup(self)
 	step3.setup(self)
 	jianghu.setup(self)
+	guide.setup(self)
+	skills = Skills.new()           # 武学 (A): after the story (its 门派簿 page) and the guide, before the schedule / board
+	add_child(skills)
+	skills.setup(self)
+	farm.setup(self)                # 经营 (B): after the skills (门派簿 pages: 门派 · 武学 · 库房)
+	schedule = Schedule.new()
+	add_child(schedule)
+	schedule.setup(self)
+	quest_board = QuestBoard.new()
+	add_child(quest_board)
+	quest_board.setup(self)
+	seats = Seats.new()
+	add_child(seats)
+	seats.setup(self)
+	pause_menu.hero_renamed.connect(_on_renamed)     # 改名与起名 v1: Esc page 改名
 	# 两条路小样 v1 存档: 继续游戏 hands a checked saved state over (SaveGame.pending); otherwise the opening starts
 	var saved: Variant = SaveGame.pending
 	SaveGame.pending = null
@@ -212,6 +239,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		story.open_book_by_key()
 
 
+## 改名与起名 v1: renamed on the Esc page - a line on screen shows the new name at once, a short note after the page
+## closes, and the name goes into the save at the next calm moment (like any other change).
+func _on_renamed(n: String) -> void:
+	if story.dialogue != null:
+		story.dialogue.refresh_name()
+	hud.show_toast(PlayerName.ui("renamed").replace("{0}", n), 2.0)
+	sample.request_save("rename")
+
+
 func toggle_ambience() -> void:
 	ambience.toggle()
 	hud.show_toast(Hud.AMBIENCE_ON_TEXT if ambience.enabled else Hud.AMBIENCE_OFF_TEXT)
@@ -250,9 +286,22 @@ func _refresh_time_and_objective(delta := 0.0) -> void:
 	ambience.apply_look(blended_look(look, lamps), lamps)
 	interiors.apply_light(lamps, indoor_k if room != "" else 0.0, ambience.enabled)
 	hud.set_clock(daynight.clock_text())
-	hud.set_objective(objectives.hud_text(Hud.OBJECTIVE_PREFIX))
-	# minimap: centred on her, the room picture indoors; the star aims at the target / a room's door / her doorway
+	# 新手指引 v1: after the prologue the line shows the tracked item (the guide's step by default) - never 序章完成
+	var gt: Variant = guide.objective_text() if guide != null else null
+	if gt == null:
+		hud.set_objective(objectives.hud_text(Hud.OBJECTIVE_PREFIX))
+	else:
+		hud.set_objective(Hud.OBJECTIVE_PREFIX + String(gt) if String(gt) != "" else "")
+	var tw: Variant = guide.track_world() if guide != null else null
+	if tw == null:
+		tw = story.prologue_track()     # 试玩反馈 v1: 擦干地上的水 - the gold arrow at the rag, then at the puddle
+	if schedule != null:
+		tw = schedule.filter_target(tw)    # 坐下与人物作息 v1: never at somebody who is asleep
+	hud.minimap.set_track(interiors.minimap_target(tw, room) if tw != null else null)
+	# minimap: centred on him, the room picture indoors; the star aims at the target / a room's door / his doorway
 	var star: Variant = story.star_world()
+	if schedule != null:
+		star = schedule.filter_target(star)
 	var target: Variant = interiors.minimap_target(star, room) if star != null else null
 	var ct := get_viewport().get_canvas_transform()
 	var cover := [ct * player.global_position]

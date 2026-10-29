@@ -3,7 +3,7 @@ config_version=5
 
 [application]
 
-config/name="动物武侠 DEMO"
+config/name="山门小院"
 run/main_scene="res://scenes/title.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://assets/title/icon.png"
@@ -14,6 +14,8 @@ boot_splash/image="res://assets/title/boot.png"
 [autoload]
 
 ViewFit="*res://scripts/view_fit.gd"
+LangService="*res://scripts/lang.gd"
+AudioService="*res://scripts/audio_service.gd"
 
 [display]
 

@@ -17,6 +17,10 @@ extends Node
 ##              +win_coins, every wins_for_fame wins 名望 +1.  打扫: see daily.
 ## The effective job of a day is a pure function of the day (job_next from job_from), so the stall and the upkeep agree
 ## whatever order the nodes run in.
+## 武学与经营 第一批 (B): a 4th job 种地 ("farm", shown in 派活 only once the farm is open - show_if fm_farm_open): every 09:00 Farm
+## waters each planted plot not watered yet when job_on(that work day) == "farm"; he never sows or harvests. By day he
+## walks about the farm path with a bucket (farm.json disciple.walk_rects), at night the old dorm as always. The upkeep is
+## unchanged. Taking him in shows Farm's one-time hint (师弟可以派去种地…).
 
 var main: Node
 var s3: Step3
@@ -49,6 +53,7 @@ var _wait := 0.0
 var _stuck := 0.0
 var _last_pos := Vector2.ZERO
 var _rng := RandomNumberGenerator.new()
+var bucket_sprite: Sprite2D      # 武学与经营 第一批 (B): carried while he works the farm
 
 
 func _init() -> void:
@@ -75,6 +80,13 @@ func setup(m: Node, hub: Step3) -> void:
 		var t: Array = spec["tint"]
 		npc.sprite.self_modulate = Color(float(t[0]), float(t[1]), float(t[2]))
 	_set_present(false)
+	bucket_sprite = Sprite2D.new()
+	bucket_sprite.texture = load("res://assets/farm/bucket.png") if ResourceLoader.exists("res://assets/farm/bucket.png") else null
+	bucket_sprite.region_enabled = true
+	bucket_sprite.region_rect = Rect2(0, 0, 16, 16)
+	bucket_sprite.position = Vector2(10, -9)
+	bucket_sprite.visible = false
+	npc.add_child(bucket_sprite)
 
 
 func _set_present(on: bool) -> void:
@@ -214,6 +226,8 @@ func greeting() -> String:
 	if job_from >= 0 and job_from > work_day() and job == "none":
 		return String(g.get("pending", ""))
 	var j := job_today()
+	if j == "farm" and main.get("farm") != null:
+		return main.farm.ui("greeting_farm")
 	if j == "spar" and spars_left_today() <= 0:
 		return String(g.get("spar_used", ""))
 	return String(g.get(j, g.get("none", "")))
@@ -232,6 +246,8 @@ func accept() -> void:
 		s3.toast(s3.ui("joined_toast") % join_estate)
 	if OS.has_feature("web"):
 		print("disciple: joined")
+	if main.get("farm") != null:
+		main.farm.on_disciple_joined()      # 武学与经营 第一批 (B): the one-time 种地 hint
 	s3.request_save("disciple")
 
 
@@ -242,9 +258,11 @@ func think() -> void:
 ## "do": "disciple_job": from the next 08:00 on.
 func assign(j: String, token: int) -> void:
 	var story: Story = main.story
-	if not (j in ["cook", "spar", "sweep"]):
+	if not (j in ["cook", "spar", "sweep", "farm"]):
 		return
 	if j == "cook" and not s3.sample.is_repaired("kitchen"):
+		return
+	if j == "farm" and not farm_open():
 		return
 	var pending := job_next if job_from >= 0 else job
 	var sc := "D-师弟-派活-same" if j == pending else "D-师弟-派活-" + j
@@ -338,6 +356,8 @@ func _want_place() -> String:
 			var h: float = main.daynight.hour
 			if h < float(Economy.disciple_int("day_hour")) or h >= float(Economy.disciple_int("night_hour")):
 				return "night"
+			if job_today() == "farm" and farm_open():
+				return "farm"
 			return "spar" if job_today() == "spar" else "yard"
 	return "hidden"
 
@@ -370,6 +390,8 @@ func _go_to_place() -> void:
 			dir = String(spec.get("gate_dir", "up"))
 		"yard":
 			pos = _v("yard_home", [470, 1000])
+		"farm":
+			pos = _farm_v("home", [1712, 1040])
 		"spar":
 			pos = _v("spar_spot", [1350, 880])
 			dir = "left"
@@ -378,13 +400,14 @@ func _go_to_place() -> void:
 	npc.home = pos
 	npc.home_dir = dir
 	npc.reset_home(true)
+	bucket_sprite.visible = place == "farm"
 	_target = Vector2.INF
 	_wait = _rng.randf_range(0.5, 2.0)
 
 
 ## Daytime in the dorm yard: walk to a random free point of the yard rectangles (straight lines only), rest, again.
 func _physics_process(delta: float) -> void:
-	if main == null or place != "yard" or not npc.visible or npc.engaged:
+	if main == null or not (place == "yard" or place == "farm") or not npc.visible or npc.engaged:
 		return
 	var c: Combat = main.combat
 	var p: Player = main.player
@@ -426,13 +449,20 @@ func _physics_process(delta: float) -> void:
 
 func _pick_target() -> Vector2:
 	var rects: Array = spec.get("yard_rects", [])
+	var on_farm: bool = place == "farm" and main.get("farm") != null
+	if on_farm:
+		rects = main.farm.walk_rects()      # 菜园扩建 v1: the whole field once expanded
 	var nav: NavGrid = main.combat.nav
 	for i in 12:
 		if rects.is_empty():
 			break
 		var r: Array = rects[_rng.randi() % rects.size()]
 		var q := Vector2(_rng.randf_range(float(r[0]), float(r[0]) + float(r[2])), _rng.randf_range(float(r[1]), float(r[1]) + float(r[3])))
-		if nav == null or nav.line_clear(npc.global_position, q):
+		if on_farm:
+			# (the nav grid is built once from the map, where the whole field is solid: Farm knows what is open now)
+			if main.farm.walk_clear(npc.global_position, q):
+				return q
+		elif nav == null or nav.line_clear(npc.global_position, q):
 			return q
 	return Vector2.INF
 
@@ -458,7 +488,18 @@ func book_entries(track: String) -> Array:
 
 
 func job_name(j: String) -> String:
+	if j == "farm" and main.get("farm") != null:
+		return main.farm.ui("job_farm")     # 武学与经营 第一批 (B)
 	return String(s3.data.get("ui", {}).get("job_names", {}).get(j, j))
+
+
+func farm_open() -> bool:
+	return main.get("farm") != null and main.farm.opened
+
+
+func _farm_v(key: String, def: Array) -> Vector2:
+	var a: Array = main.farm.data.get("disciple", {}).get(key, def) if main.get("farm") != null else def
+	return Vector2(float(a[0]), float(a[1]))
 
 
 func book_lines() -> Array:
@@ -531,6 +572,6 @@ static func validate(d: Variant) -> String:
 	if not (d.get("asked") is bool):
 		return "bad step3.disciple.asked"
 	for k in ["job", "job_next"]:
-		if not (String(d.get(k, "")) in ["none", "cook", "spar", "sweep"]):
+		if not (String(d.get(k, "")) in ["none", "cook", "spar", "sweep", "farm"]):
 			return "bad step3.disciple." + k
 	return ""

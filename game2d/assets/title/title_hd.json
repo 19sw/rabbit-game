@@ -1,0 +1,22 @@
+{
+ "_说明": "由 pixel2d/title_hd/tools/generate_title_hd.py 生成，不要手改。高清封面小兔：像素密度是旧图的 2 倍，游戏里按 0.5 倍显示（scale），脚底位置和旧图相同。feet = 脚底中心在帧里的像素位置（高清帧）。",
+ "art_source": "code",
+ "disclosure": "code-drawn, no image model (codeart2d PixelSpec)",
+ "qa": "pass",
+ "rabbit_hd": {
+  "faces": "right",
+  "feet": [
+   80,
+   200
+  ],
+  "file": "rabbit_standee_hd.png",
+  "fps": 3.0,
+  "frame_size": [
+   160,
+   208
+  ],
+  "frames": 4,
+  "replaces": "rabbit_standee.png",
+  "scale": 0.5
+ }
+}

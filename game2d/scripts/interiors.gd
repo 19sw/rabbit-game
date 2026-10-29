@@ -5,9 +5,9 @@ extends Node2D
 ## with its own picture (assets/interiors/<id>.png), y-sorted furniture cutouts (<id>_front.png), wall tops drawn
 ## above the characters (<id>_over.png) and collision boxes (rooms.json, written by pixel2d/interiors/tools/
 ## generate_interiors.py). Walking into an outdoor door (towards it) fades out, moves the rabbit just inside the room
-## door, fades in; walking out of the room door does the reverse. The room the player is in is worked out from her
+## door, fades in; walking out of the room door does the reverse. The room the player is in is worked out from him
 ## position every frame, so the camera limits, the minimap (building position), the indoor light and the doors always
-## agree with where she really is (after a door, a respawn or a test teleport alike).
+## agree with where he really is (after a door, a respawn or a test teleport alike).
 ## Also: the opening in bed (asleep -> the drip -> sitting up -> out of bed) and the leaking roof drips of the dorm.
 ## 打磨 v1: light = unlit room picture + a time-controlled additive daylight layer (<id>_light.png: window / door light,
 ## shafts) + night light sources per room (rooms.json "lights": oil lamp, candles, 长明灯, stove fire, faint moonlight);
@@ -23,7 +23,7 @@ const ROOMS := "res://assets/interiors/rooms.json"
 const BACKDROP := Color(0.118, 0.086, 0.07)     # dark wall-top brown around a room (never an empty void)
 const BACKDROP_MARGIN := 720.0
 const ENTER_INSET := 18.0                        # px inside the room door where the rabbit appears
-const EXIT_OUT := 22.0                           # px below the outdoor wall foot where she appears outside
+const EXIT_OUT := 22.0                           # px below the outdoor wall foot where he appears outside
 const TRIGGER_DEPTH := 12.0                      # outdoor trigger strip below the wall foot
 const ROOM_GROW := 64.0                          # a point this close to a room still counts as inside it
 const SIT_Y := 92.0                              # player node y (room px) while sitting up in bed / lying
@@ -58,6 +58,7 @@ var overflowing := false
 var pours := 0
 var bucket_drops := 0
 var rag_sprite: Sprite2D
+var rag_glow: RagGlow            # 试玩反馈 v1: blinking bright edge + gold sparkles on the rag (child of rag_sprite)
 var wardrobe_open_sprite: Sprite2D
 var wardrobe_is_open := false
 var bucket_water: BucketWater
@@ -379,7 +380,7 @@ func exit_spot(id: String) -> Vector2:
 	return Vector2(d["x"], float(d["bottom"]) + EXIT_OUT)
 
 
-## Where she stands after entering (just inside the room door).
+## Where he stands after entering (just inside the room door).
 func entry_spot(id: String) -> Vector2:
 	var dd: Dictionary = rooms[id]["def"]["doors"][0]
 	var x := (float(dd["x0"]) + float(dd["x1"])) * 0.5
@@ -406,7 +407,7 @@ func indoor_trigger(id: String) -> Rect2:
 
 ## 打磨 v1 minimap star: where the star aims for a target at world point `target` while the player is in `player_room`:
 ## same place (outdoors / same room) -> the target itself; target in a room, player outdoors -> that room's outdoor door;
-## player indoors, target elsewhere -> her room's doorway, always on the rim ("go out of the door").
+## player indoors, target elsewhere -> his room's doorway, always on the rim ("go out of the door").
 func minimap_target(target: Vector2, player_room: String) -> Dictionary:
 	var tr := room_at(target)
 	if player_room == "":
@@ -486,7 +487,7 @@ static func shaft_look(lamps: float) -> Color:
 
 
 ## Every frame (main): lamp level of the hour, how far the player is "inside" (0 outdoors .. 1 indoors, eased over the
-## door fade so nothing jumps), ambience on/off. Lights of the room she is in glow with the lamp level; the daylight
+## door fade so nothing jumps), ambience on/off. Lights of the room he is in glow with the lamp level; the daylight
 ## layers follow the hour.
 func apply_light(level: float, inside_k: float, on: bool) -> void:
 	night_level = level
@@ -594,7 +595,7 @@ func _transition(to: Vector2, facing: String, from_room: String, to_room: String
 	transition_finished.emit(current)
 
 
-## Instantly puts the rabbit outside a room's door (after the ending: she walked out of the hall).
+## Instantly puts the rabbit outside a room's door (after the ending: he walked out of the hall).
 func place_outside(id: String) -> void:
 	var p: Player = main.player
 	p.global_position = exit_spot(id)
@@ -609,12 +610,12 @@ func opening_room() -> String:
 	return String(cfg.get("opening_room", "dorm_main"))
 
 
-## Where the rabbit lies (node position: her head on the pillow).
+## Where the rabbit lies (node position: his head on the pillow).
 func bed_world() -> Vector2:
 	return world_point(opening_room(), Vector2(HEAD_X, SIT_Y))
 
 
-## Where she stands after getting up ([start] of the dorm layout).
+## Where he stands after getting up ([start] of the dorm layout).
 func getup_world() -> Vector2:
 	var s: Array = rooms[opening_room()]["def"]["start"]
 	return world_point(opening_room(), Vector2(s[0], s[1]))
@@ -673,7 +674,7 @@ func bucket_overflow() -> void:
 	await get_tree().create_timer(0.15, false).timeout
 
 
-## "……嗯？什么声音……": she sits up behind the quilt (startled by the splash).
+## "……嗯？什么声音……": he sits up behind the quilt (startled by the splash).
 func sit_up() -> void:
 	_set_bed("sitting")
 	var p: Player = main.player
@@ -686,7 +687,7 @@ func sit_up() -> void:
 	await tw.finished
 
 
-## Out of bed: she hops to the floor beside the bed; the quilt stays thrown back.
+## Out of bed: he hops to the floor beside the bed; the quilt stays thrown back.
 func get_up() -> void:
 	var p: Player = main.player
 	_set_bed("empty")
@@ -729,6 +730,9 @@ func _build_dorm_water() -> void:
 		rag_sprite.position = o + Vector2(rr[0], rr[1])
 		rag_sprite.name = "Rag"
 		ground_node.add_child(rag_sprite)
+		rag_glow = RagGlow.new()
+		rag_glow.setup(front, Rect2(v["rag"]["atlas"][0], v["rag"]["atlas"][1], v["rag"]["atlas"][2], v["rag"]["atlas"][3]))
+		rag_sprite.add_child(rag_glow)        # hidden with the rag once it is taken
 	if v.has("wardrobe_open") and room["furniture"].has("wardrobe"):
 		var ws: Sprite2D = room["furniture"]["wardrobe"]
 		wardrobe_open_sprite = _atlas_sprite(front, v["wardrobe_open"]["atlas"])
@@ -769,7 +773,7 @@ func wipe_to(n: int) -> void:
 	await tw.finished
 
 
-## 画面：小兔把木桶里的水倒掉，放回原处。 - she steps to the bucket, it empties; it goes on catching drops (to the cap).
+## 画面：小兔把木桶里的水倒掉，放回原处。 - he steps to the bucket, it empties; it goes on catching drops (to the cap).
 func pour_bucket() -> void:
 	var w: Dictionary = Tuning.data()["dorm_water"]
 	var p: Player = main.player
@@ -890,6 +894,97 @@ class PuddleDraw extends Node2D:
 			var c: Vector2 = mid + (b[0] - mid) * s
 			if b[1] * s > 4.0:
 				draw_rect(Rect2((c + Vector2(-b[1] * s * 0.5, -b[2] * s * 0.5)).round(), Vector2(maxf(1.0, 4.0 * s), 1)), Interiors.WA[3])
+
+
+# ================================================================== 试玩反馈 v1: the rag stands out
+## A bright 1-px edge around the rag's opaque pixels that pulses (PULSE s), and gold sparkles rising above it and fading.
+## Drawn in code over the rag (local coordinates = the rag sprite's, top-left of its picture).
+class RagGlow extends Node2D:
+	const PULSE := 1.2
+	const EDGE := Color(1.0, 0.95, 0.62)
+	const GOLD := Color(1.0, 0.84, 0.25)
+	const SPARKS := 5
+	const SPARK_LIFE := 1.1
+	var edge: PackedVector2Array = []     # pixels just outside the rag
+	var halo: PackedVector2Array = []     # one pixel further out (a soft second ring)
+	var size := Vector2.ZERO
+	var t := 0.0
+
+	func setup(tex: Texture2D, region: Rect2) -> void:
+		name = "RagGlow"
+		size = region.size
+		var img := tex.get_image()
+		if img == null:
+			return
+		if img.is_compressed():
+			img.decompress()
+		var w := int(region.size.x)
+		var h := int(region.size.y)
+		var solid := {}
+		for y in h:
+			for x in w:
+				var px := Vector2i(int(region.position.x) + x, int(region.position.y) + y)
+				if px.x < img.get_width() and px.y < img.get_height() and img.get_pixelv(px).a > 0.5:
+					solid[Vector2i(x, y)] = true
+		var ring1 := _ring(solid)
+		for p in ring1:
+			edge.append(Vector2(p))
+		var inner := solid.duplicate()
+		for p in ring1:
+			inner[p] = true
+		for p in _ring(inner):
+			halo.append(Vector2(p))
+
+	## Pixels next to (4-neighbours of) the set that are not in it.
+	func _ring(set_: Dictionary) -> Array:
+		var out := {}
+		for p in set_:
+			for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+				var q: Vector2i = p + d
+				if not set_.has(q):
+					out[q] = true
+		return out.keys()
+
+	## 0..1 brightness of the edge now.
+	func pulse() -> float:
+		return 0.5 + 0.5 * sin(t * TAU / PULSE)
+
+	## Sparkle i: [position (local), alpha].
+	func spark(i: int) -> Array:
+		var ph := fmod(t / SPARK_LIFE + float(i) / float(SPARKS), 1.0)
+		var x := size.x * (0.1 + 0.8 * fmod(float(i) * 0.618 + floor(t / SPARK_LIFE + float(i) / float(SPARKS)) * 0.37, 1.0))
+		return [Vector2(round(x), round(-1.0 - 12.0 * ph)), sin(ph * PI)]
+
+	func _process(delta: float) -> void:
+		t += delta
+		queue_redraw()
+
+	func _draw() -> void:
+		var k := pulse()
+		var c := EDGE
+		c.a = 0.45 + 0.55 * k
+		for p in edge:
+			draw_rect(Rect2(p, Vector2.ONE), c)
+		var hc := EDGE
+		hc.a = 0.12 + 0.3 * k
+		for p in halo:
+			draw_rect(Rect2(p, Vector2.ONE), hc)
+		for i in SPARKS:
+			var sp: Array = spark(i)
+			var a := float(sp[1])
+			var at: Vector2 = sp[0]
+			var g := GOLD
+			g.a = a
+			draw_rect(Rect2(at, Vector2.ONE), Color(1.0, 0.98, 0.85, a))      # white-hot centre
+			var g2 := g
+			g2.a = a * 0.85
+			for d in [Vector2(-1, 0), Vector2(1, 0), Vector2(0, -1), Vector2(0, 1)]:
+				draw_rect(Rect2(at + d, Vector2.ONE), g2)
+			if a > 0.7:                  # a longer twinkle at its brightest
+				var g3 := g
+				g3.a = (a - 0.7) * 2.0
+				for d in [Vector2(-2, 0), Vector2(2, 0), Vector2(0, -2), Vector2(0, 2)]:
+					draw_rect(Rect2(at + d, Vector2.ONE), g3)
 
 
 # ================================================================== night light flames

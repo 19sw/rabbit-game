@@ -186,14 +186,18 @@ func test_composition() -> void:
 		and art["crane"]["faces"] == "left", "title AC2: rabbit on the left facing right, crane on the right facing left",
 		"%s / %s" % [rb.global_position, cr.global_position])
 	var tex: Texture2D = rb.sprite_frames.get_frame_texture("idle", 0)
-	r.check(tex.get_height() == int(art["rabbit"]["frame_size"][1]) and rb.sprite_frames.get_frame_count("idle") >= 2
+	# 坐姿-高清过场-运镜 v1: the rabbit's frames come from title_hd.json when the HD standee is there (2x frame size,
+	# scale 0.5) - compare with the frame size actually in use (was: always title_art.json's 80x104)
+	var rinfo: Dictionary = title.art_hd if not title.art_hd.is_empty() else art["rabbit"]
+	r.check(tex.get_height() == int(rinfo["frame_size"][1]) and rb.sprite_frames.get_frame_count("idle") >= 2
 		and rb.is_playing() and cr.is_playing(), "title AC2: standees play their idle (breathing) frames")
 	# standees fully on screen, the logo above them, the menu below their heads
 	var view := Rect2(Vector2.ZERO, TitleScreen.VIEW)
 	var ok_view := true
 	for s in [rb, cr]:
 		var fr: Texture2D = s.sprite_frames.get_frame_texture("idle", 0)
-		ok_view = ok_view and view.encloses(Rect2(s.global_position + s.offset, fr.get_size()))
+		# on screen = offset and frame size times the sprite's scale (the HD rabbit is drawn at 0.5; the crane at 1)
+		ok_view = ok_view and view.encloses(Rect2(s.global_position + s.offset * s.scale, fr.get_size() * s.scale))
 	r.check(ok_view, "title AC2: standees are fully inside the 480x270 picture")
 	var ids := []
 	var scaled_ok := true
@@ -320,12 +324,12 @@ func test_settings_from_data() -> void:
 	await r.process_frame
 	# renaming the game: a title text that the pixel logo was not regenerated for is still shown correctly (as text)
 	var renamed := tdata.duplicate(true)
-	renamed["title"] = "动物武侠"
+	renamed["title"] = "测试"     # (改名与起名 R1: was 动物武侠 - its English entry is gone; 测试 is a known test-only text)
 	var t3: TitleScreen = load("res://scenes/title.tscn").instantiate()
 	t3.set_meta("data_override", renamed)
 	r.root.add_child(t3)
 	await r.frames(2)
-	var renamed_ok: bool = t3.logo == null and t3.logo_label != null and t3.logo_label.text == "动物武侠"
+	var renamed_ok: bool = t3.logo == null and t3.logo_label != null and t3.logo_label.text == "测试"
 	t3.queue_free()
 	await r.process_frame
 	r.check(renamed_ok, "title AC6: a new title text is never shown with the old logo (falls back to text until the logo is regenerated)")
@@ -443,7 +447,7 @@ func test_start_keyboard_and_identical_state() -> void:
 	if main == null:
 		return
 	var data: Dictionary = main.data
-	# 室内图进游戏 v1 (script v3): the game starts inside the dorm, the rabbit asleep in her bed (no longer at the
+	# 室内图进游戏 v1 (script v3): the game starts inside the dorm, the rabbit asleep in his bed (no longer at the
 	# outdoor spawn in front of the dorm door) - same check, the start spot moved
 	var sp: Vector2 = main.interiors.bed_world()
 	var snap: Dictionary = box.get("snap", {})

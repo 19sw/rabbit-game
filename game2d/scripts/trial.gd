@@ -5,7 +5,7 @@ extends Node
 ##   - 12 poles light one at a time; standing on the lit one (foot inside step_radius of its step point) marks it done
 ##     and lights the next; the last one finishes the run.
 ##   - 2 wooden dummies turn (two opposite arms, arm_length from the foot); an arm over the rabbit's feet is a hit through
-##     Player.take_damage (8, stun) - so the dodge's i-frames (and the short protection after a hit) let her through.
+##     Player.take_damage (8, stun) - so the dodge's i-frames (and the short protection after a hit) let him through.
 ##   - the clock: time_limit -> 超时 (fail). HP down to fail_hp_fraction -> 这次失败, HP refilled. Esc page: 放弃试炼.
 ##   - finished: medal by time (gold / silver / bronze lines), rewards via Sample.reward_trial (first time per tier coins
 ##     + 名望, afterwards the repeat reward).

@@ -11,15 +11,20 @@ What it does (writes ONLY inside game2d/, never into pixel2d/):
        assets/map/map_data.json   object placements, collision rectangles, lantern lights, spawn, NPCs
   2. Copies the 32x32 character sprite sheets from pixel2d/characters/output/sprites/, and (when present) the combat
      action sheets + effect sheets from pixel2d/characters/output/combat/ and fx/.
-  3. Re-renders the small Chinese UI bitmap font (fonts/ui_font.fnt/.png) if the text used by the game changed.
+  3. Re-renders the small Chinese UI bitmap font (fonts/ui_font.fnt/.png) if the text used by the game changed
+     (改名与起名 v1: always with all 3755 GB2312 level-1 hanzi, so any common character can be typed as a name).
   4. Checks that ground + objects put back together equals pixel2d/output/region1_map.png.
   7. 第③步: copies pixel2d/step3/output (four characters, combat sheets, ring layers, notice board, manifest).
   8. 第④步第一批: copies pixel2d/step4a/output (黄鼠狼 / 黑虎 + rage sheets, chick, 江湖告示榜 and props, manifest).
+  10. 坐下与人物作息 v1: copies pixel2d/schedule/output (小兔坐姿 rabbit_sit, 师兄 asleep fox_asleep_bed, manifest) to
+     assets/schedule/.
+  9. 音效 + 背景音乐 v1: copies audio/output (audio/tools/generate_audio.py: sfx/*.wav, music/*.wav, manifest.json) to
+     assets/audio/.
   6. 室内图进游戏 v1: copies the game layers of the interiors (pixel2d/interiors/output/game/: <room>.png base,
      <room>_front.png furniture cutouts, <room>_over.png wall tops, rooms.json) to assets/interiors/.
   5. Title screen (启动画面): copies pixel2d/title/output/ (standees, backdrop layers, mist, leaves) to assets/title/,
-     renders the pixel title logo from data/title.json ("title") -> assets/title/title_logo.png (+ .json stamp of the
-     text), the project icon / boot image, and the web loading page web/shell.html from web/shell_template.html
+     the pixel title logo -> assets/title/title_logo.png (+ .json stamp of the text): 改名与起名 v1 copies the brush logo
+     of pixel2d/title/logo/output/ when its text is data/title.json "title", else renders one from that text, the project icon / boot image, and the web loading page web/shell.html from web/shell_template.html
      (export_presets.cfg uses it as html/custom_html_shell: no Godot logo while the page loads).
 """
 import base64
@@ -724,6 +729,112 @@ def sync_step4a():
     print(f"  step 4a: {n} files (黄鼠狼 / 黑虎 sheets + rage sheets, portraits, combat sheets; chick; board + props; aura)")
 
 
+# ------------------------------------------------------------------ 坐下与人物作息 v1 (pixel2d/schedule, read only)
+SCHEDULE_SRC = os.path.join(PIX, "schedule", "output")
+SCHEDULE_DIR = os.path.join(GAME, "assets", "schedule")
+
+
+def sync_schedule_art():
+    """坐下与人物作息 v1: pixel2d/schedule/output (pixel2d/schedule/tools/generate_schedule_art.py) -> assets/schedule/:
+    rabbit_sit.png + .json (小兔坐姿, 2 frames), fox_asleep_bed.png (师兄 asleep in his bed, 48x80 like bed_messy),
+    manifest.json (overview.png stays behind). Missing source = the game uses the idle frame / the empty bed."""
+    if not os.path.isdir(SCHEDULE_SRC):
+        print("  schedule: nothing in pixel2d/schedule/output (the game uses the idle frame and the empty bed)")
+        return
+    os.makedirs(SCHEDULE_DIR, exist_ok=True)
+    n = 0
+    for fn in ("rabbit_sit.png", "rabbit_sit.json", "fox_asleep_bed.png", "manifest.json"):
+        sp = os.path.join(SCHEDULE_SRC, fn)
+        if os.path.isfile(sp):
+            shutil.copyfile(sp, os.path.join(SCHEDULE_DIR, fn))
+            n += 1
+    print(f"  schedule: {n} files (小兔坐姿, 师兄 asleep in his bed, manifest)")
+
+
+# ------------------------------------------------------------------ 武学与经营 第一批 · 武学 (A): pixel2d/skills_fx/output
+SKILLS_FX_SRC = os.path.join(PIX, "skills_fx", "output")
+SKILLS_FX_DIR = os.path.join(GAME, "assets", "skills")
+
+
+def sync_skills_fx():
+    """武学 (A): pixel2d/skills_fx/output (pixel2d/skills_fx/tools/generate_skills_fx.py, the pixel-vfx native backend) ->
+    assets/skills/: <name>/sheet.png + sheet.json as <name>.png / <name>.json (spin_ring, spin_arc, snow_mark, tuna_ring,
+    icons) and manifest.json. Missing source = the game draws no sprite effect for the skills (never fails)."""
+    if not os.path.isdir(SKILLS_FX_SRC):
+        print("  skills fx: nothing in pixel2d/skills_fx/output")
+        return
+    os.makedirs(SKILLS_FX_DIR, exist_ok=True)
+    n = 0
+    for name in sorted(os.listdir(SKILLS_FX_SRC)):
+        d = os.path.join(SKILLS_FX_SRC, name)
+        if not os.path.isdir(d):
+            continue
+        for src, dst in (("sheet.png", name + ".png"), ("sheet.json", name + ".json")):
+            if os.path.isfile(os.path.join(d, src)):
+                shutil.copyfile(os.path.join(d, src), os.path.join(SKILLS_FX_DIR, dst))
+                n += 1
+    if os.path.isfile(os.path.join(SKILLS_FX_SRC, "manifest.json")):
+        shutil.copyfile(os.path.join(SKILLS_FX_SRC, "manifest.json"), os.path.join(SKILLS_FX_DIR, "manifest.json"))
+        n += 1
+    print(f"  skills fx: {n} files (燕回旋 尘环 / 腿影, 雪花印, 吐纳光字环, U/I 图标)")
+
+
+# ------------------------------------------------------------------ 武学与经营 第一批 · 经营 (B): pixel2d/farm/output
+FARM_SRC = os.path.join(PIX, "farm", "output")
+FARM_DIR = os.path.join(GAME, "assets", "farm")
+FARM_FILES = ("farm_weeds.png", "farm_tilled.png", "plot_wet.png", "crops.png", "ripe_sparkle.png", "gather_shoots.png",
+              "gather_herbs.png", "bucket.png", "note.png", "manifest.json")
+
+
+def sync_farm_art():
+    """经营 (B): pixel2d/farm/output (pixel2d/farm/tools/generate_farm_art.py) -> assets/farm/: the field's weed / tilled
+    layers, the wet plot, the crop stages, the ripe sparkle, the gathering glints, the bucket, 师兄's note, manifest.json
+    (overview.png stays behind). Missing source = the game draws simple stand-ins (never fails)."""
+    if not os.path.isdir(FARM_SRC):
+        print("  farm: nothing in pixel2d/farm/output")
+        return
+    os.makedirs(FARM_DIR, exist_ok=True)
+    n = 0
+    for fn in FARM_FILES:
+        sp = os.path.join(FARM_SRC, fn)
+        if os.path.isfile(sp):
+            shutil.copyfile(sp, os.path.join(FARM_DIR, fn))
+            n += 1
+    print(f"  farm: {n} files (杂草层 / 翻土层, 湿土, 作物, 闪光, 水桶, 字条)")
+
+
+# ------------------------------------------------------------------ 音效 + 背景音乐 v1 (audio/output, read only)
+AUDIO_SRC = os.path.join(ROOT, "audio", "output")
+AUDIO_DIR = os.path.join(GAME, "assets", "audio")
+
+
+def sync_audio():
+    """音效 + 背景音乐 v1: audio/output (audio/tools/generate_audio.py) -> assets/audio/: the 12 sound effects sfx/*.wav,
+    the 4 music loops music/*.wav and manifest.json (report.md stays behind). Missing source = the game is silent (the
+    AudioService skips sounds it cannot load), so this never fails."""
+    if not os.path.isdir(AUDIO_SRC):
+        print("  audio: nothing in audio/output (the game stays silent)")
+        return
+    pairs = []
+    for sub in ("sfx", "music"):
+        for f in sorted(glob.glob(os.path.join(AUDIO_SRC, sub, "*.wav"))):
+            pairs.append((os.path.relpath(f, AUDIO_SRC), os.path.join(AUDIO_DIR, sub, os.path.basename(f))))
+    pairs.append(("manifest.json", os.path.join(AUDIO_DIR, "manifest.json")))
+    if os.path.isdir(AUDIO_DIR):
+        for f in glob.glob(os.path.join(AUDIO_DIR, "*", "*.wav")) + [os.path.join(AUDIO_DIR, "manifest.json")]:
+            if os.path.isfile(f) and not os.path.isfile(os.path.join(AUDIO_SRC, os.path.relpath(f, AUDIO_DIR))):
+                os.remove(f)                      # a sound that is no longer generated (Godot's .import files stay)
+    n = 0
+    for src, dst in pairs:
+        sp = os.path.join(AUDIO_SRC, src)
+        if not os.path.isfile(sp):
+            continue
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        shutil.copyfile(sp, dst)
+        n += 1
+    print(f"  audio: {n} files (sound effects, music loops, manifest)")
+
+
 # ------------------------------------------------------------------ font
 # 打磨 v1 fix round: the font lives in the project (game2d/fonts/source/, SIL OFL 1.1 - see OFL.txt there). Only this
 # copy is used; nothing outside the project is ever read for it.
@@ -738,10 +849,24 @@ def font_source():
     return FONT_SOURCE
 
 
+def gb2312_level1():
+    """改名与起名 v1: every GB2312 level-1 hanzi (3755 common characters) - the player may name the hero with any of
+    them. Derived offline from the Python codec: rows 0xB0-0xD7, columns 0xA1-0xFE; invalid code points skipped."""
+    out = set()
+    for hi in range(0xB0, 0xD8):
+        for lo in range(0xA1, 0xFF):
+            try:
+                out.add(bytes([hi, lo]).decode("gb2312"))
+            except UnicodeDecodeError:
+                pass
+    return out
+
+
 def used_characters():
     chars = set(chr(c) for c in range(0x20, 0x7F))
     chars |= set("，。！？、；：“”‘’（）【】《》…—·～")
-    pats = ["scripts/*.gd", "scenes/*.tscn", "assets/map/map_data.json", "data/*.json", "cards/*.tres"]
+    chars |= gb2312_level1()
+    pats = ["scripts/*.gd", "scenes/*.tscn", "assets/map/map_data.json", "data/*.json", "data/i18n/*.json", "cards/*.tres"]
     for pat in pats:
         for fn in glob.glob(os.path.join(GAME, pat)):
             with open(fn, encoding="utf-8") as f:
@@ -773,8 +898,9 @@ def build_font():
         im = Image.new("L", (w, h), 0)
         ImageDraw.Draw(im).text((pad - bb[0], pad - bb[1]), ch, font=font, fill=255, anchor="ls")
         glyphs.append((ch, im, bb[0] - pad, ascent + bb[1] - pad, adv))
-    # shelf packing
-    page_w = 512
+    # shelf packing (改名与起名 v1: 2048 wide - with the 3755 common hanzi a 512-wide page would be 16384 tall; 2048 keeps
+    # the single page at 4096, the height the font already needed)
+    page_w = 2048
     x = y = row_h = 0
     pos = {}
     for ch, im, *_ in glyphs:
@@ -837,6 +963,38 @@ def sync_title_art():
     print(f"  title art: {len(TITLE_FILES) - len(missing)} files -> assets/title/")
 
 
+# ------------------------------------------------------------------ 开场过场动画 v1
+OPENING_SRC = os.path.join(PIX, "opening", "output")
+OPENING_DIR = os.path.join(GAME, "assets", "opening")
+OPENING_HD_SRC = os.path.join(PIX, "opening", "output_hd")
+
+
+def sync_opening_art():
+    """开场过场动画 v1: copies the 7 storyboard pictures + opening_art.json (pixel2d/opening/output) to assets/opening/."""
+    os.makedirs(OPENING_DIR, exist_ok=True)
+    meta_path = os.path.join(OPENING_SRC, "opening_art.json")
+    if not os.path.exists(meta_path):
+        print("  WARNING opening art missing in pixel2d/opening/output "
+              "(run: cd pixel2d && .venv/bin/python opening/tools/generate_opening.py)")
+        return
+    with open(meta_path, encoding="utf-8") as f:
+        files = list(json.load(f)["scenes"]) + ["opening_art.json"]
+    for fn in files:
+        shutil.copyfile(os.path.join(OPENING_SRC, fn), os.path.join(OPENING_DIR, fn))
+    print(f"  opening art: {len(files)} files -> assets/opening/")
+    # 坐姿-高清过场-运镜 方案 v1: the HD pictures (960x540, pixel2d/opening/tools/generate_opening_hd.py), next to the old
+    hd_meta = os.path.join(OPENING_HD_SRC, "opening_art_hd.json")
+    if not os.path.exists(hd_meta):
+        print("  WARNING HD opening art missing in pixel2d/opening/output_hd "
+              "(run: cd pixel2d && .venv/bin/python opening/tools/generate_opening_hd.py)")
+        return
+    with open(hd_meta, encoding="utf-8") as f:
+        hd_files = list(json.load(f)["scenes"]) + ["opening_art_hd.json"]
+    for fn in hd_files:
+        shutil.copyfile(os.path.join(OPENING_HD_SRC, fn), os.path.join(OPENING_DIR, fn))
+    print(f"  opening art (HD): {len(hd_files)} files -> assets/opening/")
+
+
 def read_title_data():
     with open(os.path.join(GAME, "data", "title.json"), encoding="utf-8") as f:
         return json.load(f)
@@ -883,10 +1041,31 @@ def render_logo(text, glyph_px):
     return out
 
 
+# 改名与起名 v1: the 《山门小院》 logo is drawn by its own generator (pixel2d/title/tools/generate_title_logo.py ->
+# pixel2d/title/logo/output/, brush look); it is used whenever its text is the title of data/title.json. Any other title
+# text falls back to render_logo() above (so editing the title still gives a matching logo at once).
+TITLE_LOGO_SRC = os.path.join(PIX, "title", "logo", "output")
+
+
 def build_title_logo():
     data = read_title_data()
     text = data["title"]
     lg = data["logo"]
+    src_png = os.path.join(TITLE_LOGO_SRC, "title_logo.png")
+    src_json = os.path.join(TITLE_LOGO_SRC, "title_logo.json")
+    stamp = None
+    if os.path.exists(src_png) and os.path.exists(src_json):
+        with open(src_json, encoding="utf-8") as f:
+            stamp = json.load(f)
+    if stamp is not None and stamp.get("text") == text:
+        shutil.copyfile(src_png, os.path.join(TITLE_DIR, "title_logo.png"))
+        shutil.copyfile(src_json, os.path.join(TITLE_DIR, "title_logo.json"))
+        logo = Image.open(src_png).convert("RGBA")
+        print(f"  title logo: '{text}' {logo.size[0]}x{logo.size[1]} (pixel2d/title/logo/output) -> assets/title/title_logo.png")
+        return data, logo
+    if stamp is not None:
+        print(f"  NOTE title logo in pixel2d/title/logo/output is '{stamp.get('text')}', the title is '{text}': "
+              "drawn here instead (edit pixel2d/title/logo/logo.toml and run title/tools/generate_title_logo.py)")
     logo = render_logo(text, int(lg["glyph_px"]))
     logo.save(os.path.join(TITLE_DIR, "title_logo.png"), optimize=True)
     with open(os.path.join(TITLE_DIR, "title_logo.json"), "w", encoding="utf-8") as f:
@@ -909,6 +1088,18 @@ def build_icons(logo):
     print("  icon + boot image -> assets/title/icon.png, boot.png")
 
 
+def loader_texts(data):
+    """中英文切换 v1: the loading page's own words in both languages (English from data/i18n/en.json)."""
+    zh = {"title": data["title"], "loading": data["loading_text"], "starting": data["starting_text"]}
+    zh.update(data.get("loader_texts", {}))
+    en_path = os.path.join(os.path.dirname(WEB_DIR), "data", "i18n", "en.json")
+    lines = {}
+    if os.path.exists(en_path):
+        with open(en_path, encoding="utf-8") as f:
+            lines = json.load(f).get("lines", {})
+    return {"zh": zh, "en": {k: lines.get(v, v) for k, v in zh.items()}}
+
+
 def build_web_shell(data, logo):
     with open(os.path.join(WEB_DIR, "shell_template.html"), encoding="utf-8") as f:
         html = f.read()
@@ -920,7 +1111,8 @@ def build_web_shell(data, logo):
     html = (html.replace("{{TITLE}}", esc(data["title"])).replace("{{LOADING_TEXT}}", esc(data["loading_text"]))
             .replace("{{STARTING_TEXT}}", esc(data["starting_text"]).replace("'", "\\'"))
             .replace("{{LOGO_DATA_URI}}", uri).replace("{{LOGO_W}}", str(logo.width * 3))
-            .replace("{{LOGO_H}}", str(logo.height * 3)).replace("{{BG}}", SHELL_BG))
+            .replace("{{LOGO_H}}", str(logo.height * 3)).replace("{{BG}}", SHELL_BG)
+            .replace("{{LOADER_TEXTS}}", json.dumps(loader_texts(data), ensure_ascii=False).replace("</", "<\\/")))
     with open(os.path.join(WEB_DIR, "shell.html"), "w", encoding="utf-8") as f:
         f.write(html)
     print("  web loading page -> web/shell.html")
@@ -946,6 +1138,33 @@ def sync_title():
     sync_project_name(data)
     build_icons(logo)
     build_web_shell(data, logo)
+
+
+# ------------------------------------------------------------------ 坐姿重画 + 高清头像 + 封面高清小兔 (方案 v1, 2026-10-29)
+PORTRAIT_HD_DIR = os.path.join(GAME, "assets", "portraits_hd")
+
+
+def sync_hd_art():
+    """New files only (the old pictures stay): pixel2d/sit_pose/output -> assets/schedule/rabbit_sit_back|cross .png/.json;
+    pixel2d/portraits_hd/output/portraits/*.png (128x128) -> assets/portraits_hd/; pixel2d/title_hd/output
+    rabbit_standee_hd.png + title_hd.json -> assets/title/. Missing source = the game keeps the old pictures."""
+    pairs = []
+    for fn in ("rabbit_sit_back.png", "rabbit_sit_back.json", "rabbit_sit_cross.png", "rabbit_sit_cross.json"):
+        pairs.append((os.path.join(PIX, "sit_pose", "output", fn), os.path.join(SCHEDULE_DIR, fn)))
+    os.makedirs(PORTRAIT_HD_DIR, exist_ok=True)
+    for f in glob.glob(os.path.join(PORTRAIT_HD_DIR, "*.png")):
+        os.remove(f)
+    for f in sorted(glob.glob(os.path.join(PIX, "portraits_hd", "output", "portraits", "*.png"))):
+        pairs.append((f, os.path.join(PORTRAIT_HD_DIR, os.path.basename(f))))
+    for fn in ("rabbit_standee_hd.png", "title_hd.json"):
+        pairs.append((os.path.join(PIX, "title_hd", "output", fn), os.path.join(TITLE_DIR, fn)))
+    n = 0
+    for src, dst in pairs:
+        if os.path.isfile(src):
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            shutil.copyfile(src, dst)
+            n += 1
+    print(f"  hd art: {n} files (sitting poses, HD portraits, HD title rabbit)")
 
 
 def main():
@@ -974,8 +1193,20 @@ def main():
     sync_step3()
     print("sync: step 4a (pixel2d/step4a/output)")
     sync_step4a()
+    print("sync: schedule (pixel2d/schedule/output)")
+    sync_schedule_art()
+    print("sync: audio (audio/output)")
+    sync_audio()
+    print("sync: skills fx (pixel2d/skills_fx/output)")
+    sync_skills_fx()
+    print("sync: farm (pixel2d/farm/output)")
+    sync_farm_art()
     print("sync: title screen")
     sync_title()
+    print("sync: opening (pixel2d/opening/output)")
+    sync_opening_art()
+    print("sync: sitting poses, HD portraits, HD title rabbit (pixel2d/sit_pose, portraits_hd, title_hd)")
+    sync_hd_art()
     print("sync: font")
     build_font()
     print("sync: done")

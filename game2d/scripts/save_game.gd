@@ -4,7 +4,7 @@ extends RefCounted
 ## File: {"game": GAME_ID, "version": VERSION, "saved_at": unix time, "reason": "...", "state": {...}} as JSON.
 ## What is in "state" (capture()): story progress and gating (stage, flags, objective, wiping, puzzle, bubbles, 门派簿),
 ## the dorm opening's water, bandits, coins / repairs / trial results / stall day (Sample), the clock, where the rabbit
-## is (indoors or out follows from the position) and her HP.
+## is (indoors or out follows from the position) and his HP.
 ## When: Sample.request_save(reason) after story progress, a repair, the end of a trial, the daily income and a door; the
 ## write waits for a calm frame (no conversation / modal page / spar / trial / door fade), so a save never catches a
 ## half-played scene. Reading never hangs: a missing, unreadable, wrong-version or malformed file is reported with
@@ -22,9 +22,15 @@ extends RefCounted
 ## in, the next posting day, 巡山 editions, the bounty taken and whether it is won -, the day's 委托 offers with their progress,
 ## the chick, the totals and the 名望 / 家业 given). Versions 1-3 are upgraded with an empty section: nothing of step 4a
 ## happened yet (the first 悬赏 is posted on day 2 of Step3's calendar, i.e. at once for a game already past it).
+## 新手指引 v1: VERSION 5 adds the "guide" section (Guide.capture: steps done / paid, 出师, switched off, the step-1 / step-4 /
+## step-5 marks, the tracked item). Versions 1-4 get Guide.upgrade_state: a save made after the prologue has the guide
+## running with every step its state already meets marked done and paid - without paying any coins.
+## 改名与起名 v1: "player" may hold "name" (the hero's name the player chose). Optional - no version change: an older
+## file has none and loads as 小兔; a name that is not text is refused like any broken field; text this version cannot
+## show (empty, too long, a character missing from the font) loads as 小兔 (PlayerName.from_save).
 
 const GAME_ID := "dongwu-wuxia-demo"
-const VERSION := 4
+const VERSION := 5
 const OLDEST_VERSION := 1     # older files are upgraded (upgrade()); anything else is refused
 const SLOT := "user://save.json"
 const TEST_SLOT := "user://test_save.json"
@@ -141,6 +147,8 @@ static func upgrade(st: Dictionary, from_version: int) -> Dictionary:
 			d["spar_count"] = 1 if (d.get("spar_day") is float or d.get("spar_day") is int) and float(d["spar_day"]) >= 0.0 else 0
 	if from_version < 4 and not out.has("jianghu"):
 		out["jianghu"] = Jianghu.defaults()     # 第③步 -> 第④步第一批: no 悬赏 / 委托 yet
+	if from_version < 5 and not out.has("guide"):
+		out["guide"] = Guide.upgrade_state(out)  # 新手指引 v1: steps already met count as done + paid (no coins)
 	return out
 
 
@@ -172,6 +180,9 @@ static func validate(st: Variant) -> String:
 		return "stage out of range"
 	if not (String(st["player"]["facing"]) in ["down", "left", "right", "up"]):
 		return "bad facing"
+	# 改名与起名 v1: player.name is optional (older saves have none); when present it must be text
+	if st["player"].has("name") and not (st["player"]["name"] is String):
+		return "bad player.name"
 	if float(st["player"]["hp"]) < 1.0:
 		return "bad hp"
 	var pp: Array = st["player"]["pos"]
@@ -195,7 +206,22 @@ static func validate(st: Variant) -> String:
 	var why3 := Step3.validate(st.get("step3", null))
 	if why3 != "":
 		return why3
-	return Jianghu.validate(st.get("jianghu", null))
+	var why4 := Jianghu.validate(st.get("jianghu", null))
+	if why4 != "":
+		return why4
+	var whyg := Guide.validate(st.get("guide", null))
+	if whyg != "":
+		return whyg
+	# 武学与经营 第一批: optional sections (an older save has none -> nothing learned, no farm); checked when present
+	if st.has("skills"):
+		var whysk := Skills.validate(st["skills"])
+		if whysk != "":
+			return whysk
+	if st.has("farm"):
+		var whyf := Farm.validate(st["farm"])        # 武学与经营 第一批 (B)
+		if whyf != "":
+			return whyf
+	return ""
 
 
 static func _type_ok(v: Variant, t: String) -> bool:
@@ -250,7 +276,7 @@ static func capture(main: Node) -> Dictionary:
 			"objective": main.objectives.index, "wipes": story.wipes, "progress": story.progress, "errors": story.errors,
 			"hint_given": story.hint_given, "solved": story.solved, "bubbles": Array(story.bubble_done)},
 		"player": {"pos": [p.global_position.x, p.global_position.y], "facing": p.facing, "hp": p.hp,
-			"room": it.room_at(p.global_position)},
+			"room": it.room_at(p.global_position), "name": PlayerName.value()},
 		"time": {"hour": main.daynight.hour, "total": main.daynight.total_hours},
 		"dorm": {"water_level": it.water_level, "water_cap": it.water_cap, "puddle": it.puddle_size, "pours": it.pours,
 			"bed": it.bed_state},
@@ -258,6 +284,9 @@ static func capture(main: Node) -> Dictionary:
 		"sample": main.sample.capture(),
 		"step3": main.step3.capture(),
 		"jianghu": main.jianghu.capture(),
+		"guide": main.guide.capture(),
+		"skills": main.skills.capture() if main.get("skills") != null else Skills.defaults(),   # 武学与经营 第一批 (A)
+		"farm": main.farm.capture() if main.get("farm") != null else Farm.defaults(),   # 武学与经营 第一批 (B)
 	}
 
 
@@ -316,8 +345,15 @@ static func restore(main: Node, st: Dictionary) -> void:
 		it.take_rag()
 	# the clock
 	main.daynight.restore(float(st["time"]["hour"]), float(st["time"]["total"]))
+	# 武学与经营 第一批: restored before the rabbit's HP below, so a max of 120 / 135 is in place when it is clamped
+	if main.get("skills") != null:
+		main.skills.restore(st.get("skills", Skills.defaults()))
+	if main.get("farm") != null:
+		main.farm.restore(st.get("farm", Farm.defaults()))     # 经营 (B): the 药膳 bonus is re-applied here too
 	# the rabbit
 	var pl: Dictionary = st["player"]
+	# 改名与起名 v1: the hero's name (an older save has none -> 小兔; a name this version cannot show -> 小兔 too)
+	PlayerName.choose(PlayerName.from_save(pl.get("name", PlayerName.DEFAULT)))
 	var pos: Array = pl["pos"]
 	main.camera_target = null
 	p.sprite.modulate.a = 1.0
@@ -336,5 +372,6 @@ static func restore(main: Node, st: Dictionary) -> void:
 	main.sample.restore(st["sample"])
 	main.step3.restore(st["step3"])
 	main.jianghu.restore(st["jianghu"])
+	main.guide.restore(st["guide"])
 	if OS.has_feature("web"):
 		print("save: restored (stage %d)" % story.stage)

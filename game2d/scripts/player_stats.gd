@@ -66,16 +66,26 @@ extends Resource
 ## 落在敌人身后多少像素
 @export var swap_behind := 28.0
 
-@export_group("闪避反击")
-## 闪避成功后多少秒内打中第一下算反击
-@export var counter_window := 0.8
-## 反击连招伤害倍率
-@export var counter_multiplier := 1.5
+@export_group("格挡（GP，试玩反馈 v1）")
+## 按 K / 鼠标右键后格挡架势持续多久；这段时间里被敌人打中 = GP 成功（不掉血、自动反击）
+@export var gp_stance := 0.25
+## 按早了（架势结束时还没被打到）的收招：这段时间不能动、不能闪避、不能攻击
+@export var gp_whiff_recover := 0.4
+## 冷却：架势结束后多少秒内不能再按 K
+@export var gp_cooldown := 0.3
+## GP 成功后原地自动反击的总伤害（两下：按攻击 1 : 攻击 2 的比例拆开，8:12 → 12 + 18）
+@export var gp_counter_damage := 30
+## GP 成功时敌人的硬直（秒）；有霸体（super_armor）的敌人不硬直
+@export var gp_enemy_stagger := 0.6
+## GP 成功时的画面停顿（秒）
+@export var gp_hitstop := 0.1
+## GP 成功时把敌人弹开多少像素（再乘以敌人的 1 - 击退抗性）
+@export var gp_knockback := 16.0
 
 @export_group("闪身追击（v1.2）")
 ## 闪避结束后多少秒内按攻击，会冲向附近的敌人再出手（冲刺速度 = 闪避速度 dodge_speed）
 @export var chase_window := 0.6
-## 追击范围：最近的敌人在这个距离内才会冲过去（否则原地出招）
+## 追击范围（锁定范围，3 格 = 96 像素）：最近的敌人在这个距离内才会冲过去，冲刺中一直追着它，贴身才出手，一定打中（否则原地出招）
 @export var chase_range := 96.0
 
 @export_group("受击")

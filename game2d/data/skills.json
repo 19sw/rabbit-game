@@ -1,0 +1,152 @@
+{
+ "_说明": "武学（武学与经营 第一批，外部文件层）。数值在 cards/skills/*.tres（配置资产层），这里是名字、说明、怎么学、考验、特效和音效、武学页 / 任务看板 / 对话的文字。改文字只改这里；英文在 data/i18n/en_skills.json。主角小兔是男性：师父叫他“兔儿”“徒儿”。",
+ "order": ["swallow_spin", "tuna", "snow_step"],
+ "skills": {
+  "swallow_spin": {
+   "name": "燕回旋",
+   "kind": "move",
+   "card": "res://cards/skills/swallow_spin.tres",
+   "desc": "原地旋身扫腿，打身边一圈。伤害 15，冷却 4 秒；没有霸体的敌人会被打退、硬直。",
+   "need_fame": 2,
+   "trial": "spar_gp",
+   "trial_need": 3,
+   "icon": "res://assets/skills/icon_swallow_spin.png",
+   "fx": "spin_ring",
+   "sfx": "skill_spin",
+   "learned_caption": "学会：燕回旋（{key}）"
+  },
+  "tuna": {
+   "name": "吐纳功",
+   "kind": "inner",
+   "card": "res://cards/skills/tuna.tres",
+   "desc": "气息悠长：生命上限 100 → 120；脱离战斗 3 秒后开始回血，每秒 5 点。",
+   "need_fame": 3,
+   "trial": "meditate",
+   "trial_need": 1,
+   "fx": "tuna_ring",
+   "sfx": "skill_tuna",
+   "learned_caption": "学会：吐纳功（内功）"
+  },
+  "snow_step": {
+   "name": "踏雪二段闪",
+   "kind": "body",
+   "card": "res://cards/skills/snow_step.tres",
+   "desc": "闪避落地后 0.3 秒内再按闪避，可以再闪一次（七成远）。两次都闪完才开始冷却。",
+   "need_fame": 4,
+   "trial": "trial_silver",
+   "trial_need": 1,
+   "fx": "snow_mark",
+   "sfx": "skill_snow",
+   "learned_caption": "学会：踏雪二段闪（身法）"
+  }
+ },
+ "_trials说明": "考验：spar_gp = 和师兄切磋，同一场里格挡成功 trial_need 次，输赢都算；meditate = 正殿蒲团上坐下按 E 打坐，跳到下一个辰时 08:00（和“等到天亮”同一套流程）；trial_silver = 梅花桩试炼拿到银（以前拿过银或金也算，直接过）。",
+ "meditate": {
+  "seats": ["hall_futon_1", "hall_futon_master", "hall_futon_3", "hall_futon_4"],
+  "caption": "静坐吐纳……",
+  "prompt": "按 E 打坐",
+  "scene": "K-打坐"
+ },
+ "qi": {
+  "_说明": "气槽：这一批代码写好但不显示（第三批学会白鹤亮翅时再亮出来）。打中 +hit，格挡成功 +gp，满 max。",
+  "max": 100,
+  "hit": 4,
+  "gp": 10
+ },
+ "book": {
+  "title": "武学",
+  "moves": "招式（U / I）",
+  "body": "身法（学会就生效）",
+  "inner": "内功（学会就运转）",
+  "slot_line": "U：{u}    I：{i}",
+  "slot_empty": "空",
+  "in_slot": "装在 {key} 格",
+  "running": "运转中",
+  "active": "已生效",
+  "locked_name": "？？？",
+  "how_fame": "名望 {fame} 格后，找师父传功",
+  "how_trial": "师父的考验：{trial}",
+  "how_back": "考验已过，回正殿找师父",
+  "close_hint": "↑↓ 选择  E 装备 / 换格  ← → 翻页  Esc / B 关闭",
+  "equip_toast": "{name} 装进 {key} 格",
+  "inner_toast": "{name} 运转中"
+ },
+ "board": {
+  "tab": "武学",
+  "item": "{mark} 师父传功：{name} · 名望 {fame} 格",
+  "need_fame": "名望到 {fame} 格后找师父（现在 {now} 格）",
+  "go_master": "去正殿找师父",
+  "master_asleep": "师父 06:00 起",
+  "trial": "考验：{trial}",
+  "trial_done": "考验已过，回正殿找师父学",
+  "learned": "√ 已学会：{name}",
+  "obj_go": "去正殿找师父传功：{name}",
+  "obj_asleep": "师父传功：{name}（师父 06:00 起）",
+  "obj_trial": "师父的考验：{trial}",
+  "obj_back": "回正殿找师父学{name}",
+  "trial_text": {
+   "spar_gp": "和师兄切磋，同一场里格挡 {need} 次（这场最多 {best}/{need}）",
+   "meditate": "到正殿蒲团上坐下，按 E 打坐一夜",
+   "trial_silver": "梅花桩试炼拿到“银”"
+  }
+ },
+ "ui": {
+  "trial_passed": "师父的考验完成：{name}，回正殿找师父",
+  "gp_count": "格挡 {n}/{need}",
+  "cooldown": "冷却中"
+ },
+ "scenes": {
+  "K-师父-燕回旋-考验": [
+   {"who": "crane", "text": "兔儿，近来你的名望渐起，为师在殿里都听说了。"},
+   {"who": "crane", "text": "为师有一路「燕回旋」：原地旋身，一腿扫开身边一圈。"},
+   {"who": "crane", "text": "不过招式再巧，护不住自己也是白搭。去和你师兄切磋一场，同一场里格挡住他三招，输赢不论。"},
+   {"who": "crane", "text": "做到了，再回来找为师。", "do": "skills_assign", "skill": "swallow_spin"}
+  ],
+  "K-师父-燕回旋-未完": [
+   {"who": "crane", "text": "同一场切磋里，格挡住你师兄三招。看准他出手的那一下再挡，莫慌。"}
+  ],
+  "K-师父-燕回旋-传授": [
+   {"who": "crane", "text": "好，挡得稳，心也就稳了。"},
+   {"who": "crane", "text": "看好了——腰带着腿走，脚下生根，身子像燕子回巢。"},
+   {"who": "rabbit", "text": "（照着师父的样子转了一圈……差点把自己绊倒。）"},
+   {"who": "crane", "text": "哈哈，多转几回就顺了。徒儿，往后按 U 使出这一招。", "do": "skills_teach", "skill": "swallow_spin"}
+  ],
+  "K-师父-吐纳功-考验": [
+   {"who": "crane", "text": "徒儿，打架靠的不只是手脚，还有一口气。"},
+   {"who": "crane", "text": "殿里的蒲团，你挑一个坐下，按 E 打坐，静坐一夜，到明早辰时再起来。"},
+   {"who": "crane", "text": "只是这一坐就是一整夜，今天没办完的委托会作废，你自己掂量着来。", "do": "skills_assign", "skill": "tuna"}
+  ],
+  "K-师父-吐纳功-未完": [
+   {"who": "crane", "text": "蒲团就在殿里。坐上去，按 E 打坐，一夜不动。"}
+  ],
+  "K-师父-吐纳功-传授": [
+   {"who": "crane", "text": "一夜没动，气息也匀了。为师把吐纳的法门传给你。"},
+   {"who": "crane", "text": "吸要长，呼要缓，气沉丹田。往后受了伤，你也好得快些。", "do": "skills_teach", "skill": "tuna"}
+  ],
+  "K-师父-二段闪-考验": [
+   {"who": "crane", "text": "兔儿，你的身法还差一口气。"},
+   {"who": "crane", "text": "去练武场的梅花桩试炼，拿个「银」回来。从前拿过银或金的，也算数。", "do": "skills_assign", "skill": "snow_step"}
+  ],
+  "K-师父-二段闪-未完": [
+   {"who": "crane", "text": "梅花桩，拿到银再来。脚下要快，眼要尖。"}
+  ],
+  "K-师父-二段闪-传授": [
+   {"who": "crane", "text": "梅花桩上能拿银，脚下已经有根了。"},
+   {"who": "crane", "text": "这路「踏雪二段闪」：闪出去刚一落地，趁脚下那点余力，再闪一次。"},
+   {"who": "crane", "text": "像在雪地上走，只留下一个印子。学会了，就一直跟着你。", "do": "skills_teach", "skill": "snow_step"}
+  ],
+  "K-打坐": [
+   {"kind": "提示", "text": "静坐吐纳，一直坐到明早辰时 08:00。跳过去后，今天没做完的委托会作废。"},
+   {"choice": [
+    {"text": "打坐（到明早 08:00）", "then": [{"do": "skills_meditate"}]},
+    {"text": "再等等", "then": []}
+   ]}
+  ]
+ },
+ "_scenes说明": "K-师父-<招式>-考验 / -未完 / -传授：名望够了以后找师父（师父 crane）。skills_assign = 布置考验；skills_teach = 学会（师父说完、对话框关掉后，屏幕中间亮出光环字幕）。K-打坐：坐在正殿蒲团上按 E（布置了吐纳功的考验以后）。",
+ "talk": {
+  "swallow_spin": {"assign": "K-师父-燕回旋-考验", "wait": "K-师父-燕回旋-未完", "teach": "K-师父-燕回旋-传授"},
+  "tuna": {"assign": "K-师父-吐纳功-考验", "wait": "K-师父-吐纳功-未完", "teach": "K-师父-吐纳功-传授"},
+  "snow_step": {"assign": "K-师父-二段闪-考验", "wait": "K-师父-二段闪-未完", "teach": "K-师父-二段闪-传授"}
+ }
+}

@@ -1,13 +1,13 @@
 class_name Occlusion
 extends Node
 ## 打磨 v1: outdoor "see through what covers you". When the rabbit (or an NPC / enemy) stands behind a roof, a compound
-## wall's tile top, a gate wing or a tree canopy, the outdoor object picture drawn over her gets a soft round
-## see-through hole around her (scripts/occlusion_fade.gdshader), faded in / out. Render-only: the colliders, the
+## wall's tile top, a gate wing or a tree canopy, the outdoor object picture drawn over him gets a soft round
+## see-through hole around him (scripts/occlusion_fade.gdshader), faded in / out. Render-only: the colliders, the
 ## pictures and the y-sort order stay exactly as they are. Numbers in data/tuning.json "occlusion".
 ##
-## How "covers" is decided (fix round): the object is drawn over the character (its base line is below her feet) and
-## the opaque pixels of its picture cover at least `coverage` of her REAL sprite pixels (current animation frame) -
-## a few pixels at a tree edge, a woodpile, a bamboo edge or an eave tip are enough. The hole is centred on her pixels.
+## How "covers" is decided (fix round): the object is drawn over the character (its base line is below his feet) and
+## the opaque pixels of its picture cover at least `coverage` of him REAL sprite pixels (current animation frame) -
+## a few pixels at a tree edge, a woodpile, a bamboo edge or an eave tip are enough. The hole is centred on his pixels.
 
 const CELL := 128.0
 ## 建筑实心 v1: buildings (and the library ruin) are solid over their whole picture - nothing can stand under their
@@ -84,7 +84,7 @@ static func body_rect(feet: Vector2) -> Rect2:
 
 
 ## 打磨 v1 fix round: the opaque pixels of the character's CURRENT animation frame (frame-local), cached per frame
-## texture - the fade decision and the visibility checks use her real outline, not a box.
+## texture - the fade decision and the visibility checks use his real outline, not a box.
 func frame_mask(spr: AnimatedSprite2D) -> PackedVector2Array:
 	if spr == null or spr.sprite_frames == null or not spr.sprite_frames.has_animation(spr.animation):
 		return PackedVector2Array()
@@ -107,7 +107,7 @@ func frame_mask(spr: AnimatedSprite2D) -> PackedVector2Array:
 	return pts
 
 
-## World positions of a character's visible pixels if her feet were at `feet` (current frame of `a`).
+## World positions of a character's visible pixels if his feet were at `feet` (current frame of `a`).
 func pixels_at(a: Node2D, feet: Vector2) -> PackedVector2Array:
 	var spr: AnimatedSprite2D = a.sprite
 	var m := frame_mask(spr)
@@ -177,14 +177,14 @@ func over(feet: Vector2, pts: PackedVector2Array) -> Array:
 				seen[idx] = true
 				var s: Sprite2D = entries[idx]["sprite"]
 				if not s.visible or s.position.y <= feet.y:
-					continue           # drawn behind her: nothing to see through
+					continue           # drawn behind him: nothing to see through
 				if (entries[idx]["rect"] as Rect2).intersects(Rect2(lo, hi - lo + Vector2.ONE)):
 					out.append(idx)
 	return out
 
 
 ## Entries that hide enough of a character at `feet` (pixels `pts`; default: the rabbit's current frame) to fade:
-## at least `coverage` of her pixels (tuning; a few pixels are enough).
+## at least `coverage` of his pixels (tuning; a few pixels are enough).
 func covering(feet: Vector2, pts := PackedVector2Array()) -> Array:
 	if pts.is_empty():
 		pts = pixels_at(main.player, feet)
@@ -205,7 +205,7 @@ func _hole_alpha(q: Vector2, centers: Array, strength: float) -> float:
 	return lerpf(1.0, float(cfg["min_alpha"]), hole * strength)
 
 
-## Share (0..1) of a character's pixels that stay visible: a pixel is hidden when some picture drawn over her is
+## Share (0..1) of a character's pixels that stay visible: a pixel is hidden when some picture drawn over him is
 ## opaque there with an effective alpha above 0.5. steady = true: as it will be once the fade has settled (only this
 ## character's own holes), false: as drawn right now (current fade strengths / holes of everyone).
 func visible_fraction(a: Node2D, feet: Vector2, steady := false) -> float:

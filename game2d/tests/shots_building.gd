@@ -1,6 +1,6 @@
 extends SceneTree
 ## 房子整栋实心 v1 screenshots -> screenshots/building_*.png (needs a window, ~40 s):  tools/screenshots_building.sh
-##   01 the client's spot: pushed down at the old disciples' house ridge (x 260), she stops outside     02-03 the same at the
+##   01 the client's spot: pushed down at the old disciples' house ridge (x 260), he stops outside     02-03 the same at the
 ##   west eave tip (176) / east spire (344)     04 main hall, from its west side     05 north dorm, pushing at the roof from the
 ##   north     06 kitchen from the north     07 hut from the west     08 library ruin from the west     09 山门 passage (the
 ##   gate tower still fades)     10 tree canopy (still fades)
@@ -50,7 +50,7 @@ func push(from: Vector2, code: Key, facing: String, secs := 1.2) -> void:
 	await frames(30)
 
 
-## Start at `from`, hold `code` until her feet pass `stop_y` (or `frames` frames when stop_y = 0), then shoot.
+## Start at `from`, hold `code` until his feet pass `stop_y` (or `frames` frames when stop_y = 0), then shoot.
 func walk_shot(from: Vector2, code: Key, facing: String, stop_y: float, name: String, nframes := 400) -> void:
 	await place(from, facing)
 	key(code, true)
@@ -116,7 +116,7 @@ func _run() -> void:
 			break
 	await frames(40)
 	await shot("building_10_tree_canopy_still_fades")
-	# 房子整栋实心 v1 fix 2: the north wall moved one tile north - she walks the new walkway, the gap path and the breaches
+	# 房子整栋实心 v1 fix 2: the north wall moved one tile north - he walks the new walkway, the gap path and the breaches
 	await walk_shot(Vector2(312, 416), KEY_W, "up", 370.0, "building_11_breach_V2_walking_through_wall")
 	await walk_shot(Vector2(312, 416), KEY_W, "up", 334.0, "building_12_breach_V2_north_side")
 	await walk_shot(Vector2(284, 416), KEY_W, "up", 370.0, "building_13_breach_V1_walking_through_wall")

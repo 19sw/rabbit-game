@@ -1,0 +1,19 @@
+{
+  "_说明": "采集（外部文件层，docs/design/武学与经营-第一批-方案-v1.md 第二节第 4 条）。items = 能采的东西：name 名字，sell 卖给厨娘的价钱（文）。spots = 采集点：kind 是哪种（shoots 竹笋 / herbs 草药），pos 世界像素（地上那一点）。竹笋 4 处在后山竹林（area bamboo），草药 4 处在山路边（area road），都和“挖竹笋”委托的发光点分开（委托的竹笋照旧单独计数，不进库房）。respawn_hour = 每天几点重新长出来。radius = 离多近能按 E。能采的地方一闪一闪发亮（图：assets/farm/gather_shoots.png / gather_herbs.png，3 帧）。",
+  "items": {
+    "shoots": { "name": "竹笋", "sell": 4 },
+    "herbs":  { "name": "草药", "sell": 6 }
+  },
+  "respawn_hour": 8,
+  "radius": 26,
+  "spots": [
+    { "id": "shoot_1", "kind": "shoots", "pos": [600, 250] },
+    { "id": "shoot_2", "kind": "shoots", "pos": [790, 130] },
+    { "id": "shoot_3", "kind": "shoots", "pos": [1050, 130] },
+    { "id": "shoot_4", "kind": "shoots", "pos": [1580, 300] },
+    { "id": "herb_1", "kind": "herbs", "pos": [900, 1480] },
+    { "id": "herb_2", "kind": "herbs", "pos": [540, 1515] },
+    { "id": "herb_3", "kind": "herbs", "pos": [720, 1675] },
+    { "id": "herb_4", "kind": "herbs", "pos": [1200, 1430] }
+  ]
+}

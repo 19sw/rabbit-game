@@ -148,19 +148,24 @@ func _run() -> void:
 	await frames(10)
 	await shot("story_07_sect_book")
 	await tap(KEY_E)
+	# 新手指引 v1: no 序章 · 完 page any more - the caption 「序章 · 完」 fades in over the game
 	for i in 400:
-		if story.prologue_end.is_open:
+		if main.guide.caption_showing():
 			break
-		await tap(KEY_E)
-	for i in 200:
-		if story.prologue_end.buttons_shown():
-			break
-		await frames(1)
-	await frames(10)
+		if story.dialogue.active:
+			await tap(KEY_E)
+		else:
+			await frames(1)
+	await frames(20)
 	await shot("story_08_prologue_end")
-	# 10 walking bubble (继续逛逛 -> 师兄 nearby at step 9)
-	await tap(KEY_DOWN)
-	await tap(KEY_E)
+	for i in 400:
+		if main.sample.unlocked and not story.busy and not main.guide._intro_pending:
+			break
+		if story.dialogue.active:
+			await tap(KEY_E)
+		else:
+			await frames(2)
+	# 10 walking bubble (师兄 nearby at step 9)
 	await frames(5)
 	await place(npc("fox").global_position + Vector2(30, 40))
 	await frames(20)

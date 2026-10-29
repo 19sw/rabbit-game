@@ -1,0 +1,70 @@
+{
+  "frames": {
+    "fx0": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 16,
+        "h": 16
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 16,
+        "h": 16
+      },
+      "sourceSize": {
+        "w": 16,
+        "h": 16
+      },
+      "duration": 500
+    },
+    "fx1": {
+      "frame": {
+        "x": 16,
+        "y": 0,
+        "w": 16,
+        "h": 16
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 16,
+        "h": 16
+      },
+      "sourceSize": {
+        "w": 16,
+        "h": 16
+      },
+      "duration": 500
+    }
+  },
+  "meta": {
+    "app": "pixel-art render.py",
+    "image": "sheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 32,
+      "h": 16
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "icons",
+        "frames": [
+          "fx0",
+          "fx1"
+        ],
+        "durations_ms": [
+          500,
+          500
+        ],
+        "direction": "forward"
+      }
+    ]
+  }
+}

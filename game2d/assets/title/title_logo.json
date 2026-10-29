@@ -1,9 +1,9 @@
 {
- "text": "动物武侠 DEMO",
- "glyph_px": 18,
+ "text": "山门小院",
+ "glyph_px": 24,
  "size": [
-  129,
-  22
+  103,
+  29
  ],
- "_说明": "由 tools/sync_assets.py 按 data/title.json 生成；游戏会核对 text，和标题文字不一致时改用文字显示。"
+ "_说明": "由 pixel2d/title/tools/generate_title_logo.py 按 title/logo/logo.toml 生成；game2d/tools/sync_assets.py 复制到 assets/title/。游戏会核对 text，和 data/title.json 的标题不一致时改用文字显示。"
 }

@@ -1,0 +1,15 @@
+{
+ "anchor": [
+  16,
+  31
+ ],
+ "facing": "up",
+ "fps": 2,
+ "frame_height": 40,
+ "frame_width": 32,
+ "frames": 2,
+ "id": "rabbit_sit_back",
+ "loop": true,
+ "note": "小兔 seen from behind on a bench / stool, facing the table; rows 30-33 empty (the seat board in front of his legs), shins + heels below it. Frame 1 = body 1 px lower.",
+ "pose": "back"
+}

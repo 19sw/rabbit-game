@@ -1,0 +1,32 @@
+{
+  "_说明": "坐下与人物作息 v1（外部文件层，docs/design/坐下与人物作息-方案-v1.md 第二、三节）。people = 每个人几点去睡（sleep）、几点出现（wake），24 小时制的整点或小数（21.5 = 21:30）；sleep 到 wake 之间（跨过半夜）人不在：到点头顶冒 ui.bubble 气泡，fade_seconds 秒淡出，第二天到 wake 在原位淡入。night = 夜里在哪：hidden 看不到；bed = 睡在 bed（room 房间里 item 那张床，图 assets/schedule/fox_asleep_bed.png），走到床边按 E 冒 dream 那句梦话。师弟（disciple.gd 自己的作息）和山贼不在这里，不受影响。prologue_first = true：序章没完成时谁都不睡。打架、比武、切磋、试炼、对话、开着的页面、进出门时，到点了也先不走，等结束再走。wait = 任务面板的“等到天亮”：跳到下一个 to_hour 点（现在是 0 点到 to_hour 之间就跳到当天的），画面 fade_seconds 秒渐黑，text_seconds 秒显示 ui.night_passes，再 fade_seconds 秒渐亮；钟按 T 键同样的步长（tuning.json time_skip_hours）一步一步往前走，所以每日的事和按 T 一样。bubble_seconds = “呼……”气泡停多久；line_seconds = 梦话、坐下彩蛋气泡停多久。改完执行 game2d/tools/update.sh --no-tests。",
+  "prologue_first": true,
+  "fade_seconds": 0.5,
+  "bubble_seconds": 1.2,
+  "line_seconds": 3.0,
+  "people": {
+    "crane":  { "name": "师父 · 仙鹤",     "sleep": 21, "wake": 6, "night": "hidden" },
+    "fox":    { "name": "师兄 · 狐狸",     "sleep": 22, "wake": 7, "night": "bed", "bed": { "room": "dorm_main", "item": "senior_bed" },
+                "dream": "（呼……谁动我萝卜……）" },
+    "bear":   { "name": "厨娘 · 熊",       "sleep": 20, "wake": 5, "night": "hidden" },
+    "dog":    { "name": "看门老伯 · 老狗", "sleep": 22, "wake": 6, "night": "hidden" },
+    "tanuki": { "name": "茶摊老板 · 狸猫", "sleep": 19, "wake": 7, "night": "hidden" },
+    "duck":   { "name": "村民 · 鸭子",     "sleep": 19, "wake": 7, "night": "hidden" },
+    "mouse":  { "name": "瓦匠老周 · 老鼠", "sleep": 18, "wake": 8, "night": "hidden" }
+  },
+  "_commission说明": "F1（客户 2026-10-27）：委托要找的人睡着时（按上面的作息表，序章后才算），告示榜上这种委托变灰、接不了，写 ui.commission_asleep；对方醒来后自动恢复。已经接下的不受影响。commission_people = 委托种类 -> 要找的人（送馒头 bun 找茶摊老板，送信 letter 找茶摊老板和老伯）。",
+  "commission_people": { "bun": ["tanuki"], "letter": ["tanuki", "dog"] },
+  "wait": { "to_hour": 8, "fade_seconds": 0.5, "text_seconds": 1.5 },
+  "ui": {
+    "bubble": "呼……",
+    "prompt_sit": "按 E 坐下",
+    "prompt_dream": "按 E 查看",
+    "wait_button": "等到天亮（辰时 08:00）",
+    "wait_key": "Enter",
+    "all_awake": "大家都醒着",
+    "wait_note": "跳过去后，今天没做完的委托会作废。",
+    "night_passes": "一夜过去……",
+    "opt_c_asleep": "%s：对方已睡，明早再来",
+    "commission_asleep": "对方已睡，明早再来"
+  }
+}

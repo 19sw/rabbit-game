@@ -1,0 +1,15 @@
+{
+ "anchor": [
+  16,
+  31
+ ],
+ "facing": "down",
+ "fps": 2,
+ "frame_height": 32,
+ "frame_width": 32,
+ "frames": 2,
+ "id": "rabbit_sit_cross",
+ "loop": true,
+ "note": "小兔 cross-legged on a floor cushion / 蒲团, facing the camera, paws on the knees. Frame 1 = body 1 px lower.",
+ "pose": "cross"
+}

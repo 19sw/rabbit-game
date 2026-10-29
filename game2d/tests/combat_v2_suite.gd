@@ -28,7 +28,7 @@ func run() -> void:
 	await reset_v2()
 	await test_chase_basic()
 	await test_chase_window_and_range()
-	await test_chase_counter()
+	await test_chase_no_counter()
 	await test_chase_after_swap()
 	await test_chase_never_through_walls()
 	await test_chase_arena()
@@ -197,7 +197,10 @@ func test_chase_window_and_range() -> void:
 	await reset_v2()
 
 
-func test_chase_counter() -> void:
+## 试玩反馈 v1: the chase used to count as a 看破反击 (x1.5) after a dodge success; the 看破反击 is gone. Same setup as
+## before: the chase after a dodge success is now an ordinary 8 + 12 with no gold 反击 - and (the fix) the chase hit
+## lands even when 师兄 side-steps away during the blow's wind-up.
+func test_chase_no_counter() -> void:
 	await reset_v2()
 	await spar_calm()
 	var fp := fox.global_position
@@ -206,13 +209,13 @@ func test_chase_counter() -> void:
 	await r.frames(2)
 	var succ0 := player.dodge_successes
 	await cs._fox_windup_until(0.15)
-	# side-step slightly forward (66 deg off "towards him": no swap) at the end of his wind-up -> 看破. A pure side-step
-	# from his 36 px attack distance lands ~100 px away - just outside the 96 px chase range (reported to PM)
+	# side-step slightly forward (66 deg off "towards him": no swap) at the end of his wind-up -> 看破
 	var end := await dodge(Vector2(-0.4, 0.92).normalized())
 	fox.next_attack = 9999.0
-	var success := player.dodge_successes == succ0 + 1 and player.counter_left > 0.0
+	var success := player.dodge_successes == succ0 + 1
 	var hp0 := fox.hp
 	var c0 := player.chases_started
+	var gold0: int = combat.hud.number_texts().filter(func(s): return "反击" in s).size()
 	var pop0: int = combat.fx.spawned.get("counter_text", 0) + combat.fx.spawned.get("slash_counter", 0)
 	await r.frames(3)
 	await r.tap(KEY_J)
@@ -221,48 +224,49 @@ func test_chase_counter() -> void:
 		await r.physics_frame
 		g += 1
 	var d1 := hp0 - fox.hp
-	var gold := combat.hud.number_texts().filter(func(s): return "反击" in s)
-	var pop: int = combat.fx.spawned.get("counter_text", 0) + combat.fx.spawned.get("slash_counter", 0)
 	await r.tap(KEY_J)
 	await r.frames(30)
 	var d2 := hp0 - fox.hp - d1
-	r.check(success and player.chases_started == c0 + 1 and d1 == 12 and d2 == 18 and gold.size() > 0 and pop > pop0,
-		"AC4 chase = counter: after a dodge success (看破) the chase hit counts as a counter - 12 + 18 (x1.5), gold 反击",
-		"dodge end %.0f px away, success %s, dmg %d + %d, %s" % [end.distance_to(fp), success, d1, d2, gold])
-	await attack_done()
-	# late press: J 0.55 s after the dodge - the counter window (0.8 s from the 看破) runs out during the dash /
-	# before the hit lands; the rule is decided at the press, so it is still a counter
-	await r.teleport(fp + Vector2(36, 0))
-	fox.global_position = fp
-	fox.angle = 0.0
-	player.dash_cooldown_left = 0.0
-	await r.frames(30)
-	var succ1 := player.dodge_successes
-	await cs._fox_windup_until(0.15)
-	await dodge(Vector2(-0.4, 0.92).normalized())
-	fox.next_attack = 9999.0
-	await r.frames(32)
-	var left_at_press := player.counter_left
-	var hp2 := fox.hp
-	await r.tap(KEY_J)
-	var g2 := 0
-	while fox.hp == hp2 and g2 < 40:
-		await r.physics_frame
-		g2 += 1
-	r.check(player.dodge_successes == succ1 + 1 and player.last_attack_chased and hp2 - fox.hp == 12 and left_at_press < 0.3,
-		"AC4 chase = counter: decided at the press - a late chase (window %.2f s left at J, gone before the hit) still counts x1.5" % left_at_press,
-		"dmg %d after %d frames" % [hp2 - fox.hp, g2])
+	var gold: int = combat.hud.number_texts().filter(func(s): return "反击" in s).size()
+	var pop: int = combat.fx.spawned.get("counter_text", 0) + combat.fx.spawned.get("slash_counter", 0)
+	r.check(success and player.chases_started == c0 + 1 and d1 == 8 and d2 == 12 and gold == gold0 and pop == pop0,
+		"试玩反馈 v1 chase: after a dodge success (看破) the chase hit is an ordinary 8 + 12 - no 看破反击 any more",
+		"dodge end %.0f px away, success %s, dmg %d + %d" % [end.distance_to(fp), success, d1, d2])
 	await attack_done()
 	await r.frames(30)
-	# a chase after a dodge that was NOT a success is a normal hit (8)
-	await r.teleport(fp + Vector2(-70, -86))
-	fox.global_position = fp
-	await dodge(Vector2.DOWN)
-	var hp1 := fox.hp
-	await r.tap(KEY_J)
-	await r.frames(20)
-	r.check(player.last_attack_chased and hp1 - fox.hp == 8, "AC4 chase: without a dodge success the chase hit is a normal 8", "%d" % (hp1 - fox.hp))
-	await attack_done()
+	# the fix: he side-steps 62 px the moment the chase blow starts - the rabbit keeps sticking to him and the blow lands
+	var hits := 0
+	var tries := 0
+	var detail := []
+	for side in [1.0, -1.0, 1.0, -1.0]:
+		await r.teleport(fp + Vector2(-70, -86))
+		fox.global_position = fp
+		player.dash_cooldown_left = 0.0
+		await dodge(Vector2.DOWN)
+		var h := fox.hp
+		await r.tap(KEY_J)
+		var w := 0
+		while player.is_chasing() and w < 40:
+			await r.physics_frame
+			w += 1
+		# 师兄's own side-step (sidestep_distance in sidestep_time), as when his 10 % chance comes up
+		var dir: Vector2 = (fox.global_position - player.global_position).normalized().orthogonal() * float(side)
+		fox.velocity = dir * (fox.stats.sidestep_distance / fox.stats.sidestep_time)
+		fox.t = 0.0
+		fox.state = "sidestep"
+		w = 0
+		while fox.hp == h and w < 40:
+			await r.physics_frame
+			w += 1
+		tries += 1
+		if fox.hp < h:
+			hits += 1
+		detail.append("%d" % (h - fox.hp))
+		await attack_done()
+		fox.state = "chase"
+		fox.velocity = Vector2.ZERO
+		await r.frames(20)
+	r.check(hits == tries, "试玩反馈 v1 chase fix: 师兄 side-steps away right as the chase blow starts - it still lands (%d/%d)" % [hits, tries], str(detail))
 	await reset_v2()
 
 
@@ -361,9 +365,11 @@ func test_chase_never_through_walls() -> void:
 	await dodge(Vector2.RIGHT)
 	await r.tap(KEY_J)
 	await attack_done()
-	var reached := player.global_position.distance_to(w.global_position) <= player.stats.hit_offset + 1.5
+	var dist_end := player.global_position.distance_to(w.global_position)
+	var reached := dist_end <= player.stats.hit_offset + 1.5
 	w.reset_home(true)
-	r.check(reached and player.last_attack_chased, "AC4 chase: positive control - in the open the same chase reaches the bandit")
+	r.check(reached and player.last_attack_chased, "AC4 chase: positive control - in the open the same chase reaches the bandit",
+		"%.1f px, chased %s, blocked %s, end %s" % [dist_end, player.last_attack_chased, player.chase_blocked, player.chase_end])
 	await reset_v2()
 
 
@@ -519,10 +525,10 @@ func test_pause_page() -> void:
 	for l in pm.key_labels + pm.tip_labels:
 		text += l.text + "\n"
 	var keys_ok := true
-	for k in ["WASD", "方向键", "J", "鼠标左键", "空格", "Shift", "E", "交谈", "1 / 2", "↑↓", "选择", "T", "快进", "L", "氛围", "Esc", "暂停"]:
+	for k in ["WASD", "方向键", "J", "鼠标左键", "空格", "Shift", "K", "鼠标右键", "格挡", "E", "交谈", "1 / 2", "↑↓", "选择", "T", "快进", "L", "氛围", "Esc", "暂停"]:
 		keys_ok = keys_ok and k in text
 	var tips_ok := true
-	for k in ["两连击", "闪避无敌", "看破", "反击", "自动换位", "闪身追击", "切磋", "20%", "山贼", "复活"]:
+	for k in ["两连击", "闪避无敌", "格挡（GP）", "反击", "自动换位", "闪身追击", "切磋", "20%", "山贼", "复活"]:
 		tips_ok = tips_ok and k in text
 	var font: Font = load("res://fonts/ui_font.fnt")
 	var missing := ""
@@ -531,7 +537,7 @@ func test_pause_page() -> void:
 			missing += c
 	r.check(pm.is_open and Rect2(Vector2.ZERO, vp).encloses(rect) and rect.size.x > vp.x * 0.6,
 		"AC5 page: the help page fits on the screen (%s inside %s)" % [rect, vp])
-	r.check(keys_ok and tips_ok and missing == "", "AC5 page: lists every key with its use and the play tips (combo, i-frames, 看破/反击, swap, chase, spar, bandits)",
+	r.check(keys_ok and tips_ok and missing == "", "AC5 page: lists every key with its use (试玩反馈 v1: K / 鼠标右键 格挡) and the play tips (combo, i-frames, 格挡 GP / 反击, swap, chase, spar, bandits)",
 		"keys %s tips %s missing glyphs '%s'" % [keys_ok, tips_ok, missing])
 	# no label is clipped: each label gets at least its minimum size
 	var clipped := ""

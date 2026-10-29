@@ -87,6 +87,25 @@ body {
 	min-height: 18px;
 }
 
+#lang-switch {
+	position: absolute;
+	top: 10px;
+	right: 14px;
+	z-index: 3;
+	font: 14px/1 "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+	color: #8d8273;
+	user-select: none;
+}
+
+#lang-switch span {
+	cursor: pointer;
+	padding: 2px 4px;
+}
+
+#lang-switch span.on {
+	color: #f6dc78;
+}
+
 #loader-notice {
 	display: none;
 	max-width: 560px;
@@ -110,6 +129,7 @@ body {
 			需要开启 JavaScript 才能运行。
 		</noscript>
 
+		<div id="lang-switch"><span data-lang="zh">中文</span>|<span data-lang="en">English</span></div>
 		<div id="loader">
 			<img id="loader-logo" src="{{LOGO_DATA_URI}}" alt="{{TITLE}}">
 			<div id="loader-bar" class="indeterminate"><div id="loader-fill"></div></div>
@@ -129,7 +149,47 @@ const engine = new Engine(GODOT_CONFIG);
 	const fill = document.getElementById('loader-fill');
 	const text = document.getElementById('loader-text');
 	const notice = document.getElementById('loader-notice');
-	const loadingText = text.textContent;
+	// 中英文切换 v1: 「中文 | English」 top right. The choice is kept in localStorage "aw_lang" - the game (scripts/lang.gd)
+	// reads the same key; first visit: the browser's language. The texts in both languages come from data/title.json +
+	// data/i18n/en.json (filled in by tools/sync_assets.py).
+	const TEXTS = {{LOADER_TEXTS}};
+	const switcher = document.getElementById('lang-switch');
+	function storedLang() {
+		try {
+			const v = localStorage.getItem('aw_lang');
+			if (v === 'zh' || v === 'en') {
+				return v;
+			}
+		} catch (e) {}
+		const nav = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+		return nav.startsWith('zh') ? 'zh' : 'en';
+	}
+	let lang = storedLang();
+	let pct = -1;
+	const T = (k) => TEXTS[lang][k];
+	function paint() {
+		document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+		document.title = T('title');
+		for (const s of switcher.querySelectorAll('span')) {
+			s.classList.toggle('on', s.dataset.lang === lang);
+		}
+		text.textContent = pct < 0 ? T('loading') : (pct >= 100 ? T('starting') : T('loading') + '  ' + pct + '%');
+		if (notice.dataset.retry === '1') {
+			notice.textContent = T('slow');
+		}
+	}
+	switcher.addEventListener('click', function (ev) {
+		const l = ev.target.dataset && ev.target.dataset.lang;
+		if (l !== 'zh' && l !== 'en') {
+			return;
+		}
+		lang = l;
+		try {
+			localStorage.setItem('aw_lang', l);
+		} catch (e) {}
+		paint();
+	});
+	paint();
 	let initializing = true;
 
 	function hideLoader() {
@@ -138,18 +198,19 @@ const engine = new Engine(GODOT_CONFIG);
 		}
 		initializing = false;
 		loader.classList.add('done');
+		switcher.remove();             // in the game the title screen has its own switch
 		setTimeout(() => loader.remove(), 400);
 	}
 
 	function displayFailureNotice(err) {
 		console.error(err);
-		let msg = '未知错误';
+		let msg = T('unknown');
 		if (err instanceof Error) {
 			msg = err.message;
 		} else if (typeof err === 'string') {
 			msg = err;
 		}
-		notice.textContent = '加载失败：' + msg;
+		notice.textContent = T('failed') + msg;
 		notice.style.display = 'block';
 		bar.style.display = 'none';
 		initializing = false;
@@ -162,7 +223,7 @@ const engine = new Engine(GODOT_CONFIG);
 			return;
 		}
 		console.warn('loader: slow start, offering a reload');
-		notice.textContent = '加载有点慢，点此刷新重试';
+		notice.textContent = T('slow');
 		notice.style.display = 'block';
 		notice.style.cursor = 'pointer';
 		notice.dataset.retry = '1';
@@ -178,16 +239,16 @@ const engine = new Engine(GODOT_CONFIG);
 	});
 
 	if (missing.length !== 0) {
-		displayFailureNotice('浏览器缺少运行所需的功能：\n' + missing.join('\n'));
+		displayFailureNotice(T('missing') + '\n' + missing.join('\n'));
 		return;
 	}
 	engine.startGame({
 		'onProgress': function (current, total) {
 			if (current > 0 && total > 0) {
-				const pct = Math.max(0, Math.min(100, Math.floor((current / total) * 100)));
+				pct = Math.max(0, Math.min(100, Math.floor((current / total) * 100)));
 				bar.classList.remove('indeterminate');
 				fill.style.width = pct + '%';
-				text.textContent = pct >= 100 ? '{{STARTING_TEXT}}' : loadingText + '  ' + pct + '%';
+				paint();
 			} else {
 				bar.classList.add('indeterminate');
 			}

@@ -161,7 +161,8 @@ func _on_line() -> void:
 	seen_lines.append(dlg.full_text)
 
 
-## The real end of the prologue: stage 8 -> 师父 (E) -> S9-师父-收尾 -> 门派簿 -> 序章 · 完 -> 继续逛逛 (↓ + E).
+## The real end of the prologue: stage 8 -> 师父 (E) -> S9-师父-收尾 -> 门派簿 -> (新手指引 v1: no 序章 · 完 page /
+## 继续逛逛 any more - the game goes straight on) -> 师父's guide line (E) - then nothing is running.
 func reach_unlock() -> void:
 	for f in ["bandits_defeated", "puzzle_solved", "tiles_found"]:
 		story.flags[f] = true
@@ -171,16 +172,12 @@ func reach_unlock() -> void:
 	for i in 900:
 		if story.sect_book.is_open:
 			await r.tap(KEY_ESCAPE)
-		elif story.prologue_end.is_open:
-			if story.prologue_end.buttons_shown():
-				break
-			await r.frames(2)
 		elif dlg.active:
 			await r.tap(KEY_E)
+		elif smp.unlocked and not story.busy and not g.guide._intro_pending:
+			break
 		else:
 			await r.frames(2)
-	await r.tap(KEY_DOWN)
-	await r.tap(KEY_E)
 	await r.frames(4)
 
 
@@ -267,7 +264,9 @@ func test_numbers_from_data() -> void:
 	var lines := []
 	for sc in ["X-老周-修屋顶", "X-厨娘-修好了", "X-试炼木牌"]:
 		for e in story.scene(sc):
-			lines.append(String(e.get("text", "")))
+			# 改名与起名 v1: {name} (the hero's name) is filled when the line is shown (Dialogue.say) - filled here the
+			# same way, so "no { left" still means every number placeholder was filled from the data
+			lines.append(PlayerName.fill(String(e.get("text", ""))))
 	var joined := "\n".join(lines)
 	var tips := ""
 	for l in g.pause_menu.sample_tip_labels:
@@ -314,7 +313,7 @@ func test_gating() -> void:
 	var v := sample_visible()
 	v.erase("stall")
 	r.check(smp.unlocked and all_true(v) and smp.coins == 30 and smp.coin_label.text == "铜钱 30"
-		and "师父给的本钱：铜钱 +30" in smp.toasts, "sample AC1: '继续逛逛' -> 老周, the trial board / poles / dummies and the coin counter (30) appear, toast for the 本钱",
+		and "师父给的本钱：铜钱 +30" in smp.toasts, "sample AC1: the end of the prologue (新手指引 v1: no 继续逛逛 page, straight on) -> 老周, the trial board / poles / dummies and the coin counter (30) appear, toast for the 本钱",
 		"%s coins %d '%s'" % [v, smp.coins, smp.coin_label.text])
 	r.check(not smp.stall.visible, "sample AC1: the food stall only after the kitchen repair")
 	await _check_toast_clear("师父给的本钱：铜钱 +30")
@@ -592,7 +591,7 @@ func test_trial_rules() -> void:
 		stunned = stunned or p().stun_left > 0.0
 		if tr.hits > hits0:
 			break
-	r.check(tr.hits == hits0 + 1 and p().hp == 92 and stunned, "sample AC3: a turning arm that sweeps over her: -8 HP and a short stun", "hp %d" % p().hp)
+	r.check(tr.hits == hits0 + 1 and p().hp == 92 and stunned, "sample AC3: a turning arm that sweeps over him: -8 HP and a short stun", "hp %d" % p().hp)
 	# a dodge through the arm: no damage
 	await r.frames(60)
 	await r.teleport(spot)
@@ -601,7 +600,7 @@ func test_trial_rules() -> void:
 	var hp0 := p().hp
 	var hits1 := tr.hits
 	await r.tap(KEY_SPACE)            # dodge in place (facing) - i-frames start
-	tr.angles[0] = (spot - foot).angle()    # the arm is right on her
+	tr.angles[0] = (spot - foot).angle()    # the arm is right on him
 	await r.frames(6)
 	var dodge_ok := tr.hits == hits1 and p().hp == hp0 and p().iframes_left >= 0.0
 	r.check(dodge_ok, "sample AC3: dodging through a sweeping arm - the dodge's i-frames, no damage", "hp %d->%d" % [hp0, p().hp])
@@ -719,7 +718,7 @@ func test_trial_rewards_and_book() -> void:
 
 # ================================================================== AC3 the real-key bot run
 ## From the board with the real keys: E, 是, then steer with the movement keys towards the lit pole each frame; when an
-## arm is about to cross her path, dodge (Space) through it. Must reach a medal within the limit.
+## arm is about to cross him path, dodge (Space) through it. Must reach a medal within the limit.
 func test_trial_bot_run() -> void:
 	var tr: PlumTrial = smp.trial
 	await _start_trial_by_keys()
@@ -766,7 +765,7 @@ func _arm_threat(tr: PlumTrial) -> bool:
 			var arm := tr.angles[i] + PI * k
 			var diff := wrapf(a - arm, -PI, PI)
 			if signf(diff) == signf(w) and absf(diff) < deg_to_rad(28.0):
-				return true      # the arm reaches her within ~0.3 s
+				return true      # the arm reaches him within ~0.3 s
 	return false
 
 
@@ -938,7 +937,7 @@ func test_continue_restores() -> void:
 	r.check(_diff(obs, obs2) == "", "sample AC7: and it looks the same (coin counter, 老周, board, stall, mended pictures, rooms, no drips, indoors, clock, talk, book)",
 		_diff(obs, obs2))
 	r.check(not story.busy and story.stage == 9 and p().hp == 73 and g.interiors.room_at(p().global_position) == "dorm_old" and smp.coins == 42,
-		"sample AC7: no opening scene replays; she is in the old dorm with 73 HP and 42 coins")
+		"sample AC7: no opening scene replays; he is in the old dorm with 73 HP and 42 coins")
 	# the restored game plays on: walk out of the room (door), the trial board works
 	var res: String = await nav.go_out("dorm_old")
 	r.check(res == "door", "sample AC7: the restored game is playable (walks out through the door)")

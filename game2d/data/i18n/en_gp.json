@@ -1,0 +1,19 @@
+{
+  "_说明": "试玩反馈 v1（开发 A：格挡 GP、闪身追击、抹布、鼠标翻对话、教学台词）新加的中文 → 英文。格式同 en.json；由翻译器和 en.json 一起读入。主角小兔是男性（he / him）。",
+  "lines": {
+    "记住咱家功夫的要诀：看我身上发红、头上冒\"!\"，就按 K 接住这一招，顺势还手。实在接不住，就闪开。": "Remember the secret of our kung fu: when I glow red with a \"!\" over my head, press K to catch the blow and strike right back. If you can't catch it, dodge.",
+    "J 攻击，K 格挡，空格闪避。看准时机按 K，挡住就能自动反击；贴着对手闪避会绕到他背后。": "J attacks, K guards, Space dodges. Time your K: a caught blow counters by itself. Dodging close to a foe slips you behind him.",
+    "哈哈，又是我赢！不过你刚才闪那一下挺快，下回看准了按 K 接住，顺势还手。": "Ha! I win again! Your dodge was quick, though. Next time, time your K, catch the blow and hit back.",
+    "……呼。刚才太着急了。师兄说过，看见\"!\"就按 K 接住，顺势还手；接不住就闪开。": "...Phew. I rushed it. Senior Brother said: see the \"!\", press K to catch it and hit back; if you can't, dodge.",
+    "看准了按 K 接住，挡住就能还手。": "Time your K. Catch the blow and you hit back.",
+    "和师兄切磋：格挡（GP）成功一次，再赢下切磋": "Spar with Senior Brother: guard (GP) one blow, then win",
+    "指引 1/5：找师兄切磋，格挡（GP）成功一次，赢一场": "Tutorial 1/5: Spar with Senior Brother: guard (GP) once, win",
+    "看到师兄发红、头上冒“!” → 按 K（或鼠标右键）格挡 → 自动反击": "Senior Brother glows red with a \"!\" → K (or right click) to guard → auto counter",
+    "格挡 {0} · 赢一场 {1}": "Guard {0} · Win {1}",
+    "K / 鼠标右键": "K / Right click",
+    "格挡（GP）": "Guard (GP)",
+    "对话：下一句（鼠标左键也行）": "Talk: next line (left click too)",
+    "敌人头顶出“!”时按 K：挡住不掉血，自动反击 30；按早了会僵住。": "Press K when a foe shows \"!\": no damage, auto counter for 30. Too early and you freeze.",
+    "闪避后 0.6 秒内按 J，冲向 3 格内最近的敌人，一定打中。": "Press J within 0.6 s of a dodge to dash at the nearest foe within 3 tiles: a sure hit."
+  }
+}

@@ -3,7 +3,7 @@ extends SceneTree
 ##   01-04 opening: asleep / bucket filling / overflow + puddle / woken     05 objective 擦干地上的水 (star on the rag)
 ##   06 hint without the rag   07 rag taken   08-09 wipes 1 and 2   10 pouring (S1-擦水渍)   11 看看桌上的字条
 ##   12 wardrobe panel   13 dorm corner (broom + rag)   14 the leak onto 师兄's pillow (wet mark)
-##   20-24 minimap: outdoors / indoors / star on the rim / transparent over her / rim towards the doorway indoors
+##   20-24 minimap: outdoors / indoors / star on the rim / transparent over him / rim towards the doorway indoors
 ##   30-44 indoor light: every room at noon, dusk and night (mean brightness printed)
 ##   50-55 occlusion: dorm roof, hall roof, compound wall, tree canopy, kitchen roof, an NPC; 56 = the dorm roof with the
 ##   fade switched off (the old look) for comparison

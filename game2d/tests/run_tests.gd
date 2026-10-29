@@ -20,6 +20,11 @@ var reach := PackedInt32Array()   # BFS parent index (-1 = unreached)
 
 func _initialize() -> void:
 	SaveGame.erase()    # 两条路小样 v1: start from no save (tests use user://test_save.json, never the player's slot)
+	# 开场过场动画 v1: the older suites click 新游戏 and expect the game at once; tests/opening_suite.gd turns it on
+	Opening.enabled = false
+	# 改名与起名 v1: the same for the naming box after 新游戏 - off = the default name 小兔 is taken at once (exactly what
+	# 确定 on the untouched box does); tests/naming_suite.gd turns it on and types names with real keys
+	NamingPanel.enabled = false
 	# 第④步第一批 修复 v1: the game's real view - a 1440x810 window shows the 480x270 picture (ViewFit). Headless runs
 	# used to start with a 64x64 window, which ViewFit turned into a 480x480 view: every "fits on the screen" check was
 	# measured on a screen 210 px taller than the game's.
@@ -136,6 +141,14 @@ func _run() -> void:
 	# the walking / collision / NPC tests below teleport the player onto the mountain road; the bandits would now
 	# (correctly) attack. Their AI is switched off for these tests only and back on for the combat tests.
 	main.combat.bandits_enabled = false
+	if "--only-i18n" in OS.get_cmdline_user_args():
+		# quick loop for 中英文切换:  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-i18n
+		root.remove_child(main)
+		await load("res://tests/i18n_suite.gd").new(self).run()
+		_log("")
+		_log("RESULT (only i18n): %d passed, %d failed" % [passes, fails])
+		quit(1 if fails > 0 else 0)
+		return
 	if "--only-v2" in OS.get_cmdline_user_args():
 		# quick loop while working on combat v1.2:  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-v2
 		var only = load("res://tests/combat_v2_suite.gd").new(self, load("res://tests/combat_suite.gd").new(self))
@@ -195,6 +208,15 @@ func _run() -> void:
 		_log("RESULT (only step3): %d passed, %d failed" % [passes, fails])
 		quit(1 if fails > 0 else 0)
 		return
+	if "--only-guide" in OS.get_cmdline_user_args():
+		# quick loop for 新手指引 + 任务面板:  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-guide
+		#   (add --g=name,name to run some of its tests only)
+		root.remove_child(main)
+		await load("res://tests/guide_suite.gd").new(self).run()
+		_log("")
+		_log("RESULT (only guide): %d passed, %d failed" % [passes, fails])
+		quit(1 if fails > 0 else 0)
+		return
 	if "--only-step4a" in OS.get_cmdline_user_args():
 		# quick loop for 第④步第一批:  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-step4a
 		#   (add --s4=name,name to run some of its tests only)
@@ -209,6 +231,68 @@ func _run() -> void:
 		await load("res://tests/title_suite.gd").new(self).run()
 		_log("")
 		_log("RESULT (only title): %d passed, %d failed" % [passes, fails])
+		quit(1 if fails > 0 else 0)
+		return
+	if "--only-opening" in OS.get_cmdline_user_args():
+		# quick loop for 开场过场动画 v1:  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-opening
+		await load("res://tests/opening_suite.gd").new(self).run()
+		_log("")
+		_log("RESULT (only opening): %d passed, %d failed" % [passes, fails])
+		quit(1 if fails > 0 else 0)
+		return
+	if "--only-gp" in OS.get_cmdline_user_args():
+		# quick loop for 试玩反馈 v1 (格挡 GP, 闪身追击, 抹布, 鼠标翻对话):  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-gp
+		await load("res://tests/gp_suite.gd").new(self).run()
+		_log("")
+		_log("RESULT (only gp): %d passed, %d failed" % [passes, fails])
+		quit(1 if fails > 0 else 0)
+		return
+	if "--only-schedule" in OS.get_cmdline_user_args():
+		# quick loop for 坐下与人物作息 v1:  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-schedule
+		#   (add --sch=name,name to run some of its tests only)
+		root.remove_child(main)
+		await load("res://tests/schedule_suite.gd").new(self).run()
+		_log("")
+		_log("RESULT (only schedule): %d passed, %d failed" % [passes, fails])
+		quit(1 if fails > 0 else 0)
+		return
+	if "--only-skills" in OS.get_cmdline_user_args():
+		# quick loop for 武学与经营 第一批 · 武学 (A):  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-skills
+		#   (add --sk=name,name to run some of its tests only)
+		root.remove_child(main)
+		await load("res://tests/skills_suite.gd").new(self).run()
+		_log("")
+		_log("RESULT (only skills): %d passed, %d failed" % [passes, fails])
+		quit(1 if fails > 0 else 0)
+		return
+	if "--only-farm" in OS.get_cmdline_user_args():
+		# quick loop for 武学与经营 第一批 · 经营 (B):  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-farm
+		#   (add --fm=name,name to run some of its tests only)
+		root.remove_child(main)
+		await load("res://tests/farm_suite.gd").new(self).run()
+		_log("")
+		_log("RESULT (only farm): %d passed, %d failed" % [passes, fails])
+		quit(1 if fails > 0 else 0)
+		return
+	if "--only-naming" in OS.get_cmdline_user_args():
+		# quick loop for 改名与起名 v1:  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-naming
+		await load("res://tests/naming_suite.gd").new(self).run()
+		_log("")
+		_log("RESULT (only naming): %d passed, %d failed" % [passes, fails])
+		quit(1 if fails > 0 else 0)
+		return
+	if "--only-hd" in OS.get_cmdline_user_args():
+		# quick loop for 坐姿重画 + 高清头像 + 封面高清小兔:  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-hd
+		await load("res://tests/hd_suite.gd").new(self).run()
+		_log("")
+		_log("RESULT (only hd): %d passed, %d failed" % [passes, fails])
+		quit(1 if fails > 0 else 0)
+		return
+	if "--only-audio" in OS.get_cmdline_user_args():
+		# quick loop for 音效 + 背景音乐:  godot --headless --fixed-fps 60 --path game2d -s tests/run_tests.gd -- --only-audio
+		await load("res://tests/audio_suite.gd").new(self).run()
+		_log("")
+		_log("RESULT (only audio): %d passed, %d failed" % [passes, fails])
 		quit(1 if fails > 0 else 0)
 		return
 	await test_spawn()
@@ -256,6 +340,28 @@ func _run() -> void:
 	await load("res://tests/step3_suite.gd").new(self).run()
 	# 第④步第一批 (tests/step4a_suite.gd): 江湖告示榜, 悬赏 posting / fights / bots, 委托 draw / six kinds / 24:00, saving v4
 	await load("res://tests/step4a_suite.gd").new(self).run()
+	# 新手指引 + 任务面板 v1 (tests/guide_suite.gd): the new ending, the five steps, the Q board, tracking, layout, save v5
+	await load("res://tests/guide_suite.gd").new(self).run()
+	# 音效 + 背景音乐 v1 (tests/audio_suite.gd): files, event -> sound, scene -> track, cross-fade, four volume levels, the
+	# Esc page volume controls, settings outside the save, the web first-input gate
+	await load("res://tests/audio_suite.gd").new(self).run()
+	# 中英文切换 v1 (tests/i18n_suite.gd): the English catalog, the switches, a line switching mid-way, every layout in English
+	await load("res://tests/i18n_suite.gd").new(self).run()
+	# 开场过场动画 v1 (tests/opening_suite.gd): 新游戏 -> opening -> prologue, 继续游戏 without it, skip, keys, replay, layout
+	await load("res://tests/opening_suite.gd").new(self).run()
+	# 试玩反馈 v1 (tests/gp_suite.gd): 格挡 GP, 闪身追击 always lands, the rag, dialogue by mouse (its own games)
+	await load("res://tests/gp_suite.gd").new(self).run()
+	# 坐下与人物作息 v1 (tests/schedule_suite.gd): the 8 seats, who sleeps when, exceptions, 等到天亮 = T hour by hour, saves
+	await load("res://tests/schedule_suite.gd").new(self).run()
+	# 武学与经营 第一批 · 武学 (tests/skills_suite.gd): three moves, 师父传功, 打坐 = 等到天亮 = T, 武学 page / tab, saves, bots
+	await load("res://tests/skills_suite.gd").new(self).run()
+	# 武学与经营 第一批 · 经营 (tests/farm_suite.gd): 菜园, 库房, 采集, 药膳, 师弟种地, 进阶指引, 序章转场, 三种跳时间一致, saves
+	await load("res://tests/farm_suite.gd").new(self).run()
+	# 改名与起名 v1 (tests/naming_suite.gd): 《山门小院》 title, the naming box (real keys / IME text), the name in every line,
+	# 门派簿, saves (old ones -> 小兔), Esc 改名, English (Momo), the font's 3755 common hanzi
+	await load("res://tests/naming_suite.gd").new(self).run()
+	# 坐姿重画 + 高清头像 + 封面高清小兔 (tests/hd_suite.gd): seat poses, the new sitting art, HD portraits, HD title rabbit
+	await load("res://tests/hd_suite.gd").new(self).run()
 	_log("")
 	_log("RESULT: %d passed, %d failed" % [passes, fails])
 	var f := FileAccess.open("res://tests/last_result.txt", FileAccess.WRITE)
@@ -848,7 +954,7 @@ func _sprite_by_type(t: String, near: Vector2) -> Sprite2D:
 
 
 func test_occlusion_order() -> void:
-	# north of the dorm roof (stopped at the ridge, 房子整栋实心 v1: she can no longer tuck behind it) -> the dorm draws over the player
+	# north of the dorm roof (stopped at the ridge, 房子整栋实心 v1: he can no longer tuck behind it) -> the dorm draws over the player
 	var dorm := _sprite_by_type("building", Vector2(5 * T + 144, 29 * T))
 	await teleport(Vector2(10 * T + 16, 24 * T + 12))
 	await push(Vector2.DOWN, 0.4)
@@ -870,7 +976,13 @@ func test_v2_speed_dash() -> void:
 	# walking is ~30% slower than v1 (190 px/s). Combat v1.1 moved it from data/tuning.json into the player's
 	# stat card (cards/player.tres) - same value, new home; tuning.json must no longer carry it.
 	var v: float = player.stats.walk_speed
-	check(v >= 190.0 * 0.62 and v <= 190.0 * 0.78 and not Tuning.data().has("walk_speed") and player.stats.resource_path == "res://cards/player.tres",
+	# (武学与经营 第一批, B 整体收尾: 吐纳功 gives the rabbit a private copy of the card (Skills.base_stats is the card
+	# itself) - "lives in the player card" is checked through that copy's source: the card's path and the same speed)
+	var card_path: String = player.stats.resource_path
+	var sk = main.get("skills")
+	if card_path == "" and sk != null and sk.base_stats != null and sk.base_stats.walk_speed == v:
+		card_path = sk.base_stats.resource_path
+	check(v >= 190.0 * 0.62 and v <= 190.0 * 0.78 and not Tuning.data().has("walk_speed") and card_path == "res://cards/player.tres",
 		"A1 speed: walk speed is ~30% below v1's 190 px/s and lives in the player card (moved from tuning.json)", "%.0f px/s" % v)
 	# dash is unchanged from v1: 540 px/s for 0.16 s (~86 px), cooldown 0.6 s (v1.1: values now in the player card)
 	check(player.stats.dodge_speed == 540.0 and player.stats.dodge_time == 0.16 and player.stats.dodge_cooldown == 0.6,
@@ -1019,7 +1131,7 @@ func test_minimap() -> void:
 			await frames(2)
 			if mm.center_world.distance_to(player.global_position) > 0.5 or mm.player_marker != Vector2(mm.radius, mm.radius) or mm.arrow_dir.distance_to(dirs[dn_]) > 0.01:
 				bad += "[%s %s: %s dir %s] " % [sp, dn_, mm.center_world, mm.arrow_dir]
-	check(bad == "", "A5 minimap: centred on the player, the arrow shows her facing (6 places x 4 facings)", bad)
+	check(bad == "", "A5 minimap: centred on the player, the arrow shows his facing (6 places x 4 facings)", bad)
 	# real walking: the map moves under the centred arrow
 	await teleport(tile_center(31, 29))
 	var m0 := mm.center_world

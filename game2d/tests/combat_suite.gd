@@ -1,8 +1,16 @@
 extends RefCounted
 ## Combat v1 checks, run by tests/run_tests.gd after the walking-version checks. Real key events (J, Space,
-## E, 1/2, arrows / WASD), real physics, real AI. Bots: idle, masher, dodge-only, dodge-then-counter.
+## E, 1/2, arrows / WASD), real physics, real AI. Bots: idle, masher, dodge-only, dodge-then-chase, GP (格挡, K).
+## 试玩反馈 v1: the 看破反击 (counter window after a dodge) is gone - the counter comes from GP now; the winning bots
+## of every suite use GP (bot_step("gp")); "human" = a human-like GP bot (K 0.30-0.55 s after the wind-up starts,
+## a quarter of the blows not guarded at all).
 
 const DOC := "docs/design/战斗数据方案-v1.3.md"   # v1.3: numbers checked against the v1.3 doc (v1.2 stays as history)
+# 试玩反馈 v1 (docs/design/试玩反馈-格挡音效-方案-v1.md, client-confirmed 2026-10-27): the 看破反击 fields left the player
+# card (rows still in v1.3 appendix A as history) and the 格挡 (GP) fields came in - checked here against that plan.
+const REMOVED_FIELDS := ["player.counter_window", "player.counter_multiplier"]
+const GP_FIELDS := {"gp_stance": 0.25, "gp_whiff_recover": 0.4, "gp_cooldown": 0.3, "gp_counter_damage": 30,
+	"gp_enemy_stagger": 0.6, "gp_hitstop": 0.1, "gp_knockback": 16.0}   # (knock-back: the plan gives no number - attack 2's 16)
 
 var r                     # the runner (SceneTree with check(), frames(), key(), tap(), teleport(), hold_dir() ...)
 var main: Node
@@ -14,6 +22,10 @@ var boar: Fighter
 var bot_results := {}     # for the report
 var _j_down := false
 var _space_down := false
+var _k_down := false
+var human_rng := RandomNumberGenerator.new()   # the "human" GP bot's reaction times (seed it per run)
+var _human_plan := {}       # [fighter, strike number] -> reaction time (s after the wind-up started) or -1 (not guarded)
+var _gp_for := {}           # fighter -> strike number K was pressed for
 var _atk_cd := 0.0
 var _dodged_for := {}
 var _bot_t := 0.0
@@ -63,6 +75,9 @@ func _release() -> void:
 	if _space_down:
 		r.key(KEY_SPACE, false)
 		_space_down = false
+	if _k_down:
+		r.key(KEY_K, false)
+		_k_down = false
 
 
 func reset_all() -> void:
@@ -127,12 +142,58 @@ func press_space() -> void:
 	_space_down = true
 
 
+func press_k() -> void:
+	r.key(KEY_K, true)
+	_k_down = true
+
+
+## Seconds from now until `f`'s blow can reach the player (wind-up left, plus - for a charge / pounce - the time the
+## lunge needs to close the gap). What a perfect GP bot aims its K at.
+func blow_eta(f: Fighter) -> float:
+	var left: float = maxf(0.0, f.stats.windup - f.t) if f.state == "windup" else 0.0
+	if f.state == "strike" and f.attack_kind_now() == "charge":
+		left = 0.0                # the charge is under way: only the gap is left
+	if f.attack_kind_now() != "charge":
+		return left
+	var speed: float = f._lunge() / maxf(f._strike_t(), 0.01)
+	var gap: float = f.global_position.distance_to(player.global_position) - (f.stats.hit_radius + player.stats.body_radius)
+	return left + maxf(0.0, gap) / maxf(speed, 1.0)
+
+
+## A blow from `f` is on its way: its wind-up, or a charge / pounce still closing in (not yet landed).
+func blow_coming(f: Fighter) -> bool:
+	return f.state == "windup" or (f.state == "strike" and f.attack_kind_now() == "charge" and not f.struck)
+
+
+## Should the GP bot press K for `f` now? perfect: so that the stance (0.25 s) is up when the blow arrives (K about
+## 0.12 s before it); human: at its planned reaction time after the wind-up started (0.30-0.55 s), or never (25 %).
+func gp_time_ok(f: Fighter, human: bool) -> bool:
+	if not blow_coming(f) or _gp_for.get(f, -1) == attack_id(f):
+		return false
+	if human:
+		var key := [f.get_instance_id(), attack_id(f)]
+		if not _human_plan.has(key):
+			_human_plan[key] = -1.0 if human_rng.randf() < 0.25 else human_rng.randf_range(0.30, 0.55)
+		var rt: float = _human_plan[key]
+		var since: float = f.t if f.state == "windup" else f.stats.windup + f.t
+		return rt >= 0.0 and since >= rt
+	return blow_eta(f) <= 0.12
+
+
+## Which attack of `f` this is (its strike count when the wind-up started; the count goes up as the blow starts).
+func attack_id(f: Fighter) -> int:
+	return f.strikes if f.state == "windup" else f.strikes - 1
+
+
 ## One bot decision (called once per physics frame).
-## kind: idle | masher | dodger | counter | dodger_p | counter_p
-##   counter   : dodges at the end of a wind-up (into 师兄 = swap), then attacks at once - inside the 0.6 s chase
-##               window this is the 闪身追击 (v1.2), and inside the counter window it is a counter (x1.5)
-##   dodger    : same dodges, but waits until the counter window is over before attacking (no x1.5, no chase)
-##   *_p       : "punish-only" variants - attack only during the 2 s after a dodge, otherwise keep ~50 px away
+## kind: idle | masher | dodger | chase | gp | human | dodger_p | chase_p | gp_p
+##   chase     : dodges at the end of a wind-up (into 师兄 = swap), then attacks at once - inside the 0.6 s chase window
+##               this is the 闪身追击 (v1.2; 试玩反馈 v1: locked on, it always lands)
+##   dodger    : same dodges, but waits until the chase window is over before attacking (no chase)
+##   gp        : presses K (格挡) so that the stance is up when the blow lands, lets the counter run; otherwise walks in
+##               and attacks
+##   human     : like gp, but K comes 0.30-0.55 s after the wind-up starts and a quarter of the blows are not guarded
+##   *_p       : "punish-only" variants - attack only during the 2 s after a dodge / a caught blow, otherwise keep ~50 px away
 func bot_step(kind: String) -> void:
 	if _j_down:
 		r.key(KEY_J, false)
@@ -140,6 +201,9 @@ func bot_step(kind: String) -> void:
 	if _space_down:
 		r.key(KEY_SPACE, false)
 		_space_down = false
+	if _k_down:
+		r.key(KEY_K, false)
+		_k_down = false
 	_atk_cd -= 1.0 / 60.0
 	_bot_t += 1.0 / 60.0
 	if kind == "idle" or player.dead:
@@ -157,25 +221,40 @@ func bot_step(kind: String) -> void:
 	var d := to.length()
 	var base := kind.trim_suffix("_p")
 	var punish_only := kind.ends_with("_p")
-	if base == "dodger" or base == "counter":
+	if base == "gp" or base == "human":
+		if player.gp_countering or player.in_gp_stance():
+			r.hold_dir(Vector2.ZERO)
+			if player.gp_countering:
+				_punish_until = _bot_t + 2.0
+			return
+		for f in enemies:
+			var tf: Vector2 = f.global_position - player.global_position
+			var reach: float = f.stats.attack_range + 40.0 if f.attack_kind_now() != "charge" else f._lunge() + 50.0
+			if tf.length() < reach and gp_time_ok(f, base == "human"):
+				_gp_for[f] = attack_id(f)
+				if player.gp_cooldown_left <= 0.0 and not player.is_dashing() and player.stun_left <= 0.0:
+					r.hold_dir(Vector2.ZERO)
+					press_k()
+					return
+	if base == "dodger" or base == "chase":
 		for f in enemies:
 			var tf: Vector2 = f.global_position - player.global_position
 			var reach: float = f.stats.attack_range + 40.0 if f.stats.attack_kind != "charge" else f.stats.strike_lunge + 50.0
 			if f.state == "windup" and f.stats.windup - f.t <= 0.2 and tf.length() < reach and _dodged_for.get(f, -1) != f.strikes \
 					and not player.is_dashing() and player.dash_cooldown_left <= 0.0:
 				var dir := tf.normalized().orthogonal()
-				if base == "counter" and tf.length() <= 60.0 and f.stats.attack_kind != "charge":
+				if base == "chase" and tf.length() <= 60.0 and f.stats.attack_kind != "charge":
 					dir = tf.normalized()   # dodge into him -> swap behind
 				r.hold_dir(dir)
 				press_space()
 				_dodged_for[f] = f.strikes
 				_punish_until = _bot_t + 2.0
 				return
-		if base == "dodger" and player.counter_left > 0.0:
-			# "会闪避但不吃反击加成": waits until the counter window has passed before attacking again
+		if base == "dodger" and player.since_dodge_end <= player.stats.chase_window:
+			# "会闪避但不追击": waits until the chase window has passed before attacking again
 			r.hold_dir(Vector2.ZERO)
 			return
-		if base == "counter" and not player.is_dashing() and player.since_dodge_end <= player.stats.chase_window \
+		if base == "chase" and not player.is_dashing() and player.since_dodge_end <= player.stats.chase_window \
 				and d <= player.stats.chase_range and _atk_cd <= 0.0:
 			# 闪身追击: press J right after the dodge - the rabbit dashes in by itself
 			r.hold_dir(Vector2.ZERO)
@@ -196,7 +275,10 @@ func bot_step(kind: String) -> void:
 func run_spar(kind: String, seed_v: int, limit := 90.0) -> Dictionary:
 	await reset_all()
 	combat.rng.seed = seed_v
+	human_rng.seed = seed_v
 	_dodged_for = {}
+	_gp_for = {}
+	_human_plan = {}
 	_punish_until = -1.0
 	await start_spar_keys()
 	var t := 0.0
@@ -226,11 +308,15 @@ func test_cards_vs_doc() -> void:
 	var seen := {}
 	var re := RegEx.new()
 	re.compile("(?m)^\\| (\\w+) \\| (\\w+) \\| ([^|]+?) \\|")
+	var removed_ok := true
 	for m in re.search_all(app):
 		var card := m.get_string(1)
 		if not cards.has(card):
 			continue
 		var field := m.get_string(2)
+		if REMOVED_FIELDS.has(card + "." + field):
+			removed_ok = removed_ok and not field in cards[card]
+			continue
 		var want := m.get_string(3).strip_edges()
 		var res: Resource = cards[card]
 		if not field in res:
@@ -246,14 +332,21 @@ func test_cards_vs_doc() -> void:
 			bad += "%s.%s card=%s doc=%s; " % [card, field, got, want]
 		n += 1
 		seen[card + "." + field] = true
-	# every value on every card is listed in the doc
+	var gp_bad := ""
+	for k in GP_FIELDS:
+		seen["player." + k] = true
+		if not k in cards["player"] or absf(float(cards["player"].get(k)) - float(GP_FIELDS[k])) > 1e-6:
+			gp_bad += "%s=%s (plan %s) " % [k, cards["player"].get(k), GP_FIELDS[k]]
+	# every value on every card is listed in the doc (试玩反馈 v1: the GP fields in the feedback plan, checked above)
 	var undocumented := ""
 	for c in cards:
 		for p in cards[c].get_property_list():
 			if p["usage"] & PROPERTY_USAGE_SCRIPT_VARIABLE and not seen.has(c + "." + p["name"]):
 				undocumented += c + "." + p["name"] + " "
-	r.check(bad == "" and n >= 100, "AC1 cards: all %d values in appendix A of v1.3 match the .tres cards" % n, bad)
-	r.check(undocumented == "", "AC1 cards: every card field is documented in v1.3 appendix A", undocumented)
+	r.check(bad == "" and n >= 98, "AC1 cards: all %d values in appendix A of v1.3 match the .tres cards (试玩反馈 v1: the 2 看破反击 rows are gone from the card)" % n, bad)
+	r.check(removed_ok, "试玩反馈 v1 cards: the 看破反击 fields (counter_window, counter_multiplier) are no longer on the player card")
+	r.check(gp_bad == "", "试玩反馈 v1 cards: the GP numbers on cards/player.tres are the plan's (stance 0.25, too early 0.4, cooldown 0.3, counter 30, stagger 0.6, hitstop 0.1)", gp_bad)
+	r.check(undocumented == "", "AC1 cards: every card field is documented (v1.3 appendix A; the GP fields: 试玩反馈 plan, above)", undocumented)
 	# key decisions spelled out
 	var sx: EnemyStats = cards["shixiong"]
 	var pl: PlayerStats = cards["player"]
@@ -264,8 +357,8 @@ func test_cards_vs_doc() -> void:
 	r.check(sx.max_hp == 120 and sx.damage == 12 and sx.windup == 0.85 and sx.interval_min == 1.4 and sx.interval_max == 2.2
 		and sx.sidestep_chance == 0.1 and not sx.super_armor and sx.stagger_delays_attack and sx.stagger_attack_delay == 0.5
 		and not sx.can_swap and wo.max_hp == 60 and wo.damage == 14 and bo.max_hp == 110 and bo.damage == 22
-		and pl.counter_multiplier == 1.5 and pl.dodge_iframes == 0.3 and pl.chase_window == 0.6 and pl.chase_range == 96.0,
-		"AC1 decisions (v1.2 table): 师兄 120/12, wind-up 0.85, interval 1.4-2.2, sidestep 10%, no super armour, stagger delay 0.5; 狼 60/14; 野猪 110/22; chase 0.6 s / 96 px")
+		and pl.gp_counter_damage == 30 and pl.dodge_iframes == 0.3 and pl.chase_window == 0.6 and pl.chase_range == 96.0,
+		"AC1 decisions (v1.2 table; 试玩反馈 v1: GP counter 30 = the old 12 + 18 counter): 师兄 120/12, wind-up 0.85, interval 1.4-2.2, sidestep 10%, no super armour, stagger delay 0.5; 狼 60/14; 野猪 110/22; chase 0.6 s / 96 px")
 	# hits to lose: 6 hits leave 28 (> 20), the 7th ends it
 	var hp := pl.max_hp
 	var hits := 0
@@ -443,7 +536,7 @@ func test_dodge_success_and_counter() -> void:
 	await r.tap(KEY_SPACE)
 	r.release_all()
 	await r.frames(40)
-	var early_ok := player.dodge_successes == succ0 and player.counter_left == 0.0
+	var early_ok := player.dodge_successes == succ0
 	r.check(early_ok, "AC3 dodge: dodging 0.5 s before the strike is NOT a dodge success (shadow rule: 0.30 s)")
 	fox.next_attack = 9999.0
 	await r.frames(60)
@@ -458,11 +551,14 @@ func test_dodge_success_and_counter() -> void:
 	await r.tap(KEY_SPACE)
 	r.release_all()
 	await r.frames(12)
-	r.check(player.dodge_successes == succ0 + 1 and player.counter_left > 0.0 and player.hp == hp0,
-		"AC3 dodge success: dodging at the end of the wind-up -> success, counter window open, no damage",
-		"successes %d window %.2f hp %d" % [player.dodge_successes, player.counter_left, player.hp])
+	r.check(player.dodge_successes == succ0 + 1 and player.hp == hp0 and "看破！" in combat.hud.number_texts(),
+		"AC3 dodge success: dodging at the end of the wind-up -> success ('看破！'), no damage",
+		"successes %d hp %d %s" % [player.dodge_successes, player.hp, combat.hud.number_texts()])
 	fox.next_attack = 9999.0
-	# walk back and counter: both hits x1.5 (12 + 18), gold numbers with 反击
+	# 试玩反馈 v1: no 看破反击 any more - the combo right after a dodge success is the ordinary 8 + 12, no gold 反击
+	# (the counter now comes from GP: 12 + 18 = 30, gold numbers - tests/gp_suite.gd)
+	var gold0: int = combat.hud.number_texts().filter(func(s): return "反击" in s).size()
+	var arcs0: int = combat.fx.spawned.get("slash_counter", 0) + combat.fx.spawned.get("counter_text", 0)
 	var fh0 := fox.hp
 	r.hold_dir((fox.global_position - player.global_position).normalized())
 	var g := 0
@@ -476,16 +572,11 @@ func test_dodge_success_and_counter() -> void:
 	await r.tap(KEY_J)
 	await r.frames(30)
 	var d2 := fh0 - fox.hp - d1
-	r.check(d1 == 12 and d2 == 18 and player.combo_is_counter, "AC3 counter: the combo inside the window does 12 + 18 (x1.5)", "%d + %d" % [d1, d2])
 	var gold := combat.hud.number_texts().filter(func(s): return "反击" in s)
-	r.check(gold.size() > 0 and (combat.fx.spawned.get("slash_counter", 0) + combat.fx.spawned.get("counter_text", 0)) > 0,
-		"AC3/AC7 counter feedback: gold '反击' numbers, gold arc and 反击! popup", str(gold))
-	# next combo is normal again
-	await r.frames(20)
-	var fh1 := fox.hp
-	await r.tap(KEY_J)
-	await r.frames(14)
-	r.check(fh1 - fox.hp == 8, "AC3 counter: one dodge success buys one counter combo (next combo is normal 8)")
+	var arcs: int = combat.fx.spawned.get("slash_counter", 0) + combat.fx.spawned.get("counter_text", 0)
+	r.check(d1 == 8 and d2 == 12 and gold.size() == gold0 and arcs == arcs0,
+		"试玩反馈 v1: 看破反击 is gone - the combo right after a dodge success does the ordinary 8 + 12 (no x1.5, no gold 反击)",
+		"%d + %d, gold %s" % [d1, d2, gold])
 	fox.stats = orig
 	await reset_all()
 
@@ -692,24 +783,25 @@ func test_spar_flows_and_bots() -> void:
 	await r.frames(int(combat.rules.spar_result_seconds * 60) + 5)
 	r.check(combat.spar_state == "none" and player.hp == 100 and fox.hp == fox.stats.max_hp and fox.global_position == fox.home and not fox.engaged,
 		"AC4 reset: after the result both are back to full HP and 师兄 returns to his place")
-	# --- full win flow (dodge + counter bot), then rematch possible
-	var win := await run_spar("counter", 21)
+	# --- full win flow (GP bot), then rematch possible
+	var win := await run_spar("gp", 21)
 	var title_w := combat.hud.result_title.text
 	r.check(win["win"] and title_w == "你赢了！" and combat.hud.result_line.text.begins_with("师兄：") and win["fox_hp"] <= 44,
-		"AC4/AC5 win flow: the dodge-then-counter bot wins, '你赢了！' + a line from 师兄", "%.1f s, player hp %d" % [win["time"], win["hp"]])
+		"AC4/AC5 win flow: the GP bot wins, '你赢了！' + a line from 师兄", "%.1f s, player hp %d" % [win["time"], win["hp"]])
 	await r.frames(int(combat.rules.spar_result_seconds * 60) + 5)
 	await r.teleport(spot_near(fox))
 	await r.tap(KEY_E)
 	r.check(combat.hud.choice.visible, "AC4 rematch: E on 师兄 offers the spar again")
 	await r.tap(KEY_2)
-	# --- bots: idle x3, counter x8, dodge-only x8, masher x24 (seeded); v1.2 adds the "punish-only" pair
-	# (counter_p / dodger_p): they only attack after dodging a strike, which isolates what the counter
-	# (x1.5 + 闪身追击) is worth now that 师兄 usually goes down before his second attack.
+	# --- bots: idle x3, gp x8, chase x8, dodge-only x8, masher x24 (seeded); the "punish-only" variants only attack
+	# after dodging / guarding a blow: chase_p vs dodger_p isolates what the (fixed) 闪身追击 is worth, gp_p what GP is.
+	# (试玩反馈 v1: the v1.2 "counter" bot was dodge + 看破反击 + chase; the 看破反击 is gone, so it is now "chase", and the
+	# winning bot is the GP one.)
 	var stats := {}
 	fox_min = Vector2.INF
 	fox_max = -Vector2.INF
-	for kind in ["idle", "counter", "dodger", "masher", "counter_p", "dodger_p"]:
-		var n: int = {"idle": 3, "counter": 8, "dodger": 8, "masher": 24, "counter_p": 8, "dodger_p": 8}[kind]
+	for kind in ["idle", "gp", "chase", "dodger", "masher", "gp_p", "chase_p", "dodger_p"]:
+		var n: int = {"idle": 3, "gp": 8, "chase": 8, "dodger": 8, "masher": 24, "gp_p": 8, "chase_p": 8, "dodger_p": 8}[kind]
 		var wins := 0
 		var times := []
 		var win_times := []
@@ -728,22 +820,25 @@ func test_spar_flows_and_bots() -> void:
 	await reset_all()
 	bot_results = stats
 	r.check(stats["idle"]["wins"] == 0, "AC5 bot: a player who only stands still always loses", "%d/%d" % [stats["idle"]["wins"], stats["idle"]["runs"]])
-	r.check(stats["counter"]["wins"] == stats["counter"]["runs"], "AC5 bot: the dodge-at-wind-up-end + counter bot wins every time",
-		"%d/%d" % [stats["counter"]["wins"], stats["counter"]["runs"]])
+	r.check(stats["gp"]["wins"] == stats["gp"]["runs"] and stats["gp_p"]["wins"] == stats["gp_p"]["runs"],
+		"AC5 bot (试玩反馈 v1): the GP bot (K so the stance meets the blow) wins every time, also when it only attacks with the GP counter and right after it",
+		"%d/%d, punish-only %d/%d" % [stats["gp"]["wins"], stats["gp"]["runs"], stats["gp_p"]["wins"], stats["gp_p"]["runs"]])
+	r.check(stats["chase"]["wins"] == stats["chase"]["runs"], "AC5 bot: the dodge-at-wind-up-end + chase bot wins every time",
+		"%d/%d" % [stats["chase"]["wins"], stats["chase"]["runs"]])
 	# v1.2: AC2 asks "只闪避机器人必胜" and "闪避反击机器人更快获胜" (v1.1 asked for >= 20% faster). In the normal
 	# spar both bots mostly finish him in his first one or two attack cycles, so the gap there is small; the
 	# punish-only pair isolates the counter + chase advantage (reported in %; v1.1's ">= 20%" bar is not part of
 	# the v1.2 acceptance criteria, which only ask for "faster").
 	r.check(stats["dodger"]["wins"] == stats["dodger"]["runs"], "AC5 bot: the dodge-only bot wins every time",
 		"%d/%d, mean %.1f s" % [stats["dodger"]["wins"], stats["dodger"]["runs"], stats["dodger"]["mean_win_time"]])
-	r.check(stats["counter"]["mean_win_time"] < stats["dodger"]["mean_win_time"],
-		"AC5 bot: counter bot wins faster than the dodge-only bot",
-		"counter %.2f s vs dodge-only %.2f s" % [stats["counter"]["mean_win_time"], stats["dodger"]["mean_win_time"]])
-	r.check(stats["counter_p"]["wins"] == stats["counter_p"]["runs"] and stats["dodger_p"]["wins"] == stats["dodger_p"]["runs"]
-		and stats["counter_p"]["mean_win_time"] < stats["dodger_p"]["mean_win_time"],
-		"AC5 bot: attacking only after a dodge, counter + chase wins faster than waiting out the counter window",
-		"counter_p %.1f s vs dodger_p %.1f s (%.0f%% less time)" % [stats["counter_p"]["mean_win_time"], stats["dodger_p"]["mean_win_time"],
-			100.0 * (1.0 - stats["counter_p"]["mean_win_time"] / maxf(0.01, stats["dodger_p"]["mean_win_time"]))])
+	r.check(stats["gp"]["mean_win_time"] < stats["dodger"]["mean_win_time"] and stats["chase"]["mean_win_time"] < stats["dodger"]["mean_win_time"],
+		"AC5 bot: the GP bot and the dodge + chase bot both win faster than the dodge-only bot",
+		"gp %.2f s, chase %.2f s vs dodge-only %.2f s" % [stats["gp"]["mean_win_time"], stats["chase"]["mean_win_time"], stats["dodger"]["mean_win_time"]])
+	r.check(stats["chase_p"]["wins"] == stats["chase_p"]["runs"] and stats["dodger_p"]["wins"] == stats["dodger_p"]["runs"]
+		and stats["chase_p"]["mean_win_time"] < stats["dodger_p"]["mean_win_time"],
+		"AC5 bot: attacking only after a dodge, the chase wins faster than waiting out the chase window",
+		"chase_p %.1f s vs dodger_p %.1f s (%.0f%% less time)" % [stats["chase_p"]["mean_win_time"], stats["dodger_p"]["mean_win_time"],
+			100.0 * (1.0 - stats["chase_p"]["mean_win_time"] / maxf(0.01, stats["dodger_p"]["mean_win_time"]))])
 	var rate: float = float(stats["masher"]["wins"]) / stats["masher"]["runs"]
 	# v1.2: the client wants 师兄 "非常简单" - the masher's win rate must now be high (AC2 target >= 50%; v1.1 was < 50%)
 	r.check(rate >= 0.5 and stats["masher"]["runs"] >= 20, "AC5 bot: the attack-masher now wins often - %d/%d = %.0f%% (target >= 50%%)" % [stats["masher"]["wins"], stats["masher"]["runs"], rate * 100.0])
@@ -873,13 +968,14 @@ func test_bandits() -> void:
 	r.check(not combat.player_dead and player.hp == 100 and player.global_position.distance_to(combat.respawn_pos) < 1.0
 		and wolf.state == "idle" and boar.state == "idle" and wolf.hp == 60 and boar.hp == 110 and wolf.global_position == wolf.home,
 		"AC6 respawn: back at the respawn point with full HP; bandits back home with full HP")
-	# fight them both: dodge + counter bot -> both knocked out -> "山贼被赶跑了！", gone for good
+	# fight them both: GP bot -> both knocked out -> "山贼被赶跑了！", gone for good
 	await r.teleport(r.find_free_near(Vector2(512, 1440)))
 	_dodged_for = {}
+	_gp_for = {}
 	t = 0.0
 	var banner_seen := ""
 	while not combat.bandits_cleared and t < 120.0:
-		bot_step("counter")
+		bot_step("gp")
 		await r.physics_frame
 		t += 1.0 / 60.0
 		if combat.player_dead:
@@ -887,7 +983,7 @@ func test_bandits() -> void:
 	_release()
 	banner_seen = combat.hud.banner.text
 	r.check(combat.bandits_cleared and banner_seen == "山贼被赶跑了！" and wolf.state in ["gone", "down"] and boar.state in ["gone", "down"],
-		"AC6 bandits: the counter bot knocks out both (%.1f s, %d deaths) -> '山贼被赶跑了！'" % [t, combat.deaths - 1], banner_seen)
+		"AC6 bandits: the GP bot knocks out both (%.1f s, %d deaths) -> '山贼被赶跑了！'" % [t, combat.deaths - 1], banner_seen)
 	await r.frames(150)
 	r.check(not wolf.visible and not boar.visible and wolf.state == "gone", "AC6 bandits: knocked-out bandits fade out and stay gone")
 	await r.teleport(r.find_free_near(Vector2(512, 1440)))

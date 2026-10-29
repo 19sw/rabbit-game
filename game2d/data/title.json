@@ -1,9 +1,10 @@
 {
-  "_说明": "启动画面的设置（外部文件层）。改完保存，执行 game2d/tools/update.sh --no-regen --no-tests 即可生效（标题文字会重新生成像素标题图和网页加载页），详见 说明.md 第 10 节。坐标单位是像素，画面大小 480×270，左上角是 [0, 0]；颜色 [红, 绿, 蓝]，每个 0~1。",
+  "_说明": "启动画面的设置（外部文件层）。loader_texts = 网页加载页出错 / 太慢时的文字（英文在 data/i18n/en.json）。改完保存，执行 game2d/tools/update.sh --no-regen --no-tests 即可生效（标题文字会重新生成像素标题图和网页加载页），详见 说明.md 第 10 节。坐标单位是像素，画面大小 480×270，左上角是 [0, 0]；颜色 [红, 绿, 蓝]，每个 0~1。",
 
-  "title": "动物武侠 DEMO",
+  "title": "山门小院",
   "loading_text": "加载中",
   "starting_text": "加载完成，正在启动…",
+  "loader_texts": { "failed": "加载失败：", "unknown": "未知错误", "slow": "加载有点慢，点此刷新重试", "missing": "浏览器缺少运行所需的功能：", "no_canvas": "您的浏览器不支持 canvas。", "no_js": "需要开启 JavaScript 才能运行。" },
   "menu": { "continue": "继续游戏", "start": "新游戏", "help": "按键与玩法" },
   "confirm_overwrite": "会覆盖存档，确定吗？",
   "confirm_yes": "确定",

@@ -50,7 +50,12 @@ static func stall_hour() -> float:
 
 
 static func repair(id: String) -> Dictionary:
-	return data().get("repairs", {}).get(id, {})
+	var r: Dictionary = data().get("repairs", {}).get(id, {})
+	if r.is_empty():
+		r = data().get("more_repairs", {}).get(id, {})    # 武学与经营第一批: 开菜园 (farm) lives beside the three repairs
+	if r.is_empty() and id == "farm_expand":
+		r = Farm.load_data().get("expand", {})            # 菜园扩建 v1: 扩建菜园 (price / estate in data/farm.json expand)
+	return r
 
 
 static func price(id: String) -> int:

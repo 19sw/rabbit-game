@@ -2,11 +2,11 @@ extends RefCounted
 ## 房子整栋实心 v1 checks (tests/run_tests.gd runs this suite after the polish suite; quick loop: -- --only-building).
 ## Real key events and real physics.
 ##   AC1 every outdoor building (宿舍 x2, 正殿, 厨房, 藏经阁废墟, 村口茅屋 x2): pushing the rabbit into it from the north,
-##       east and west (straight and diagonal) with the movement keys never puts one pixel of her sprite on the roof / wall
+##       east and west (straight and diagonal) with the movement keys never puts one pixel of his sprite on the roof / wall
 ##       picture; a sweep of every free spot around each building (all frames of the rabbit, union of their pixels) finds
-##       no overlap wherever the building is drawn over her; an NPC / bandit sized body cannot get its feet into the
+##       no overlap wherever the building is drawn over him; an NPC / bandit sized body cannot get its feet into the
 ##       footprint, a bandit body pushed at it stops outside
-##   AC2 the client's spot (north of the old disciples' house, x 176..344, feet y ~1071): she stops outside the ridge
+##   AC2 the client's spot (north of the old disciples' house, x 176..344, feet y ~1071): he stops outside the ridge
 ##   AC3 no building ever fades (the occlusion system has no entry for them); tree canopy, bamboo and the 山门 passage still do
 ##   AC4 all five doors still work (walk in / out with the keys); every outdoor interactable, puzzle stone, NPC, the bandit
 ##       trigger, the respawn point, the grove and the stash can still be reached from the spawn
@@ -17,7 +17,7 @@ var it: Interiors
 var story: Story
 var nav
 var buildings: Array = []    # {name, sprite, rect, base, image, mask?}
-var union_mask := PackedVector2Array()    # pixel offsets (from the rounded feet) of the rabbit, union of all her frames
+var union_mask := PackedVector2Array()    # pixel offsets (from the rounded feet) of the rabbit, union of all his frames
 
 const SOLID := ["building", "library_ruin"]
 
@@ -119,7 +119,7 @@ func collect_buildings() -> void:
 		union_mask.append(Vector2(k.x, k.y) + p().sprite.offset)
 
 
-## Pixels of the rabbit's CURRENT frame on the building picture's opaque pixels (feet = her position; drawn rounded).
+## Pixels of the rabbit's CURRENT frame on the building picture's opaque pixels (feet = his position; drawn rounded).
 func overlap_now(feet: Vector2, b: Dictionary) -> int:
 	var spr: AnimatedSprite2D = p().sprite
 	var tex := spr.sprite_frames.get_frame_texture(spr.animation, spr.frame)
@@ -225,7 +225,7 @@ func test_pushes() -> void:
 		if not sides_ok:
 			total_bad.append("%s: pushes that reached it N %d E %d W %d (too few)" % [b["name"], tested["N"], tested["E"], tested["W"]])
 	r.check(total_bad.is_empty(),
-		"building AC1: pushing the rabbit into every building from the north, east and west (straight and diagonal, real keys) - zero pixels of her sprite on the roof / wall picture", str(total_bad))
+		"building AC1: pushing the rabbit into every building from the north, east and west (straight and diagonal, real keys) - zero pixels of his sprite on the roof / wall picture", str(total_bad))
 
 
 func test_sweep() -> void:
@@ -253,7 +253,7 @@ func test_sweep() -> void:
 		spots += n
 		r._log("      sweep %s: %d free spots, worst overlap %d px" % [b["name"], n, worst])
 	r.check(bad.is_empty() and spots > 5000,
-		"building AC1: sweep of %d free spots (2 px grid) around the buildings - wherever the building is drawn over her no pixel of any of her frames is on it" % spots, str(bad))
+		"building AC1: sweep of %d free spots (2 px grid) around the buildings - wherever the building is drawn over him no pixel of any of his frames is on it" % spots, str(bad))
 
 
 func test_npc_bodies() -> void:
@@ -325,7 +325,7 @@ func test_npc_bodies() -> void:
 	r.check(wolf != null and wolf is Fighter, "building AC1: the bandit (wolf) exists as a Fighter")
 
 
-## 房子整栋实心 v1 fix: holding a diagonal into a wall / eave, she keeps sliding along it (no snag on the small steps of
+## 房子整栋实心 v1 fix: holding a diagonal into a wall / eave, he keeps sliding along it (no snag on the small steps of
 ## the eave silhouette). Sides: N (down+right / down+left along the roof), E and W (up / down along the walls).
 func test_slides() -> void:
 	var speed: float = p().stats.walk_speed
@@ -361,7 +361,7 @@ func test_slides() -> void:
 				if run[3].call(f):
 					done = true
 					break
-				# stalled = she moved less than 4 px in the last half second while the keys are held
+				# stalled = he moved less than 4 px in the last half second while the keys are held
 				if hist.size() > 30 and f.distance_to(hist[hist.size() - 31]) < 4.0:
 					stall += 1
 					if stall > worst_stall:
@@ -378,12 +378,12 @@ func test_slides() -> void:
 					snags_log.append("%s %s: stalled %d frames at %s - %s" % [b["name"], run[0], worst_stall, where.round(), why])
 	for l in snags_log:
 		r._log("      slide: " + l)
-	r.check(snags_log.is_empty() and total >= 30, "building fix: holding a diagonal into the walls / eaves of every building (%d slides along N, E, W) she keeps sliding - no snag on the eave steps" % total, str(snags_log))
+	r.check(snags_log.is_empty() and total >= 30, "building fix: holding a diagonal into the walls / eaves of every building (%d slides along N, E, W) he keeps sliding - no snag on the eave steps" % total, str(snags_log))
 
 
-## A stall is a legitimate concave corner (a wing / wall she walked into) or a SNAG on a small step. It is a snag when
-## nudging her sideways by <= 6 px (away from the wall) frees the way on in the held direction, and only buildings
-## (no lantern, fence, tree...) are around her. Returns "" for a legitimate stop.
+## A stall is a legitimate concave corner (a wing / wall he walked into) or a SNAG on a small step. It is a snag when
+## nudging him sideways by <= 6 px (away from the wall) frees the way on in the held direction, and only buildings
+## (no lantern, fence, tree...) are around him. Returns "" for a legitimate stop.
 func _snag_reason(f: Vector2, d: Vector2) -> String:
 	var q := PhysicsShapeQueryParameters2D.new()
 	var rs := RectangleShape2D.new()
@@ -406,7 +406,7 @@ func _snag_reason(f: Vector2, d: Vector2) -> String:
 	var sy := 1.0 if d.y > 0.0 else -1.0
 	for k in [2.0, 4.0, 6.0]:
 		for c in [Vector2(-sx * k, 0), Vector2(0, -sy * k)]:
-			# after the nudge she goes on along the other axis of the held direction (down / along the wall)
+			# after the nudge he goes on along the other axis of the held direction (down / along the wall)
 			var along := Vector2(0, sy * 12.0) if c.x != 0.0 else Vector2(sx * 12.0, 0)
 			if r.is_free(f + c) and r.is_free(f + c + along):
 				return "a %d px sideways step %s would free the way (small ledge)" % [int(k), c]
@@ -436,8 +436,8 @@ func test_client_spot() -> void:
 			ok = false
 	for line in rows:
 		r._log("      client spot: " + line)
-	r.check(ok, "building AC2: north of the old disciples' house (x 176..344) she is stopped at the ridge (feet y <= 1064), no pixel overlap", str(rows))
-	# the old standing spot (feet y 1071) is inside the roof now - she cannot be put there by walking
+	r.check(ok, "building AC2: north of the old disciples' house (x 176..344) he is stopped at the ridge (feet y <= 1064), no pixel overlap", str(rows))
+	# the old standing spot (feet y 1071) is inside the roof now - he cannot be put there by walking
 	r.check(not r.is_free(Vector2(260, 1071)), "building AC2: the client's old spot (260, 1071) is now solid ground (roof)")
 
 
@@ -500,15 +500,15 @@ func test_fade_rules() -> void:
 		var shader_on: bool = s.material is ShaderMaterial
 		await r.teleport(r.find_free_near(Vector2(feet.x, s.position.y + 24.0), 40))
 		await r.frames(40)
-		# (another character may still be behind the same picture - e.g. 老伯 at the gate: only her own hole must be gone)
+		# (another character may still be behind the same picture - e.g. 老伯 at the gate: only his own hole must be gone)
 		var off_ok: bool = not idx in occ.covering(p().global_position) and occ.alpha_at(s, Occlusion.body_rect(p().global_position).get_center()) > 0.99
 		report.append("%s idx %d: feet %s fade %.2f alpha %.2f shader %s, in front -> off %s" % [t, idx, feet.round(), strength, alpha, shader_on, off_ok])
 		if not (strength > 0.99 and alpha <= minimum + 0.02 and shader_on and off_ok):
 			fails.append(report[-1])
 	for line in report:
 		r._log("      " + line)
-	r.check(fails.is_empty(), "building AC3: tree canopy, bamboo and the 山门 gate tower still fade around her (and clear when she steps out)", str(fails))
-	# the 山门 passage: she walks through it with the keys, the gate still fades there and does not block her
+	r.check(fails.is_empty(), "building AC3: tree canopy, bamboo and the 山门 gate tower still fade around him (and clear when he steps out)", str(fails))
+	# the 山门 passage: he walks through it with the keys, the gate still fades there and does not block him
 	await r.teleport(Vector2(1040, 1340))
 	r.hold_dir(Vector2.UP)
 	var faded := false
@@ -522,7 +522,7 @@ func test_fade_rules() -> void:
 		if gate_idx >= 0 and occ.strength_of(occ.sprite_of(gate_idx)) > 0.9:
 			faded = true
 	r.release_all()
-	r.check(faded and p().global_position.y < 1150.0, "building AC3: walking up through the 山门 passage the gate tower fades around her and she gets through (y %.0f -> %.0f)" % [enter_y, p().global_position.y])
+	r.check(faded and p().global_position.y < 1150.0, "building AC3: walking up through the 山门 passage the gate tower fades around him and he gets through (y %.0f -> %.0f)" % [enter_y, p().global_position.y])
 	await r.teleport(Vector2(1424, 1790))
 	r.hold_dir(Vector2.DOWN)
 	await r.frames(150)
@@ -628,7 +628,7 @@ var g2_h := 0
 var g2_blocked := PackedByteArray()
 
 
-## Her foot box (12 x 6, x +-6, y -5 .. +1 around the feet) against every collision rectangle, one cell per 2 px.
+## His foot box (12 x 6, x +-6, y -5 .. +1 around the feet) against every collision rectangle, one cell per 2 px.
 func build_grid2() -> void:
 	g2_w = int(g.data["pixel_width"]) / G2
 	g2_h = int(g.data["pixel_height"]) / G2

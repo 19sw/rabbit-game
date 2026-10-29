@@ -18,7 +18,8 @@ extends RefCounted
 ##       crossing 08:00 after loading charges once, invalid step-3 values are refused
 ##   v1.1 困难: cards (same HP / damage, armour, denser, double strike, 60 % sidestep), the choice at the board, rewards
 ##        120 / +3 then 80 / +2 (first counted per difficulty), cap, book entry, saved difficulty; bot win rates over
-##        10 seeded tournaments each (masher < 30 %, dodge + counter wins)
+##        10 seeded tournaments each (masher < 30 %, the GP bot wins; 试玩反馈 v1: a human-like GP bot - K 0.30-0.55 s
+##        after the wind-up starts, a quarter of the blows not guarded - wins steadily)
 ##   review fixes: a mid-prologue 第②步 save gets day 1 at the real prologue end; 陪练 per calendar day (per_day)
 ##   AC10 the ring keeps the road / arch / tea stall / villagers clear; new text in the UI font; Esc page 3 fits
 
@@ -183,7 +184,7 @@ func win_round_quick(keep_hp := false) -> bool:
 			break
 		if keep_hp:
 			p().hp = 100      # (困难 reward checks: the reward is what is checked, not the fight)
-		cs.bot_step("counter")
+		cs.bot_step("gp")
 		await r.physics_frame
 	cs._release() if cs.has_method("_release") else r.release_all()
 	r.release_all()
@@ -601,7 +602,7 @@ func test_bot_tournament() -> void:
 		var guard := 0
 		while ar.state != "idle" and guard < 60 * 400:
 			if ar.state == "fight":
-				cs.bot_step("counter")
+				cs.bot_step("gp")
 			else:
 				r.release_all()
 			await r.physics_frame
@@ -615,7 +616,7 @@ func test_bot_tournament() -> void:
 			won = true
 			break
 	bot_log = results
-	r.check(won, "step3 AC3: a bot pressing the real keys (move, J, Space-dodge on the wind-up, chase-counter) wins a whole tournament (monkey, yak, snake)", str(results))
+	r.check(won, "step3 AC3: a bot pressing the real keys (move, J, K at the blows - 试玩反馈 v1: GP) wins a whole tournament (monkey, yak, snake)", str(results))
 
 
 # ================================================================== AC5 收徒
@@ -883,7 +884,7 @@ func test_spar_job() -> void:
 	for i in 1200:
 		if c.spar_state != "fighting":
 			break
-		cs.bot_step("counter")
+		cs.bot_step("gp")
 		await r.physics_frame
 	r.release_all()
 	var title: String = c.hud.result_title.text
@@ -910,7 +911,7 @@ func test_spar_job() -> void:
 	for i in 1200:
 		if c.spar_state != "fighting":
 			break
-		cs.bot_step("counter")
+		cs.bot_step("gp")
 		await r.physics_frame
 	r.release_all()
 	for i in 400:
@@ -1172,7 +1173,10 @@ func bot_tournament(day: int, diff_key: int, kind: String, seed_v: int) -> Dicti
 	await r.frames(2)
 	await board_e([KEY_1, diff_key])
 	g.combat.rng.seed = seed_v
+	cs.human_rng.seed = seed_v
 	cs._dodged_for = {}
+	cs._gp_for = {}
+	cs._human_plan = {}
 	cs._punish_until = -1.0
 	var rounds := []
 	var guard := 0
@@ -1192,20 +1196,20 @@ func bot_tournament(day: int, diff_key: int, kind: String, seed_v: int) -> Dicti
 
 func test_hard_bot_rates() -> void:
 	await unlocked_game()
-	var res := {"masher": [], "counter": []}
+	var res := {"masher": [], "gp": []}
 	var day := 3
-	for kind in ["masher", "counter"]:
+	for kind in ["masher", "gp"]:
 		for i in 10:
 			var o := await bot_tournament(day, KEY_2, kind, 1000 + i)
 			res[kind].append(o)
 			day += 3
 	var mw: int = res["masher"].filter(func(o): return o["won"]).size()
-	var cw: int = res["counter"].filter(func(o): return o["won"]).size()
+	var cw: int = res["gp"].filter(func(o): return o["won"]).size()
 	var m_r3: int = res["masher"].filter(func(o): return o["rounds"] >= 3).size()
 	bot_log = res
-	print("HARD BOT RATES masher %d/10 (reached round 3: %d) counter %d/10" % [mw, m_r3, cw])
+	print("HARD BOT RATES masher %d/10 (reached round 3: %d) gp %d/10" % [mw, m_r3, cw])
 	print("HARD BOT DETAIL ", res)
-	r.check(mw * 10 < 30 and cw >= 6, "step3 v1.1: 困难, 10 seeded tournaments each with real keys: attack-masher wins %d/10 (< 30 %%), dodge + counter wins %d/10" % [mw, cw],
+	r.check(mw * 10 < 30 and cw >= 6, "step3 v1.1: 困难, 10 seeded tournaments each with real keys: attack-masher wins %d/10 (< 30 %%), the GP bot (试玩反馈 v1, K as the blow comes) wins %d/10" % [mw, cw],
 		"masher reached round 3 in %d" % m_r3)
 
 
@@ -1249,7 +1253,7 @@ func test_spar_per_day() -> void:
 	for i in 1200:
 		if c.spar_state != "fighting":
 			break
-		cs.bot_step("counter")
+		cs.bot_step("gp")
 		await r.physics_frame
 	r.release_all()
 	for i in 400:
@@ -1274,88 +1278,27 @@ func test_spar_per_day() -> void:
 
 
 
-# ================================================================== 困难 with a human-like reaction delay
-## The counter bot of tests/combat_suite.gd, but it does not know when the strike will land: it reacts a FIXED delay after
-## the wind-up starts (the red glow), like a person. Dodge sideways (into him at close range = swap behind), then the
-## chase-counter with J inside the chase window; otherwise walks in and attacks.
-func delay_bot_step(delay: float) -> void:
-	if cs._j_down:
-		r.key(KEY_J, false)
-		cs._j_down = false
-	if cs._space_down:
-		r.key(KEY_SPACE, false)
-		cs._space_down = false
-	cs._atk_cd -= 1.0 / 60.0
-	var pl := p()
-	var enemies: Array = g.combat.engaged_enemies()
-	if enemies.is_empty() or pl.dead:
-		r.hold_dir(Vector2.ZERO)
-		return
-	var f: Fighter = enemies[0]
-	var to: Vector2 = f.global_position - pl.global_position
-	var d := to.length()
-	var reach: float = f.stats.attack_range + 40.0 if f.stats.attack_kind != "charge" else f.stats.strike_lunge + 50.0
-	if f.state == "windup" and f.t >= delay and d < reach and cs._dodged_for.get(f, -1) != f.strikes \
-			and not pl.is_dashing() and pl.dash_cooldown_left <= 0.0:
-		var dir := to.normalized().orthogonal()
-		if d <= 60.0 and f.stats.attack_kind != "charge":
-			dir = to.normalized()
-		r.hold_dir(dir)
-		cs.press_space()
-		cs._dodged_for[f] = f.strikes
-		return
-	if not pl.is_dashing() and pl.since_dodge_end <= pl.stats.chase_window and d <= pl.stats.chase_range and cs._atk_cd <= 0.0:
-		r.hold_dir(Vector2.ZERO)
-		cs.press_j()
-		cs._atk_cd = 0.1
-		return
-	r.hold_dir(to.normalized() if d > 34.0 else Vector2.ZERO)
-	if d < 62.0 and cs._atk_cd <= 0.0:
-		cs.press_j()
-		cs._atk_cd = 0.1
-
-
-func delay_tournament(day: int, delay: float, seed_v: int) -> Dictionary:
-	set_day(day, 13.0)
-	set_coins(10)
-	await r.frames(2)
-	await board_e([KEY_1, KEY_2])
-	g.combat.rng.seed = seed_v
-	cs._dodged_for = {}
-	var lost_to := -1
-	var guard := 0
-	while ar.state != "idle" and guard < 60 * 300:
-		if ar.state == "fight":
-			delay_bot_step(delay)
-		else:
-			r.release_all()
-		if ar.state == "result" and not g.combat.bout_last_win:
-			lost_to = ar.round
-		await r.physics_frame
-		guard += 1
-	r.release_all()
-	await r.frames(3)
-	return {"won": ar.last_outcome == "champion", "lost_round": lost_to + 1}
+# ================================================================== 困难 with a human-like reaction
+## 试玩反馈 v1: the reaction bot is now the human-like GP bot of tests/combat_suite.gd ("human"): it does not know when the
+## blow will land - for each attack it presses K a random 0.30-0.55 s after the wind-up starts (the red glow), and a
+## quarter of the attacks it does not guard at all; otherwise it walks in and attacks. (v1.1 had a dodge + 看破反击 bot
+## reacting a fixed 0.30 / 0.35 s after the wind-up started; the 看破反击 is gone.)
+const HUMAN_STEADY := 8      # "稳定获胜": at least 8 of 10 seeded tournaments
 
 
 func test_hard_reaction_bot() -> void:
 	await unlocked_game()
 	var day := 3
-	var out := {}
-	for delay in [0.30, 0.35]:
-		var res := []
-		for i in 10:
-			res.append(await delay_tournament(day, delay, 2000 + i))
-			day += 3
-		out[delay] = res
-	var w30: int = out[0.30].filter(func(o): return o["won"]).size()
-	var w35: int = out[0.35].filter(func(o): return o["won"]).size()
-	var lost := {}
-	for k in out:
-		lost[k] = out[k].filter(func(o): return not o["won"]).map(func(o): return o["lost_round"])
-	print("HARD REACTION BOT 0.30 s: %d/10  0.35 s: %d/10  lost in rounds %s" % [w30, w35, lost])
-	r.check(w30 >= 7 and w35 >= 4, "step3 v1.1 (loosened): 困难 with a human reaction delay (dodges a fixed time after the wind-up starts, real keys, 10 seeded tournaments each): 0.30 s wins %d/10 (>= 7), 0.35 s wins %d/10 (>= 4)" % [w30, w35],
-		"losses by round " + str(lost))
+	var res := []
+	for i in 10:
+		res.append(await bot_tournament(day, KEY_2, "human", 2000 + i))
+		day += 3
+	var w: int = res.filter(func(o): return o["won"]).size()
+	var lost := res.filter(func(o): return not o["won"]).map(func(o): return o["rounds"])
+	bot_log = res
+	print("HARD HUMAN GP BOT %d/10  lost after rounds %s" % [w, lost])
+	r.check(w >= HUMAN_STEADY, "step3 试玩反馈 v1: 困难 with a human-like GP bot (K 0.30-0.55 s after the wind-up starts, 25 %% of the attacks not guarded, real keys, 10 seeded tournaments) wins %d/10 (>= %d)" % [w, HUMAN_STEADY],
+		"lost after rounds " + str(lost))
 
 
 # ================================================================== a version-2 save upgrades to version 3

@@ -11,6 +11,7 @@ extends Npc
 signal knocked_out(f: Fighter)
 signal enraged(f: Fighter)        # 第④步第一批: a VillainStats card's rage started (黑虎)
 signal fled(f: Fighter)           # 第④步第一批: a VillainStats card's flight started (黄鼠狼)
+signal downed(f: Fighter)         # 试玩反馈 v1: knocked down this moment (before the fade; knocked_out comes after it)
 
 const ARENA_LAYER := 8
 const FACE_TO_ATTACK := deg_to_rad(40.0)   # must roughly face the player before starting a wind-up
@@ -49,6 +50,9 @@ var has_fled := false         # ran away once (flee_at)
 var raged := false            # enraged (rage_at): shorter intervals, pounces
 var kind_now := ""            # attack kind of the attack under way ("" = the card's); a pounce is a "charge"
 var pounces := 0              # statistics for tests
+var gp_staggers := 0          # 试玩反馈 v1: times a caught blow (GP) staggered it (tests)
+var _stagger_len := 0.3       # length of the stagger under way (its card's stagger, or the longer GP stagger)
+var _gp_stun := false         # the stagger under way comes from a caught blow (hits during it do not restart it)
 var _flee_target := Vector2.ZERO
 var _base_tint := Color.WHITE
 var _rage_pending := false
@@ -188,7 +192,7 @@ func _physics_process(delta: float) -> void:
 			next_attack -= delta
 			knock_left -= delta
 			velocity = knock_vel if knock_left > 0.0 else Vector2.ZERO
-			if t >= stats.stagger:
+			if t >= _stagger_len:
 				poise_left = stats.poise
 				_go("chase")
 				if stats.stagger_delays_attack:
@@ -249,6 +253,7 @@ func _go(s: String) -> void:
 	state = s
 	t = 0.0
 	struck = false
+	_gp_stun = false
 	if s != "windup":
 		alert = false
 		_set_flash(Color.WHITE, 0.0)
@@ -435,7 +440,67 @@ func take_hit(dmg: int, from_pos: Vector2, knock: float) -> bool:
 			# v1.2 fix: the attack already happened - the usual wait after recovering still applies (before, a
 			# stagger here skipped it and the next wind-up came only stagger_attack_delay later)
 			next_attack = maxf(next_attack, _interval())
-		_go("stagger")
+		if not (state == "stagger" and _gp_stun):
+			_go("stagger")          # (a GP stagger under way is neither cut short nor stretched by the counter's blows)
+			_stagger_len = stats.stagger
+			_gp_stun = false
+	return true
+
+
+## 武学 (A) 燕回旋: hit by the spin. Damage always; a card with super armour (牦牛、黑虎 …) only takes the damage - at any
+## moment, not only while attacking; any other card is pushed `knock` px (less its knock resistance) and staggered
+## `seconds` (poise does not protect against it; a GP stagger under way is neither cut short nor stretched). Returns true
+## when it landed.
+var skill_staggers := 0           # (tests)
+
+
+func skill_hit(dmg: int, from_pos: Vector2, knock: float, seconds: float) -> bool:
+	if not engaged or state in ["down", "gone", "return", "yield", "idle"]:
+		return false
+	hp = maxi(hp - dmg, 0)
+	_set_flash(Color(1, 1, 1), 0.85)
+	_flash_t = 0.1
+	if role == "bandit" and hp <= 0:
+		_knock_out()
+		return true
+	if state == "flee" or state == "rage":
+		return true
+	if stats is VillainStats and _villain_turn(from_pos):
+		return true
+	if stats.super_armor:
+		return true
+	var away := global_position - from_pos
+	away = away.normalized() if away.length() > 0.5 else -facing_vec()
+	knock_vel = away * (knock * (1.0 - stats.knock_resist) / KNOCK_TIME)
+	knock_left = KNOCK_TIME
+	if state == "stagger" and _gp_stun:
+		return true
+	if state == "strike" or state == "recover" or state == "gap":
+		next_attack = maxf(next_attack, _interval())
+	combo_left = 0
+	_go("stagger")
+	_stagger_len = seconds
+	_gp_stun = false
+	skill_staggers += 1
+	return true
+
+
+## 试玩反馈 v1: its blow was caught by the player's GP - knocked back `knock` px (less its knock resistance) and staggered
+## `seconds` (poise does not protect against it). Callers skip super-armoured enemies. Returns true when it staggered.
+func gp_stagger(seconds: float, from_pos: Vector2, knock: float) -> bool:
+	if not engaged or state in ["down", "gone", "return", "yield", "idle", "flee", "rage"]:
+		return false
+	var away := global_position - from_pos
+	away = away.normalized() if away.length() > 0.5 else -facing_vec()
+	knock_vel = away * (knock * (1.0 - stats.knock_resist) / KNOCK_TIME)
+	knock_left = KNOCK_TIME
+	if state == "strike" or state == "recover" or state == "gap":
+		next_attack = maxf(next_attack, _interval())
+	combo_left = 0                # a caught blow ends the attack (no second strike of a combo)
+	_go("stagger")
+	_stagger_len = seconds
+	_gp_stun = true
+	gp_staggers += 1
 	return true
 
 
@@ -511,6 +576,7 @@ func _knock_out() -> void:
 	alert = false
 	collision_layer = 0
 	velocity = Vector2.ZERO
+	downed.emit(self)
 
 
 func _set_flash(c: Color, amount: float) -> void:

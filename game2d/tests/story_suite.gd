@@ -14,12 +14,14 @@ extends RefCounted
 ##   AC7 script <-> data verbatim (both directions), no missing glyph, example objectives gone
 ## 室内图进游戏 v1: the approved script is now v3 (docs/design/区域1-剧情与对话-v3.md): the opening in the dorm room, the
 ## note (S1-字条, kind 字条), 师父 / 厨娘 inside the hall / kitchen, the room optional lines (S10-*). The playthrough walks
-## through the doors (tests/nav.gd) and checks the star on the room door while the target is inside and she is not.
+## through the doors (tests/nav.gd) and checks the star on the room door while the target is inside and he is not.
 
-## 打磨 v1: the approved script is v5 (docs/design/区域1-剧情与对话-v5.md): the bucket fills and overflows, she wakes,
+## 打磨 v1: the approved script is v5 (docs/design/区域1-剧情与对话-v5.md): the bucket fills and overflows, he wakes,
 ## takes the rag in the corner, wipes the puddle (3 x E) and pours the bucket out, then the note; the star aims at the
-## target itself / a room's door / her own doorway (Interiors.minimap_target, round player-centred minimap).
-const SCRIPT_MD := "docs/design/区域1-剧情与对话-v5.md"
+## target itself / a room's door / his own doorway (Interiors.minimap_target, round player-centred minimap).
+## 试玩反馈 v1: the approved script is v6 (docs/design/区域1-剧情与对话-v6.md) - v5 with the 格挡 (GP) teaching lines
+## (师兄's 要诀, the key 提示, the spar-lost line, the bandit-fight-lost line).
+const SCRIPT_MD := "docs/design/区域1-剧情与对话-v6.md"
 const SPEAKERS := ["旁白", "提示", "碑文", "画面", "字条", "小兔", "师兄", "师父", "厨娘", "老伯", "茶摊老板", "村民", "山贼·狼", "山贼·野猪"]
 
 var r
@@ -140,9 +142,9 @@ func talk_spot(n: Node2D) -> Vector2:
 	return r.find_free_near(n.global_position + Vector2(0, 26), 24)
 
 
-## What the minimap star must aim at for a target at world point `w` (打磨 v1): the point itself when she is in the same
-## place (outdoors / the same room), the room's outdoor door when the target is inside and she is outdoors, her own
-## doorway (on the rim) when she is indoors and the target is not in her room.
+## What the minimap star must aim at for a target at world point `w` (打磨 v1): the point itself when he is in the same
+## place (outdoors / the same room), the room's outdoor door when the target is inside and he is outdoors, his own
+## doorway (on the rim) when he is indoors and the target is not in his room.
 func star_expect(w: Vector2) -> Vector2:
 	var it: Interiors = g.interiors
 	var tr := it.room_at(w)
@@ -174,6 +176,11 @@ func star_ok(expect: Variant) -> bool:
 func objective_ok(stage: int) -> bool:
 	# v4: stage 0 = 擦干地上的水 (entry 0) then 看看桌上的字条 (entry 1); stage N >= 1 = entry N + 1
 	var idx := (1 if story.flags.get("floor_wiped", false) else 0) if stage == 0 else stage + 1
+	if stage == 9:
+		# 新手指引 v1: after the prologue the line shows the guide's first step (序章完成 is never shown any more)
+		var gs: Dictionary = Guide.load_data()["steps"][0]
+		return g.hud.objective_label.text == Hud.OBJECTIVE_PREFIX + String(gs["objective"]) and g.hud.objective.visible \
+			and not ("序章完成" in g.hud.objective_label.text)
 	var st: Dictionary = objectives_raw["steps"][idx]
 	var want := String(st["text"]) if st.get("plain", false) else Hud.OBJECTIVE_PREFIX + String(st["text"])
 	return g.hud.objective_label.text == want and g.hud.objective.visible
@@ -191,6 +198,7 @@ func fight_bandits(limit := 240.0) -> bool:
 	var c: Combat = g.combat
 	var t := 0.0
 	cs._dodged_for = {}
+	cs._gp_for = {}
 	while not c.bandits_cleared and t < limit:
 		if story.busy:
 			await finish_scene()
@@ -206,7 +214,7 @@ func fight_bandits(limit := 240.0) -> bool:
 			await r.physics_frame
 			t += 1.0 / 60.0
 			continue
-		cs.bot_step("counter")
+		cs.bot_step("gp")
 		await r.physics_frame
 		t += 1.0 / 60.0
 	cs._release()
@@ -274,7 +282,9 @@ func _data_lines(node: Variant, speakers: Dictionary, out: Dictionary) -> void:
 			return
 		if node.has("text") and (node.has("who") or node.has("kind")):
 			var who := String(speakers.get(node["who"], {}).get("name", "?")) if node.has("who") else String(node["kind"])
-			out["lines"].append(who + "：" + String(node["text"]))
+			# 改名与起名 v1: the hero's name is the token {name} in the data; with the default name (小兔) every line must
+			# still be the approved script's word for word
+			out["lines"].append(PlayerName.fill_with(who + "：" + String(node["text"]), PlayerName.DEFAULT))
 		for k in node:
 			if k != "text":
 				_data_lines(node[k], speakers, out)
@@ -414,11 +424,11 @@ func test_full_playthrough() -> void:
 			break
 		await r.tap(KEY_E)
 	r.check(it.bed_state == "sitting" and p().sprite.visible and it.bed_quilt.visible and not it.bed_sleeping.visible,
-		"story AC3 (v4 opening): woken by the splash she sits up as she says '……嗯？什么声音……'")
+		"story AC3 (v4 opening): woken by the splash he sits up as he says '……嗯？什么声音……'")
 	await finish_scene()
 	var getup: Vector2 = it.getup_world()
 	r.check(it.bed_state == "empty" and p().global_position.distance_to(getup) < 1.0 and p().z_index == 0 and r.is_free(p().global_position),
-		"story AC3 (v3 opening): she gets out of bed onto free floor", str(p().global_position))
+		"story AC3 (v3 opening): he gets out of bed onto free floor", str(p().global_position))
 	r.check(g.hud.hint.visible, "story AC5: the key hint shows once the opening conversation is over")
 	var rag_pos: Vector2 = story._thing_pos(_inter("rag"))
 	var puddle_pos: Vector2 = story._thing_pos(_inter("puddle"))
@@ -453,7 +463,7 @@ func test_full_playthrough() -> void:
 	await finish_scene()
 	r.check(res == "arrived" and scenes_since(k) == ["S1-字条"] and note_kind == "字条" and story.stage == 1,
 		"story AC3 (v3): E at the little table reads S1-字条 (字条 style) and moves the story on", "%s %s %s" % [res, scenes_since(k), note_kind])
-	await check_step(1, npc("fox").global_position, "on 师兄 (outdoors; from inside: on her doorway, on the rim)")
+	await check_step(1, npc("fox").global_position, "on 师兄 (outdoors; from inside: on his doorway, on the rim)")
 	# --- 厨娘 before 师父: 任务前, no progress (walk there for real: out of the dorm, into the kitchen)
 	res = await walk_to(talk_spot(npc("bear")))
 	k = story.played.size()
@@ -470,9 +480,10 @@ func test_full_playthrough() -> void:
 	r.check(res == "arrived" and scenes_since(k) == ["S2-师兄-初见"] and c.spar_state == "fighting",
 		"story AC3: 师兄 -> S2-师兄-初见 (choice) -> the spar starts at once (no 算了 the first time)", "%s %s" % [scenes_since(k), c.spar_state])
 	cs._dodged_for = {}
+	cs._gp_for = {}
 	var t := 0.0
 	while c.spar_state == "fighting" and t < 60.0:
-		cs.bot_step("counter")
+		cs.bot_step("gp")
 		await r.physics_frame
 		t += 1.0 / 60.0
 	cs._release()
@@ -550,46 +561,52 @@ func test_full_playthrough() -> void:
 	r.check(res == "arrived" and it.room_at(p().global_position) == "hall", "story AC4 (v3): back inside the hall for the ending", res)
 	k = story.played.size()
 	await r.tap(KEY_E)
+	# 新手指引 v1 (client 2026-10-24): the 序章 · 完 page with 回到启动画面 / 继续逛逛 is gone - the last line goes straight on
+	# into the game (everything 继续逛逛 opened, saved), a "序章 · 完" caption fades in and out (~2 s) and 师父's guide line
+	# follows. These checks replace the old page / title-return checks one for one (see the delivery report).
 	var book_seen := false
 	var book_entries := []
-	var end_seen := false
-	for i in 600:
+	var page_seen := false
+	var caption_at := -1.0
+	var caption_gone_at := -1.0
+	var tsec := 0.0
+	var smp: Sample = g.sample
+	var saves0 := smp.saves.size()
+	for i in 1200:
+		if story.prologue_end.is_open:
+			page_seen = true
+		if g.guide.caption_showing() and g.guide.caption_label.text == "序章 · 完" and caption_at < 0.0:
+			caption_at = tsec
+		elif caption_at >= 0.0 and caption_gone_at < 0.0 and not g.guide.caption_showing():
+			caption_gone_at = tsec
 		if story.sect_book.is_open:
 			book_seen = true
 			book_entries = story.sect_book.shown_entries()
 			await r.frames(5)
 			await r.tap(KEY_E)
-		elif story.prologue_end.is_open:
-			end_seen = true
-			break
+			tsec += 9.0 / 60.0
 		elif dlg.active:
 			await r.tap(KEY_E)
+			tsec += 4.0 / 60.0
+		elif caption_gone_at >= 0.0 and not story.busy and not g.guide._intro_pending:
+			break
 		else:
 			await r.frames(2)
+			tsec += 2.0 / 60.0
 	r.check(book_seen and book_entries == ["打跑山路上的山贼", "解开竹林断碑", "赢了师兄一回", "找回了老周的瓦"],
 		"story AC6: the ending opens 门派簿 with 名望 (incl. 赢了师兄一回 after a won spar) and 家业 entries", str(book_entries))
-	for i in 200:
-		if story.prologue_end.buttons_shown():
-			break
-		await r.physics_frame
-	await check_step(9, null, "no star")
-	r.check(end_seen and story.prologue_end.title_label.text == "序章 · 完" and story.prologue_end.buttons[0].visible
-		and story.prologue_end.buttons[0].text == "回到启动画面" and story.prologue_end.selected == 0,
-		"story AC1: 「序章 · 完」 with the 回到启动画面 button (selected)")
+	var dur := caption_gone_at - caption_at
+	r.check(not page_seen and caption_at >= 0.0 and dur > 1.6 and dur < 2.6 and not story.prologue_end.is_open,
+		"story AC1 (新结尾): no 序章 · 完 page / buttons any more; the caption 「序章 · 完」 fades in and out by itself in ~2 s (%.2f s)" % dur)
+	await check_step(9, null, "no star - the guide's gold arrow instead")
+	var opened: bool = smp.unlocked and smp.mouse.visible and smp.trial.board.visible and smp.coin_panel.visible and smp.coins >= 30 \
+		and g.step3.arena.board.visible and g.jianghu.board.visible and g.jianghu.com.offers.size() == 2
+	r.check(opened and smp.saves.size() > saves0 and smp.saves.any(func(x): return "unlock" in String(x).split("+")) and r.current_scene == g and g.is_inside_tree()
+		and story.played.has("G-师父-开始") and g.hud.minimap.track_active,
+		"story AC1 (新结尾): the game goes on (no return to the title): everything after the prologue is open (老周, trial board, coins, 比武 board, 江湖告示榜 with today's 2 委托), the save is written, 师父's guide line plays, the gold arrow shows",
+		str([smp.unlocked, smp.saves, story.played.slice(-3)]))
 	r._log("      playthrough used %d doors" % nav.doors_used)
-	await r.tap(KEY_E)
-	var back: Node = null
-	for i in 60:
-		await r.process_frame
-		if r.current_scene != null and is_instance_valid(r.current_scene) and r.current_scene is TitleScreen:
-			back = r.current_scene
-			break
-	r.check(back != null and (not is_instance_valid(g) or not g.is_inside_tree()),
-		"story AC1: 回到启动画面 returns to the title screen (the game scene is gone)")
-	if back != null:
-		back.queue_free()
-		await r.process_frame
-	g = null
+	await _free_game()      # (before: 回到启动画面 took this game away; now it goes on - so it is freed here)
 
 
 func _inter(id: String) -> Dictionary:
@@ -608,10 +625,10 @@ func test_dialogue_system() -> void:
 	var t1 := dlg.shown_text().length()
 	r.check(dlg.is_typing() and t1 > t0 and t1 < dlg.full_text.length(), "story AC5: the text types in letter by letter", "%d -> %d of %d" % [t0, t1, dlg.full_text.length()])
 	await r.tap(KEY_SPACE)
-	var full := not dlg.is_typing() and dlg.shown_text() == dlg.full_text and dlg.active
+	var full := not dlg.is_typing() and dlg.shown_text() == dlg.screen_text and dlg.active   # (screen_text: the line in the language played)
 	var n0 := dlg.lines_shown
 	await r.tap(KEY_ENTER)
-	# v3: after the 旁白 the drop falls onto her forehead (the box steps aside), then the next line comes
+	# v3: after the 旁白 the drop falls onto his forehead (the box steps aside), then the next line comes
 	for i in 200:
 		if dlg.active:
 			break
@@ -624,8 +641,8 @@ func test_dialogue_system() -> void:
 		await r.tap(KEY_E)
 	# speaker style: portrait + name
 	r.check(dlg.kind == "speaker" and dlg.name_label.text == "小兔" and dlg.current_portrait() != null
-		and dlg.current_portrait().get_size() == Vector2(64, 64) and dlg.portrait_frame.visible,
-		"story AC5: a character line shows the 64x64 portrait and the name 小兔")
+		and dlg.current_portrait().get_size() == Vector2(128, 128) and dlg.portrait.size == Vector2(64, 64) and dlg.portrait_frame.visible,
+		"story AC5: a character line shows his portrait (the 128x128 HD picture, drawn 64x64 in the box) and the name 小兔")
 	# frozen player: walk keys + J do nothing
 	var pos := p().global_position
 	r.key(KEY_D, true)
@@ -648,7 +665,8 @@ func test_dialogue_system() -> void:
 	for id in sdata["speakers"]:
 		dlg.say({"who": id, "text": "测试"})
 		await r.frames(1)
-		if dlg.name_label.text != sdata["speakers"][id]["name"] or dlg.current_portrait() == null or dlg.current_portrait().get_size() != Vector2(64, 64):
+		# 改名与起名 v1: 小兔's 称呼 is the token {name} in the data - the plate shows the hero's name (the default 小兔 here)
+		if dlg.name_label.text != PlayerName.fill(String(sdata["speakers"][id]["name"])) or dlg.current_portrait() == null or dlg.current_portrait().get_size() != Vector2(128, 128) or dlg.portrait.size != Vector2(64, 64):
 			bad.append(id)
 		_skip_line()
 	for kind in ["旁白", "提示", "碑文", "画面", "字条"]:
@@ -797,6 +815,8 @@ func test_spar_lose_branch_and_book() -> void:
 	await stand_near(npc("crane").global_position)
 	await r.tap(KEY_E)
 	var entries := []
+	var cam_checked := false
+	var cam_ok := false
 	for i in 600:
 		if story.sect_book.is_open:
 			entries = story.sect_book.shown_entries()
@@ -806,26 +826,24 @@ func test_spar_lose_branch_and_book() -> void:
 				"story AC6: 门派簿 shows 名望 / 家业 with one segment each and the hint line", "%s %s" % [fame_bar, estate_bar])
 			await r.tap(KEY_ESCAPE)
 			r.check(not story.sect_book.is_open and not g.pause_menu.is_open, "story AC6: Esc closes 门派簿 (and does not open the Esc page)")
-		elif story.prologue_end.is_open:
-			break
+		elif dlg.active and dlg.full_text == "（自言自语）……你们，也该回来看看了。" and not cam_checked:
+			cam_checked = true
+			cam_ok = g.camera_target == npc("crane") and p().sprite.modulate.a < 0.05
+			await r.tap(KEY_E)
 		elif dlg.active:
 			await r.tap(KEY_E)
+		elif cam_checked and not story.busy and g.sample.unlocked and not g.guide._intro_pending:
+			break
 		else:
 			await r.frames(2)
 	r.check(entries == ["打跑山路上的山贼", "解开竹林断碑", "找回了老周的瓦"],
 		"story AC6: after a lost spar 门派簿 has no '赢了师兄一回'", str(entries))
-	r.check(g.camera_target == npc("crane") and p().sprite.modulate.a < 0.05 and "S9-师父-收尾" in story.played,
+	r.check(cam_ok and "S9-师父-收尾" in story.played,
 		"story AC1: the rabbit walks out, the camera rests on 师父 for his last line")
-	for i in 200:
-		if story.prologue_end.buttons_shown():
-			break
-		await r.physics_frame
-	# 继续逛逛: back in the game, S9-师兄 and B
-	await r.tap(KEY_DOWN)
-	await r.tap(KEY_E)
-	await r.frames(3)
-	r.check(not story.prologue_end.is_open and not story.busy and g.camera_target == null and p().sprite.modulate.a == 1.0 and story.stage == 9,
-		"story AC1: '继续逛逛' returns to the game after the prologue (step 9, 序章完成)")
+	# 新手指引 v1: no 继续逛逛 page - the last line goes straight back to the game (the old check after 继续逛逛, same facts)
+	r.check(not story.prologue_end.is_open and not story.busy and g.camera_target == null and p().sprite.modulate.a == 1.0 and story.stage == 9
+		and objective_ok(9),
+		"story AC1 (新结尾): after the last line he is back in the game (step 9; the objective is the guide's first step, not 序章完成)")
 	k = story.played.size()
 	await stand_near(npc("fox").global_position)
 	await r.tap(KEY_E)

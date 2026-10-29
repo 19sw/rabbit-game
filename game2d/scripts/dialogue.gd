@@ -10,10 +10,17 @@ extends CanvasLayer
 ## the same font size, it is shown in pages (paginate(): measured with the real label layout; a page ends after 。！？；，、：…
 ## or a line break where possible); E shows the next page, the choices come with the last one. full_text stays the whole
 ## line (what the story said); page_text is what is on screen.
+## 试玩反馈 v1: the mouse works too - left click = E (complete / go on); with choices showing, the option under the mouse
+## is highlighted and a left click on it picks it (a greyed one ignores it; a click elsewhere does nothing). Every mouse
+## button is swallowed while a conversation is on screen (never a swing / a guard). Signals for sounds: advanced,
+## choice_moved, choice_picked.
 ## The story (scripts/story.gd) drives it with `await say(entry)` / `await choose(options)`. Pausable: the Esc page
 ## freezes it with the rest of the game. Input is taken in _input, so the keys never reach the player or the world.
 
 signal line_done
+signal advanced                   # 试玩反馈 v1: a line completed at once / next page / next line (E, Enter, Space, click)
+signal choice_moved(index: int)   # the selected option changed (↑↓ or the mouse)
+signal choice_picked(index: int)
 
 const KIND_STYLE := {
 	# kind: [bg, border, tab bg, text colour, centred]
@@ -29,9 +36,13 @@ const KIND_STYLE := {
 }
 const BOX_H := 74.0
 const PORTRAIT := 64.0
+## 坐姿-高清过场-运镜 方案 v1: the HD portraits (128x128, pixel2d/portraits_hd) drawn into the same 64x64 box - 2x the
+## pixels. A speaker without an HD file keeps the old 64x64 one.
+const PORTRAIT_HD_DIR := "res://assets/portraits_hd/"
+const HD_SHADER := preload("res://scripts/hd_pixel.gdshader")
 const NEXT_MARK := "▼"
 const START_GUARD := 0.08      # s after a line appears in which a key press is ignored (no accidental double skip)
-const MAX_OPTIONS := 4
+const MAX_OPTIONS := 5          # 武学与经营第一批 (B): 派活 帮厨 / 陪练 / 打扫 / 种地 / 算了 (keys 1-5)
 const MANY_HINT := "1–%d 或 ↑↓ + E"
 const GREY := Color(0.55, 0.52, 0.48)
 
@@ -46,6 +57,7 @@ var box: Panel
 var box_style: StyleBoxFlat
 var portrait_frame: Panel
 var portrait: TextureRect
+var hd_material: ShaderMaterial    # the HD portraits' sampling (one shared material)
 var name_tab: PanelContainer
 var name_tab_style: StyleBoxFlat
 var name_label: Label
@@ -63,6 +75,8 @@ var entry: Dictionary = {}        # current line
 var kind := ""                    # "speaker" or 旁白 / 提示 / 碑文 / 画面
 var speaker_name := ""
 var full_text := ""            # the whole line
+var screen_text := ""          # full_text in the language being played (中英文切换 v1: Lang.t); pages are cut from it
+var _lang_for := ""
 var pages: PackedStringArray = []   # full_text cut into pages that fit the box
 var page := 0
 var page_text := ""            # the page on screen
@@ -83,14 +97,18 @@ var _blink := 0.0
 func _init() -> void:
 	name = "Dialogue"
 	layer = 20
+	add_to_group("dialogue")
 
 
 func setup(story_data: Dictionary) -> void:
 	cps = float(story_data.get("typewriter_chars_per_second", 32))
 	speakers = story_data.get("speakers", {})
 	for id in speakers:
-		var p := "res://assets/portraits/%s.png" % speakers[id].get("portrait", id)
-		if ResourceLoader.exists(p):
+		var pid := String(speakers[id].get("portrait", id))
+		var p := "res://assets/portraits/%s.png" % pid
+		if ResourceLoader.exists(PORTRAIT_HD_DIR + pid + ".png"):
+			portraits[id] = load(PORTRAIT_HD_DIR + pid + ".png")
+		elif ResourceLoader.exists(p):
 			portraits[id] = load(p)
 	var pics: Dictionary = story_data.get("pictures", {})
 	for k in pics:
@@ -141,7 +159,8 @@ func _build() -> void:
 	box.add_child(portrait_frame)
 	portrait = TextureRect.new()
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE     # any texture size is drawn into the 64x64 box
+	portrait.stretch_mode = TextureRect.STRETCH_SCALE
 	portrait.size = Vector2(PORTRAIT, PORTRAIT)
 	portrait_frame.add_child(portrait)
 
@@ -156,6 +175,7 @@ func _build() -> void:
 	text_label = _label("", 11, Color.WHITE)
 	text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text_label.add_theme_constant_override("line_spacing", 1)
+	text_label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED   # (中英文切换 v1: it shows screen_text, already translated)
 	box.add_child(text_label)
 
 	next_mark = _label(NEXT_MARK, 8, Color(1.0, 0.85, 0.45))
@@ -201,9 +221,10 @@ func _label(text: String, size: int, color: Color) -> Label:
 
 # ------------------------------------------------------------------ API used by the story
 ## Name shown for a line: the speaker's 称呼, or the kind (旁白 / 提示 / 碑文 / 画面).
+## 改名与起名 v1: the hero's name is {name} in the data - the name the player chose is put in here.
 func name_for(e: Dictionary) -> String:
 	if e.has("who"):
-		return String(speakers.get(e["who"], {}).get("name", e["who"]))
+		return PlayerName.fill(String(speakers.get(e["who"], {}).get("name", e["who"])))
 	return String(e.get("kind", ""))
 
 
@@ -213,7 +234,8 @@ func say(e: Dictionary, options: Array = [], disabled: Array = []) -> void:
 	entry = e
 	kind = "speaker" if e.has("who") else String(e.get("kind", "旁白"))
 	speaker_name = name_for(e)
-	full_text = String(e.get("text", ""))
+	full_text = PlayerName.fill(String(e.get("text", "")))     # 改名与起名 v1: {name} -> the hero's name
+	screen_text = _screen(full_text)
 	shown = 0.0
 	_guard = START_GUARD
 	choosing = false
@@ -224,7 +246,7 @@ func say(e: Dictionary, options: Array = [], disabled: Array = []) -> void:
 	choice_index = _first_enabled()
 	lines_shown += 1
 	_apply_style()
-	pages = paginate(full_text)
+	pages = paginate(screen_text)
 	page = 0
 	_show_page()
 	_laid_out_for = get_viewport().get_visible_rect().size
@@ -268,6 +290,7 @@ func _show_page() -> void:
 
 # ------------------------------------------------------------------ pages (补充: nothing ever overflows the box)
 const BREAK_AFTER := "。！？；，、：…—\n!?;,:"
+const BREAK_AFTER_EN := ". "        # 中英文切换 v1: English pages may also end after a full stop or between two words
 const CLOSERS := "”’）」』】》"
 
 
@@ -307,6 +330,9 @@ func paginate(text: String) -> PackedStringArray:
 	var cap := line_capacity()
 	var rest := text
 	var guard := 0
+	var en := Lang.is_en()
+	var breaks := BREAK_AFTER + (BREAK_AFTER_EN if en else "")
+	var trim := "\n " if en else "\n"
 	while rest != "" and guard < 64:
 		guard += 1
 		if lines_for(rest) <= cap:
@@ -323,7 +349,7 @@ func paginate(text: String) -> PackedStringArray:
 		var cut := lo
 		# end the page after a punctuation mark (or a line break) when there is one in its second half
 		for i in range(cut - 1, int(cut * 0.5) - 1, -1):
-			if BREAK_AFTER.contains(rest[i]):
+			if breaks.contains(rest[i]):
 				var c := i + 1
 				while c < cut and CLOSERS.contains(rest[c]):
 					c += 1
@@ -332,11 +358,24 @@ func paginate(text: String) -> PackedStringArray:
 		# never start the next page with a closing mark
 		while cut < rest.length() and CLOSERS.contains(rest[cut]) and cut > 1:
 			cut -= 1
-		out.append(rest.substr(0, cut).rstrip("\n"))
-		rest = rest.substr(cut).lstrip("\n")
+		out.append(rest.substr(0, cut).rstrip(trim))
+		rest = rest.substr(cut).lstrip(trim)
 	if out.is_empty():
 		out.append(text)
 	return out
+
+
+## HD portrait: coverage sampling (even pixels at the 3x window); a 64 px one: plain nearest, as before.
+func _portrait_sampling() -> void:
+	var hd := portrait.texture != null and portrait.texture.get_width() > int(PORTRAIT)
+	portrait.material = null
+	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	if hd:
+		if hd_material == null:
+			hd_material = ShaderMaterial.new()
+			hd_material.shader = HD_SHADER
+		portrait.material = hd_material
+		portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 
 
 func current_portrait() -> Texture2D:
@@ -350,10 +389,11 @@ func _apply_style() -> void:
 	name_tab_style.bg_color = st[2]
 	text_label.add_theme_color_override("font_color", st[3])
 	name_label.text = speaker_name
-	text_label.text = full_text
+	text_label.text = screen_text
 	var has_portrait := kind == "speaker"
 	portrait_frame.visible = has_portrait
 	portrait.texture = portraits.get(entry.get("who", ""), null) if has_portrait else null
+	_portrait_sampling()
 	var left := PORTRAIT + 14.0 if has_portrait else 12.0
 	name_tab.position = Vector2(left - 4.0, -9.0)
 	text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER if st[4] else HORIZONTAL_ALIGNMENT_LEFT
@@ -386,7 +426,7 @@ func relayout() -> void:
 	var typed_all := not is_typing()
 	var typed := int(shown)
 	_apply_style()
-	pages = paginate(full_text)
+	pages = paginate(screen_text)
 	page = pages.size() - 1
 	for i in pages.size():
 		if page_start(i) + pages[i].length() > start:
@@ -403,14 +443,51 @@ func relayout() -> void:
 		_show_choices()
 
 
-## Index in full_text where page `i` starts.
+## 中英文切换 v1: the language changed while a line is on screen - the same line in the new language, from its first
+## page, shown at once (the player was already reading it).
+func relayout_language() -> void:
+	screen_text = _screen(full_text)
+	_laid_out_for = get_viewport().get_visible_rect().size
+	relayouts += 1
+	_apply_style()
+	pages = paginate(screen_text)
+	page = 0
+	page_text = pages[0]
+	text_label.text = page_text
+	shown = float(page_text.length())
+	text_label.visible_characters = -1
+	if choosing and has_more_pages():
+		choosing = false
+		choice_panel.visible = false
+	elif choosing:
+		_show_choices()
+	elif not has_more_pages():
+		_on_complete()
+
+
+## 改名与起名 v1: renamed on the Esc page while a line is on screen - the line again with the new name (shown at once,
+## like after a language switch).
+func refresh_name() -> void:
+	if not active:
+		return
+	speaker_name = name_for(entry)
+	full_text = PlayerName.fill(String(entry.get("text", "")))
+	relayout_language()
+
+
+func _screen(t: String) -> String:
+	_lang_for = Lang.current()
+	return Lang.t(t)
+
+
+## Index in screen_text where page `i` starts.
 func page_start(i: int) -> int:
 	var at := 0
 	for j in mini(i, pages.size()):
-		var f := full_text.find(pages[j], at)
+		var f := screen_text.find(pages[j], at)
 		at = (f if f >= 0 else at) + pages[j].length()
 	if i < pages.size():
-		var f2 := full_text.find(pages[i], at)
+		var f2 := screen_text.find(pages[i], at)
 		return f2 if f2 >= 0 else at
 	return at
 
@@ -451,6 +528,7 @@ func _first_enabled() -> int:
 
 ## ↑ / ↓: the previous / next option that can be picked (stays put at the ends, like the two-option choice).
 func _step_choice(step: int) -> void:
+	var before := choice_index
 	var i := choice_index + step
 	while i >= 0 and i < choice_options.size():
 		if not is_disabled(i):
@@ -458,12 +536,35 @@ func _step_choice(step: int) -> void:
 			break
 		i += step
 	_refresh_choices()
+	if choice_index != before:
+		choice_moved.emit(choice_index)
+
+
+## 试玩反馈 v1: index of the option label under `pos` (viewport position of a mouse event), -1 when none.
+func choice_at(pos: Vector2) -> int:
+	if not choosing or not choice_panel.visible:
+		return -1
+	for i in mini(choice_labels.size(), choice_options.size()):
+		if choice_labels[i].visible and choice_labels[i].get_global_rect().has_point(pos):
+			return i
+	return -1
+
+
+## The mouse moved over option i: highlight it (greyed options are never highlighted).
+func _hover(i: int) -> void:
+	if i < 0 or is_disabled(i) or i == choice_index:
+		return
+	choice_index = i
+	_refresh_choices()
+	choice_moved.emit(i)
 
 
 func _process(delta: float) -> void:
 	if not active:
 		return
-	if get_viewport().get_visible_rect().size != _laid_out_for:
+	if Lang.current() != _lang_for:
+		relayout_language()
+	elif get_viewport().get_visible_rect().size != _laid_out_for:
 		relayout()
 	if text_label.size.y != BOX_H - 22.0:
 		text_label.size = Vector2(text_label.size.x, BOX_H - 22.0)   # (the first layout pass can leave it too tall)
@@ -485,6 +586,9 @@ func _on_complete() -> void:
 
 # ------------------------------------------------------------------ input
 func _input(event: InputEvent) -> void:
+	if active and event is InputEventMouse:
+		_mouse_input(event)
+		return
 	if not active or not (event is InputEventKey) or not event.pressed or event.echo:
 		return
 	var used := true
@@ -497,6 +601,8 @@ func _input(event: InputEvent) -> void:
 			_pick(2)
 		elif InputMap.has_action("choice_4") and event.is_action_pressed("choice_4") and choice_options.size() > 3:
 			_pick(3)
+		elif InputMap.has_action("choice_5") and event.is_action_pressed("choice_5") and choice_options.size() > 4:
+			_pick(4)
 		elif event.is_action_pressed("move_up"):
 			_step_choice(-1)
 		elif event.is_action_pressed("move_down"):
@@ -514,9 +620,29 @@ func _input(event: InputEvent) -> void:
 		used = false    # Esc page, L / T / H keep working during a conversation
 	else:
 		used = event.is_action_pressed("attack") or event.is_action_pressed("dash") or event.is_action_pressed("choice_1") \
-			or event.is_action_pressed("choice_2") or event.is_action_pressed("sect_book")
+			or event.is_action_pressed("choice_2") or event.is_action_pressed("sect_book") \
+			or (InputMap.has_action("gp") and event.is_action_pressed("gp"))     # 试玩反馈 v1: K never guards from a conversation
 	if used:
 		get_viewport().set_input_as_handled()
+
+
+## 试玩反馈 v1: mouse during a conversation (see the header). Motion is left to the GUI as well (hover looks); buttons
+## are always swallowed.
+func _mouse_input(event: InputEventMouse) -> void:
+	if event is InputEventMouseMotion:
+		if choosing:
+			_hover(choice_at(event.position))
+		return
+	get_viewport().set_input_as_handled()
+	var mb := event as InputEventMouseButton
+	if not mb.pressed or mb.button_index != MOUSE_BUTTON_LEFT:
+		return
+	if choosing:
+		var i := choice_at(mb.position)
+		if i >= 0:
+			_pick(i)
+		return
+	advance()
 
 
 static func _is_advance(event: InputEvent) -> bool:
@@ -537,6 +663,7 @@ func advance() -> void:
 		shown = float(page_text.length())
 		text_label.visible_characters = -1
 		_on_complete()
+		advanced.emit()
 		return
 	if choosing:
 		return
@@ -544,8 +671,10 @@ func advance() -> void:
 		page += 1
 		_show_page()
 		_guard = START_GUARD
+		advanced.emit()
 		return
 	active = false
+	advanced.emit()
 	line_done.emit()
 
 
@@ -558,4 +687,5 @@ func _pick(i: int) -> void:
 	choosing = false
 	choice_panel.visible = false
 	active = false
+	choice_picked.emit(i)
 	line_done.emit()

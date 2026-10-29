@@ -4,4 +4,4 @@ set -euo pipefail
 GAME="$(cd "$(dirname "$0")/.." && pwd)"
 GODOT="${GODOT:-/opt/homebrew/bin/godot}"
 "$GODOT" --headless --path "$GAME" --import >/dev/null 2>&1 || true
-"$GODOT" --headless --fixed-fps 60 --path "$GAME" -s tests/run_tests.gd
+"$GODOT" --headless --fixed-fps 60 --path "$GAME" -s tests/run_tests.gd -- "$@"

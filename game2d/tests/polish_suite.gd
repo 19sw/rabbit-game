@@ -1,16 +1,16 @@
 extends RefCounted
 ## 打磨 v1 checks (tests/run_tests.gd runs this suite last; quick loop: -- --only-polish). Real key events and real
 ## physics in games built like a direct launch (story mode, the opening on screen).
-##   AC1 round minimap: size / place, centred on her, star in range at its place, out of range on the rim at the right
-##       angle (8 directions), indoors the room picture, outdoor target from inside -> rim towards her doorway, target in
-##       a room from outside -> its door; nearly transparent over her / an NPC / a thing to press E on; hidden in a
+##   AC1 round minimap: size / place, centred on him, star in range at its place, out of range on the rim at the right
+##       angle (8 directions), indoors the room picture, outdoor target from inside -> rim towards his doorway, target in
+##       a room from outside -> its door; nearly transparent over him / an NPC / a thing to press E on; hidden in a
 ##       conversation; no overlap with the objective line (also with a long text)
 ##   AC2 indoor light: day / dusk / night per room (brightness floor, warmth, daylight layer on / off, night light
 ##       sources per room), sampled door transitions (no one-frame jump), the daylight layer is not baked in the base
 ##   AC3 outdoor occlusion: behind the dorm roof, the hall roof, the compound wall (gate wing), a tree canopy and the
-##       kitchen roof the covering picture fades around her (shader on, alpha at her middle low), not when she stands
+##       kitchen roof the covering picture fades around him (shader on, alpha at his middle low), not when he stands
 ##       in front; colliders unchanged; an NPC behind a roof / canopy gets the same
-##   AC4 opening v4 + wiping: leaks (bucket, 师兄's pillow, none on her bed), wipe without the rag -> hint (UI text),
+##   AC4 opening v4 + wiping: leaks (bucket, 师兄's pillow, none on his bed), wipe without the rag -> hint (UI text),
 ##       rag -> 3 wipes shrinking the puddle ring by ring -> pour (level 0) -> keeps catching (capped), star order
 ##       rag -> puddle -> table, leaving before wiping (objective kept, star on the dorm door)
 ##   AC5 wardrobe: E opens the panel (4 garment icons, 64x64) with S1-衣柜, the door opens; closes with the scene, door
@@ -143,7 +143,7 @@ func test_opening_art_and_leaks() -> void:
 			on_pillow = true
 	into.sort()
 	r.check(into == ["bucket", "pillow"] and not on_her_bed and on_pillow,
-		"polish AC4: the two leaks drip into the bucket and onto 师兄's pillow (head end of his bed); nothing lands on her bed", str(into))
+		"polish AC4: the two leaks drip into the bucket and onto 师兄's pillow (head end of his bed); nothing lands on his bed", str(into))
 	var types := []
 	for f in d["furniture"]:
 		types.append(f["type"])
@@ -173,7 +173,7 @@ func test_opening_art_and_leaks() -> void:
 
 # ================================================================== AC4 wiping
 func test_wiping() -> void:
-	# the opening: the bucket fills, overflows, she wakes (checked in detail by the story suite) - here: the end state
+	# the opening: the bucket fills, overflows, he wakes (checked in detail by the story suite) - here: the end state
 	var lv0: float = it.water_level
 	await finish_scene()
 	r.check(story.stage == 0 and g.hud.objective_label.text == "目标：擦干地上的水" and it.puddle_size >= 0.99 and it.water_level >= 0.99
@@ -181,7 +181,7 @@ func test_wiping() -> void:
 	var rag := thing("rag")
 	var puddle := thing("puddle")
 	await r.frames(2)
-	# fix round: the key hint that comes up after waking never covers the rag corner (nor her)
+	# fix round: the key hint that comes up after waking never covers the rag corner (nor him)
 	var hint_bad := []
 	for hk in 3:
 		await r.frames(10)
@@ -206,7 +206,7 @@ func test_wiping() -> void:
 	r.check(res == "arrived" and it.room_at(p().global_position) == "" and story.stage == 0 and g.hud.objective_label.text == "目标：擦干地上的水"
 		and mm.star_target_world.distance_to(it.door_point("dorm_main")) < 1.0,
 		"polish AC4: leaving before wiping is allowed - objective unchanged, the star points at the dorm door", res)
-	# the rag (the hint again, the first seconds after waking are not over yet when she gets to the corner)
+	# the rag (the hint again, the first seconds after waking are not over yet when he gets to the corner)
 	g.hud.show_hint()
 	res = await nav.walk_to(rag + Vector2(0, 4))
 	await r.frames(2)
@@ -260,7 +260,8 @@ func test_wiping() -> void:
 		else:
 			await r.frames(1)
 	await r.frames(3)
-	var want3: Array = sdata["scenes"]["S1-擦水渍"].filter(func(e): return e.has("text")).map(func(e): return e["text"])
+	# 改名与起名 v1: the data writes the hero's name as {name}; on screen it is the name (the default 小兔 here)
+	var want3: Array = sdata["scenes"]["S1-擦水渍"].filter(func(e): return e.has("text")).map(func(e): return PlayerName.fill(String(e["text"])))
 	r.check(res == "arrived" and note_closed and sizes == [0.66, 0.34] and not busy_before and scene3 == "S1-擦水渍" and it.puddle_size <= 0.001
 		and story.flags.get("floor_wiped", false) and lines3 == want3,
 		"polish AC4: with the rag, E at the puddle 3 times: it shrinks ring by ring (1 -> 0.66 -> 0.34 -> 0), the third plays S1-擦水渍 (the note stays closed until then)",
@@ -324,7 +325,7 @@ func test_wardrobe() -> void:
 	r.check(closed and panel_rect.size.x > 256 and panel_rect.position.y >= 0 and panel_rect.end.y < box_top and g.hud.objective.visible
 		and not panel_rect.intersects(obj_rect) and not panel_rect.intersects(Rect2(g.hud.minimap.position, g.hud.minimap.size))
 		and not panel_rect.intersects(g.combat.hud.hp_panel.get_global_rect()),
-		"polish AC5: when the lines end the panel closes and the wardrobe door is shut again; she can walk (panel above the dialogue box, never over the objective line / minimap / HP bar)", "%s obj %s box top %.0f" % [panel_rect, obj_rect, box_top])
+		"polish AC5: when the lines end the panel closes and the wardrobe door is shut again; he can walk (panel above the dialogue box, never over the objective line / minimap / HP bar)", "%s obj %s box top %.0f" % [panel_rect, obj_rect, box_top])
 	# the garments: drawn in the rabbit's outfit colours (the cream top + blue-grey collar / sash)
 	var img: Image = load(WardrobePanel.SHEET).get_image()
 	if img.is_compressed():
@@ -383,7 +384,7 @@ func test_minimap() -> void:
 					bad.append("in %d %d marker %s want %s" % [a, dist, mm.star_marker, c + off])
 	r.check(bad.is_empty() and n_rim >= 6 and n_in >= 6,
 		"polish AC1: star inside the range sits at the target's place; outside it sits on the rim pointing at the target (angle vs atan2, %d far + %d near spots)" % [n_rim, n_in], str(bad))
-	# indoors: the room picture; a target in the same room at its place; an outdoor target -> rim towards her doorway
+	# indoors: the room picture; a target in the same room at its place; an outdoor target -> rim towards his doorway
 	story.set_stage(0)
 	await r.teleport(it.world_point("dorm_main", Vector2(240, 180)))
 	await r.frames(3)
@@ -574,7 +575,7 @@ func _entry_for(type: String, area: String, x: int) -> int:
 	return -1
 
 
-## The free spot behind entry `idx` where the most of a body is covered (outdoors, drawn over her).
+## The free spot behind entry `idx` where the most of a body is covered (outdoors, drawn over him).
 func _behind_spot(idx: int, x_max := INF) -> Vector2:
 	var occ: Occlusion = g.occlusion
 	var s: Sprite2D = occ.sprite_of(idx)
@@ -625,7 +626,7 @@ func test_occlusion() -> void:
 			bad.append(name + ": no spot behind it")
 			continue
 		# walk in behind it with the keys: from a little further back, walk down into it (the roof / wall / trunk
-		# collider stops her there, tucked behind the picture)
+		# collider stops him there, tucked behind the picture)
 		var back: Vector2 = r.find_free_near(st + Vector2(0, -14), 6)
 		await r.teleport(back if back != Vector2.INF else st)
 		await r.push(Vector2.DOWN, 0.35)
@@ -640,17 +641,17 @@ func test_occlusion() -> void:
 		# in front of it: no fade
 		await r.teleport(r.find_free_near(Vector2(feet.x, s.position.y + 22.0), 40))
 		await r.frames(40)
-		# (another character may still be behind the same picture - e.g. 老伯 at the gate: only her own hole must be gone)
+		# (another character may still be behind the same picture - e.g. 老伯 at the gate: only his own hole must be gone)
 		var front := p().global_position
 		var off_ok: bool = not idx in occ.covering(front) and occ.alpha_at(s, Occlusion.body_rect(front).get_center()) > 0.99 \
 			and (s.material == null or occ.active[idx]["centers"].size() < 2)
-		r._log("      %s: feet %s covered %.2f, fade %.2f, alpha at her middle %.2f, in front -> off %s" % [name, feet.round(), cov, strength, alpha, off_ok])
+		r._log("      %s: feet %s covered %.2f, fade %.2f, alpha at his middle %.2f, in front -> off %s" % [name, feet.round(), cov, strength, alpha, off_ok])
 		if not (cov >= float(Tuning.data()["occlusion"]["coverage"]) and strength > 0.99 and alpha <= minimum + 0.02 and shader_on and free_ok and off_ok):
 			bad.append("%s cov %.2f str %.2f alpha %.2f shader %s free %s off %s" % [name, cov, strength, alpha, shader_on, free_ok, off_ok])
 		else:
 			done += 1
 	r.check(bad.is_empty() and done == 2 and bad_roof_entries == 0 and g.solids.get_child_count() == n_colliders,
-		"polish AC3: behind the compound wall tiles (gate wing) and a tree canopy the picture fades around her (alpha %.2f at her middle) - and not when she stands in front; colliders unchanged; roofs have no fade entry (solid since 房子整栋实心 v1)" % minimum,
+		"polish AC3: behind the compound wall tiles (gate wing) and a tree canopy the picture fades around him (alpha %.2f at his middle) - and not when he stands in front; colliders unchanged; roofs have no fade entry (solid since 房子整栋实心 v1)" % minimum,
 		str(bad))
 	# an NPC behind a canopy / roof gets the same (the player far away)
 	var duck := npc("duck")
@@ -674,9 +675,9 @@ func test_occlusion() -> void:
 	r.check(same, "polish AC3: render-only - the outdoor objects still draw the original map pictures (no image changed)")
 
 
-# ================================================================== AC3 fix round: she stays >= 90 % visible everywhere
+# ================================================================== AC3 fix round: he stays >= 90 % visible everywhere
 ## Static sweep: every cell of the 8 px walk grid reachable from the outdoor spawn where any outdoor picture is drawn
-## over her, with her real sprite pixels in 4 facings, as the fade settles (Occlusion.visible_fraction steady) - and
+## over him, with his real sprite pixels in 4 facings, as the fade settles (Occlusion.visible_fraction steady) - and
 ## live checks (real fade, after walking there) at the reviewer's spots: the woodpile, pine / bamboo edges, the
 ## bamboo along the top edge of the map, the eave tips of the old disciples' house.
 func test_occlusion_sweep() -> void:
@@ -722,7 +723,7 @@ func test_occlusion_sweep() -> void:
 				bad.append("%s %s %.2f" % [feet, f, v])
 	p().sprite.play("idle_down")
 	r.check(bad.is_empty() and cells > 2000,
-		"polish AC3 fix: sweep of %d reachable spots x 4 facings where an outdoor picture covers her (%s) - she is at least 90%% visible everywhere (worst %.2f at %s)" % [cells / 4, ", ".join(types.keys()), worst, worst_at],
+		"polish AC3 fix: sweep of %d reachable spots x 4 facings where an outdoor picture covers him (%s) - he is at least 90%% visible everywhere (worst %.2f at %s)" % [cells / 4, ", ".join(types.keys()), worst, worst_at],
 		str(bad))
 	# live, with the real fade, at the reviewer's spots
 	var spots := {"woodpile (1756,876)": Vector2(1756, 876)}
@@ -746,7 +747,7 @@ func test_occlusion_sweep() -> void:
 				if String(occ.entries[idx]["type"]) != want_t:
 					continue
 				var n := occ.covered_count(idx, pts)
-				# an edge: only a part of her covered (the hard case for a threshold)
+				# an edge: only a part of him covered (the hard case for a threshold)
 				if n > 0 and n < pts.size() * 0.45 and n > best_n:
 					best_n = n
 					best = feet
@@ -794,5 +795,5 @@ func test_occlusion_sweep() -> void:
 	for line in report:
 		r._log("      " + line)
 	r.check(lbad.is_empty() and spots.size() >= 4,
-		"polish AC3 fix: arriving (walking sideways onto the spot) at the woodpile, a pine edge, a bamboo edge and the top-edge bamboo (the old dorm eave tips are solid now, 房子整栋实心 v1) - she is at least 90% visible with the real fade (her sprite pixels)", str(lbad) + " spots " + str(spots.keys()))
+		"polish AC3 fix: arriving (walking sideways onto the spot) at the woodpile, a pine edge, a bamboo edge and the top-edge bamboo (the old dorm eave tips are solid now, 房子整栋实心 v1) - he is at least 90% visible with the real fade (his sprite pixels)", str(lbad) + " spots " + str(spots.keys()))
 

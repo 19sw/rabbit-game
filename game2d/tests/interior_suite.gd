@@ -6,14 +6,14 @@ extends RefCounted
 ##       outside), E at its door plays S5-藏经阁封条; per room: walls hold (walk + dodge into every wall, the doorway
 ##       plug), every furniture box holds, and from the door every interactable of the room can be reached (grid BFS
 ##       + a real walk to each), camera limits stay on the room
-##   AC3 opening: the leak keeps dripping (bucket drop + ripple, pillow drop once she is up), note gating
+##   AC3 opening: the leak keeps dripping (bucket drop + ripple, pillow drop once he is up), note gating
 ##   AC4 师父 / 厨娘 inside at their spots; prompts per stage indoors (steps 3 / 4 / 9 unchanged)
 ##   AC5 every optional line has exactly one source; the moved ones are gone outdoors; each plays its scene once per E
 ##   AC7 indoor light readable at night (tint luminance floor), lamp glow at night only indoors; no combat indoors
 ##       (no fighter inside, no spar invite, J hits nothing, bandits never come in); dodge never passes a wall
 ##   minimap: indoors the arrow sits in the building; star rules (same room / other room / outdoors)
 ## 打磨 v1 edits (spec changes only): the opening is v4 (bucket -> overflow; leaks into the bucket and onto 师兄's pillow,
-## none on her bed; the note after wiping), 练功服 -> 衣柜, the minimap star rules of the round minimap
+## none on his bed; the note after wiping), 练功服 -> 衣柜, the minimap star rules of the round minimap
 ## (Interiors.minimap_target), the indoor light rules (darker at night with lamps; eased at the doors). Doors, walls,
 ## furniture, reachability, NPC gating and no-combat checks are unchanged.
 
@@ -183,7 +183,7 @@ func test_opening_and_leak() -> void:
 	await r.frames(240)
 	var b1: int = d.landed.get("bucket", 0)
 	r.check(story.current_scene == "S1-醒来" and it.bed_state == "sleeping" and b1 - b0 >= 2 and d.landed.get("pillow", 0) - w0 >= 1 and not d.landed.has("head"),
-		"interior AC3 (v4): while she sleeps the leaks drip into the bucket (%d drops in 4 s) and onto 师兄's pillow; nothing drips on her bed" % (b1 - b0))
+		"interior AC3 (v4): while he sleeps the leaks drip into the bucket (%d drops in 4 s) and onto 师兄's pillow; nothing drips on his bed" % (b1 - b0))
 	await finish_scene()
 	var w1: int = d.landed.get("pillow", 0)
 	var b2: int = d.landed.get("bucket", 0)
@@ -296,7 +296,7 @@ func test_doors() -> void:
 		if await walk_in("kitchen") < 0 or not await walk_out("kitchen"):
 			loops_ok = false
 	r.check(loops_ok and it.transitions - t0 == 6, "interior AC2: in / out of the kitchen 3 times in a row: exactly 6 door fades", str(it.transitions - t0))
-	# keep holding up after entering: she walks on into the room (no second fade); keep holding down after leaving: same
+	# keep holding up after entering: he walks on into the room (no second fade); keep holding down after leaving: same
 	await walk_in("dorm_old")
 	var t1 := it.transitions
 	await r.push(Vector2.UP, 0.8)
@@ -516,7 +516,7 @@ func test_npcs_and_gating() -> void:
 	await r.tap(KEY_E)
 	var faced := crane.facing
 	await finish_scene()
-	r.check(faced == "down" and crane.facing == "up" and story.stage == 3, "interior AC4: 师父 turns to her to talk, then back to the portrait; '之后' does not move on")
+	r.check(faced == "down" and crane.facing == "up" and story.stage == 3, "interior AC4: 师父 turns to him to talk, then back to the portrait; '之后' does not move on")
 
 
 # ================================================================== AC5 optional lines once each
@@ -564,11 +564,11 @@ func test_minimap_and_star() -> void:
 	await r.teleport(it.world_point("hall", Vector2(320, 230)))
 	await r.frames(3)
 	var c: bool = mm.star_target_world.distance_to(npc("crane").global_position) < 1.0 and mm.room == "hall"
-	story.set_stage(1)      # 去练武场找师兄 from inside: her doorway, on the rim
+	story.set_stage(1)      # 去练武场找师兄 from inside: his doorway, on the rim
 	await r.frames(3)
 	var d: bool = mm.star_target_world.distance_to(it.doorway_point("hall")) < 1.0 and mm.star_on_rim
 	r.check(a and b and c and d and in_kitchen,
-		"interior minimap: target inside -> star on that building's door (from outside); from another room / target outdoors -> on the rim towards her doorway; in the same room -> its place; indoors the circle shows the room",
+		"interior minimap: target inside -> star on that building's door (from outside); from another room / target outdoors -> on the rim towards his doorway; in the same room -> its place; indoors the circle shows the room",
 		"%s %s %s %s %s" % [a, b, c, d, in_kitchen])
 
 

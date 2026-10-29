@@ -1,0 +1,199 @@
+{
+ "_说明": "音效 + 背景音乐 v1（audio/tools/generate_audio.py 生成，别手改）。file 路径相对本文件所在目录 audio/output/。格式：22050 Hz、16 位、单声道 PCM WAV。音乐的 loop 是整首循环的帧范围 [begin, end)（文件里的 smpl 块按 WAV 规范写成闭区间 end-1）。",
+ "bits": 16,
+ "channels": 1,
+ "files": [
+  "manifest.json",
+  "music/battle.wav",
+  "music/day.wav",
+  "music/night.wav",
+  "music/opening.wav",
+  "report.md",
+  "sfx/coin.wav",
+  "sfx/complete.wav",
+  "sfx/cursor.wav",
+  "sfx/dodge.wav",
+  "sfx/gp.wav",
+  "sfx/hit.wav",
+  "sfx/hit_heavy.wav",
+  "sfx/hurt.wav",
+  "sfx/ko.wav",
+  "sfx/page.wav",
+  "sfx/panel.wav",
+  "sfx/skill_snow.wav",
+  "sfx/skill_spin.wav",
+  "sfx/skill_tuna.wav",
+  "sfx/telegraph.wav"
+ ],
+ "music": {
+  "battle": {
+   "bars": 24,
+   "bpm": 140,
+   "duration_s": 41.143,
+   "file": "music/battle.wav",
+   "frames": 907200,
+   "loop": [
+    0,
+    907200
+   ],
+   "meter": "4/4",
+   "purpose": "战斗：切磋 / 山贼 / 比武 / 悬赏战 / 试炼",
+   "scale": "羽调五声 A C D E G",
+   "sha1": "73606fe4d48700d4a5c3968c1a69ed47cfee684e"
+  },
+  "day": {
+   "bars": 16,
+   "bpm": 96,
+   "duration_s": 40.002,
+   "file": "music/day.wav",
+   "frames": 882048,
+   "loop": [
+    0,
+    882048
+   ],
+   "meter": "4/4",
+   "purpose": "白天：门派小院，古筝拨弦般的轻快旋律",
+   "scale": "宫调五声 C D E G A",
+   "sha1": "b4a15cc153133a9632e4562a400f65a86400fc0a"
+  },
+  "night": {
+   "bars": 16,
+   "bpm": 72,
+   "duration_s": 53.336,
+   "file": "music/night.wav",
+   "frames": 1176064,
+   "loop": [
+    0,
+    1176064
+   ],
+   "meter": "4/4",
+   "purpose": "夜晚：同一段旋律放慢，更安静",
+   "scale": "宫调五声 C D E G A",
+   "sha1": "e8ada375038489f5050c26fdf58efeb78550700d"
+  },
+  "opening": {
+   "bars": 12,
+   "bpm": 66,
+   "duration_s": 43.638,
+   "file": "music/opening.wav",
+   "frames": 962208,
+   "loop": [
+    0,
+    962208
+   ],
+   "meter": "4/4",
+   "purpose": "开场动画 / 启动画面：悠远的旋律",
+   "scale": "D 羽五声 D F G A C",
+   "sha1": "1ecbb668ea24111d610589de823a359e07381382"
+  }
+ },
+ "regenerate": "python3 audio/tools/generate_audio.py [--check]",
+ "sample_rate": 22050,
+ "sfx": {
+  "coin": {
+   "duration_s": 0.4,
+   "file": "sfx/coin.wav",
+   "frames": 8820,
+   "purpose": "拿到铜钱",
+   "sha1": "a63eeb4c8003f7b90ac089af7ba6e72bbd9fa739"
+  },
+  "complete": {
+   "duration_s": 0.85,
+   "file": "sfx/complete.wav",
+   "frames": 18742,
+   "purpose": "任务或指引完成",
+   "sha1": "9ba10246cdfc98ac4646d582026c4c3ad6fd0d18"
+  },
+  "cursor": {
+   "duration_s": 0.06,
+   "file": "sfx/cursor.wav",
+   "frames": 1323,
+   "purpose": "选项移动",
+   "sha1": "d5d991f0cbadffe1d16c96934dec9a69e98de273"
+  },
+  "dodge": {
+   "duration_s": 0.3,
+   "file": "sfx/dodge.wav",
+   "frames": 6615,
+   "purpose": "闪避的风声",
+   "sha1": "ea3e8415f85ca0ed1fa2dc9eb776d7f3fa26f744"
+  },
+  "gp": {
+   "duration_s": 0.55,
+   "file": "sfx/gp.wav",
+   "frames": 12128,
+   "purpose": "GP 成功「当」",
+   "sha1": "188defb1edf5f83d7f9441b36a382f0b0f559456"
+  },
+  "hit": {
+   "duration_s": 0.15,
+   "file": "sfx/hit.wav",
+   "frames": 3308,
+   "purpose": "普通命中",
+   "sha1": "fa33d99bb80edebb189f6242f57c1fb02d7a775a"
+  },
+  "hit_heavy": {
+   "duration_s": 0.32,
+   "file": "sfx/hit_heavy.wav",
+   "frames": 7056,
+   "purpose": "重击命中（第二段 / 反击 / 闪身追击）",
+   "sha1": "3a1560ea28b6363ab74449cc81070a8bcfd42823"
+  },
+  "hurt": {
+   "duration_s": 0.26,
+   "file": "sfx/hurt.wav",
+   "frames": 5733,
+   "purpose": "小兔被打中",
+   "sha1": "c8a993cc80b4e49cbc58058bb8863efce919a87f"
+  },
+  "ko": {
+   "duration_s": 0.65,
+   "file": "sfx/ko.wav",
+   "frames": 14332,
+   "purpose": "倒地",
+   "sha1": "6b4b3dc36eaf25604a511d7a9dfd816ce18b4819"
+  },
+  "page": {
+   "duration_s": 0.05,
+   "file": "sfx/page.wav",
+   "frames": 1102,
+   "purpose": "对话翻页（很轻）",
+   "sha1": "6a14248662760fac7bf6f924a485479ae45c2d50"
+  },
+  "panel": {
+   "duration_s": 0.17,
+   "file": "sfx/panel.wav",
+   "frames": 3749,
+   "purpose": "打开 Esc 页 / 门派簿 / 任务面板",
+   "sha1": "513cbd3715cda09f1b40739737a49c1d52dd38e8"
+  },
+  "skill_snow": {
+   "duration_s": 0.14,
+   "file": "sfx/skill_snow.wav",
+   "frames": 3087,
+   "purpose": "踏雪二段闪 第二闪「嚓」（武学与经营 第一批）",
+   "sha1": "08fde1aef441f0707ec122139bd0eef1bd4a8a3d"
+  },
+  "skill_spin": {
+   "duration_s": 0.5,
+   "file": "sfx/skill_spin.wav",
+   "frames": 11025,
+   "purpose": "燕回旋出招「呼——」一声旋风（武学与经营 第一批）",
+   "sha1": "e704fb085b193577c2de0aba77ff959f5b7a3759"
+  },
+  "skill_tuna": {
+   "duration_s": 1.1,
+   "file": "sfx/skill_tuna.wav",
+   "frames": 24255,
+   "purpose": "学会吐纳功时低沉的「嗡」（武学与经营 第一批）",
+   "sha1": "2a5705a6a23c51e74f7ea117644dd7287fd50eab"
+  },
+  "telegraph": {
+   "duration_s": 0.4,
+   "file": "sfx/telegraph.wav",
+   "frames": 8820,
+   "purpose": "敌人前摇提示「叮」（和头顶「!」同时）",
+   "sha1": "9bd172bd1a3e1d9932eb174c0983e75bec407245"
+  }
+ }
+}

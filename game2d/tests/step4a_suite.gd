@@ -9,7 +9,7 @@ extends RefCounted
 ##   AC2 posting: day 2 08:00, the next one the day after a turn-in, 巡山 every 2 days, an untaken 巡山 replaced
 ##   AC3 cards == the plan (黄鼠狼 60/8/0.6/150, 黑虎 180/18/0.7/100, 狼山贼 60/8); 黄鼠狼 flees at half HP and comes back;
 ##       黑虎 enrages at half HP (intervals x0.7, pounces)
-##   AC4 real-key bots win the three bounties (黑虎 by dodge + counter bots); the attack-masher's rate against 黑虎
+##   AC4 real-key bots win the three bounties (黑虎 by GP bots - 试玩反馈 v1); the attack-masher's rate against 黑虎
 ##   AC5 20 % loses: HP refilled, coins kept, villains still there; paid only at the turn-in, once; 名望 cap 10
 ##   AC6 委托: reproducible draw (seed + day), 送馒头 only with the kitchen, each of the six done with real keys (walking
 ##       there), void at 24:00, 5 -> 家业 +1, x1.5 rounded at 名望 >= 5, 家业 cap 10
@@ -212,6 +212,8 @@ func start_fight() -> bool:
 func bot_fight(kind: String, seconds := 120.0, delay := -1.0) -> String:
 	var l0 := b.losses
 	t3.cs._dodged_for = {}
+	t3.cs._gp_for = {}
+	t3.cs._human_plan = {}
 	t3.cs._punish_until = -1.0
 	for i in int(seconds * 60.0):
 		if b.losses > l0:
@@ -234,72 +236,11 @@ func bot_fight(kind: String, seconds := 120.0, delay := -1.0) -> String:
 				r.hold_dir(to.normalized())
 			await r.physics_frame
 			continue
-		if kind == "tiger":
-			tiger_bot_step(delay)
-		else:
-			t3.cs.bot_step(kind)
+		t3.cs.bot_step(kind)
 		await r.physics_frame
 	t3.cs._release()
 	r.release_all()
 	return "timeout"
-
-
-## The dodge + counter bot for 黑虎 (real keys). It knows a pounce from a claw only by what is visible (the wind-up of an
-## enraged tiger at range = a pounce). delay < 0: dodges 0.2 s before the blow (like tests/combat_suite.gd's counter
-## bot); delay >= 0: reacts that long after the wind-up starts (a human reaction time).
-const HUMAN := -2.0
-var _human_rng := RandomNumberGenerator.new()
-var _human_plan := {}       # strike number -> reaction time (s) or -1 (this one is missed)
-
-
-## delay == HUMAN: a human-like reaction for each wind-up - 0.30-0.55 s after it starts, and 25 % of them not dodged.
-func tiger_bot_step(delay: float) -> void:
-	var cs = t3.cs
-	if cs._j_down:
-		r.key(KEY_J, false)
-		cs._j_down = false
-	if cs._space_down:
-		r.key(KEY_SPACE, false)
-		cs._space_down = false
-	cs._atk_cd -= 1.0 / 60.0
-	var pl := p()
-	var enemies: Array = g.combat.engaged_enemies()
-	if enemies.is_empty() or pl.dead:
-		r.hold_dir(Vector2.ZERO)
-		return
-	var f: Fighter = enemies[0]
-	var to: Vector2 = f.global_position - pl.global_position
-	var d := to.length()
-	var pounce: bool = f.attack_kind_now() == "charge"
-	var reach: float = (f._lunge() + 50.0) if pounce else f.stats.attack_range + 40.0
-	var time_ok: bool = (f.stats.windup - f.t <= 0.2) if delay < 0.0 else f.t >= delay
-	if delay == HUMAN:
-		if not _human_plan.has(f.strikes):
-			_human_plan[f.strikes] = -1.0 if _human_rng.randf() < 0.25 else _human_rng.randf_range(0.30, 0.55)
-		var rt: float = _human_plan[f.strikes]
-		time_ok = rt >= 0.0 and f.t >= rt
-	if f.state == "windup" and time_ok and d < reach and cs._dodged_for.get(f, -1) != f.strikes and not pl.is_dashing() \
-			and pl.dash_cooldown_left <= 0.0:
-		var dir := to.normalized().orthogonal()
-		if not pounce and d <= 60.0:
-			dir = to.normalized()      # into him: swap behind
-		r.hold_dir(dir)
-		cs.press_space()
-		cs._dodged_for[f] = f.strikes
-		return
-	if not pl.is_dashing() and pl.since_dodge_end <= pl.stats.chase_window and d <= pl.stats.chase_range and cs._atk_cd <= 0.0:
-		r.hold_dir(Vector2.ZERO)
-		cs.press_j()
-		cs._atk_cd = 0.1
-		return
-	if f.state == "windup" or f.state == "rage":
-		# waiting for his blow: keep a step away, never swing into a wind-up
-		r.hold_dir(-to.normalized() if d < 40.0 else Vector2.ZERO)
-		return
-	r.hold_dir(to.normalized() if d > 34.0 else Vector2.ZERO)
-	if d < 62.0 and cs._atk_cd <= 0.0 and f.state in ["recover", "stagger", "chase"]:
-		cs.press_j()
-		cs._atk_cd = 0.1
 
 
 ## Accept the posted bounty at the board (real keys: 看悬赏 -> 接榜).
@@ -317,7 +258,7 @@ func quick_win() -> bool:
 		if f.stats is VillainStats:
 			f.has_fled = true       # no flight / rage at 1 HP (that is checked elsewhere)
 			f.raged = false
-	var res := await bot_fight("counter", 60.0)
+	var res := await bot_fight("gp", 60.0)
 	return res == "won"
 
 
@@ -426,6 +367,9 @@ func test_text() -> void:
 	for x in d["bounties"] + [d["patrol"]]:
 		lines += String(x.get("desc", ""))
 	var bad_words := ["她", "师姐", "姑娘", "女侠"].filter(func(w): return w in lines)
+	# 改名与起名 v1: the hero's name is the token {name} in the data now (filled when shown): the default name fills in
+	# 小兔 - the same words as before are checked
+	lines = PlayerName.fill_with(lines, PlayerName.DEFAULT)
 	r.check(bad_words.is_empty() and "少侠" in lines and "小兔兄弟" in lines,
 		"step4a: every new line calls the hero 少侠 / 小兔兄弟 (never 她 / 师姐)", str(bad_words))
 
@@ -838,13 +782,13 @@ func test_bots() -> void:
 	for pair in [[0, "weasel"], [1, "wolves"]]:
 		var res := []
 		for i in 5:
-			var o := await fight_with(int(pair[0]), "counter", 300 + i)
+			var o := await fight_with(int(pair[0]), "gp", 300 + i)
 			res.append(o)
 			b.active = {}
 			p().full_heal()
 		out[pair[1]] = res
-	report["weasel_counter"] = out["weasel"]
-	report["wolves_counter"] = out["wolves"]
+	report["weasel_gp"] = out["weasel"]
+	report["wolves_gp"] = out["wolves"]
 	var ww: int = out["weasel"].count("won")
 	var wl: int = out["wolves"].count("won")
 	# reference: the attack-masher (J only) on the first two
@@ -859,24 +803,29 @@ func test_bots() -> void:
 	report["masher_weasel"] = "%d/5" % mash["weasel"]
 	report["masher_wolves"] = "%d/5" % mash["wolves"]
 	print("BOUNTY MASHER RATES weasel %d/5 wolves %d/5" % [mash["weasel"], mash["wolves"]])
-	r.check(ww >= 4 and wl >= 3, "step4a AC4: a real-key dodge + counter bot (tests/combat_suite.gd) wins the 黄鼠狼 %d/5 and the three 狼山贼 %d/5 (from walking in to the last knock-out)" % [ww, wl], str(out))
+	r.check(ww >= 4 and wl >= 3, "step4a AC4: a real-key GP bot (tests/combat_suite.gd, 试玩反馈 v1) wins the 黄鼠狼 %d/5 and the three 狼山贼 %d/5 (from walking in to the last knock-out)" % [ww, wl], str(out))
+
+
+## 试玩反馈 v1: 黑虎 against the GP bots of tests/combat_suite.gd: "gp" presses K so that the stance meets the blow (a claw
+## or a pounce closing in); "human" presses K a random 0.30-0.55 s after the wind-up starts and leaves a quarter of the
+## attacks unguarded (v1.1's dodge + 看破反击 bots are gone with the 看破反击). The attack-masher never guards.
+## (黑虎's wind-up is 0.7 s: a K 0.30-0.55 s after its start only meets the claw when it comes at 0.45 s or later - about 4
+## in 10 reactions - so this bot catches ~30 % of his attacks and wins on the counters and its J; measured 7/10 here and
+## 23/30 on 30 other seeds. "稳定获胜" is taken as >= 7 of 10 - reported to PM as a judgement call.)
+const TIGER_HUMAN_STEADY := 7
 
 
 func test_tiger_bots() -> void:
 	await game()
 	set_day(2, 9.0)
-	var res := {"perfect": [], "react_0.30": [], "human": [], "masher": []}
+	var res := {"perfect": [], "human": [], "masher": []}
 	for i in 10:
-		res["perfect"].append(await fight_with(2, "tiger", 700 + i, -1.0))
+		res["perfect"].append(await fight_with(2, "gp", 700 + i, -1.0))
 		b.active = {}
 		p().full_heal()
 	for i in 10:
-		res["react_0.30"].append(await fight_with(2, "tiger", 800 + i, 0.30))
-		b.active = {}
-		p().full_heal()
-	for i in 10:
-		_human_rng.seed = 4000 + i
-		res["human"].append(await fight_with(2, "tiger", 850 + i, HUMAN))
+		t3.cs.human_rng.seed = 4000 + i
+		res["human"].append(await fight_with(2, "human", 850 + i, -1.0))
 		b.active = {}
 		p().full_heal()
 	for i in 10:
@@ -884,14 +833,12 @@ func test_tiger_bots() -> void:
 		b.active = {}
 		p().full_heal()
 	var pw: int = res["perfect"].count("won")
-	var rw: int = res["react_0.30"].count("won")
 	var hw: int = res["human"].count("won")
 	var mw: int = res["masher"].count("won")
-	report["tiger"] = {"perfect_dodge_counter": "%d/10" % pw, "fixed_0.30s_after_windup_start": "%d/10" % rw,
-		"human_like_0.30-0.55s_25pct_missed": "%d/10" % hw, "masher": "%d/10" % mw, "detail": res}
-	print("TIGER BOT RATES perfect %d/10  fixed0.30 %d/10  human %d/10  masher %d/10" % [pw, rw, hw, mw])
-	r.check(pw >= 7 and hw >= 5, "step4a AC4: 黑虎 is beaten by real-key dodge + counter bots: dodging 0.2 s before the blow %d/10; a human-like bot (reacts 0.30-0.55 s after the wind-up starts, misses 25 %% of the dodges) %d/10; (always 0.30 s after the start - early, the i-frames can run out before the blow: %d/10)" % [pw, hw, rw], str(res))
-	r.check(mw * 10 < 30, "step4a AC4: the attack-masher (J only, never dodges) beats 黑虎 %d/10 (< 30 %%)" % mw, str(res["masher"]))
+	report["tiger"] = {"perfect_gp": "%d/10" % pw, "human_like_gp_0.30-0.55s_25pct_unguarded": "%d/10" % hw, "masher": "%d/10" % mw, "detail": res}
+	print("TIGER BOT RATES gp %d/10  human %d/10  masher %d/10" % [pw, hw, mw])
+	r.check(pw >= 9 and hw >= TIGER_HUMAN_STEADY, "step4a AC4 (试玩反馈 v1): 黑虎 is beaten by real-key GP bots: K as the blow comes %d/10; a human-like bot (K 0.30-0.55 s after the wind-up starts, 25 %% of the attacks unguarded) %d/10 (>= %d)" % [pw, hw, TIGER_HUMAN_STEADY], str(res))
+	r.check(mw * 10 < 30, "step4a AC4: the attack-masher (J only, never guards) beats 黑虎 %d/10 (< 30 %%)" % mw, str(res["masher"]))
 
 
 # ================================================================== AC6 委托
@@ -1171,9 +1118,9 @@ func test_save() -> void:
 	await reload_game()
 	var snap2 := SaveGame.roundtrip(SaveGame.capture(g))
 	var d: String = ss._diff(snap, snap2)
-	r.check(int(doc["version"]) == 4 and SaveGame.VERSION == 4 and d == "" and snap["jianghu"]["com"]["offers"].size() == 2
+	r.check(int(doc["version"]) == SaveGame.VERSION and SaveGame.VERSION >= 4 and d == "" and snap["jianghu"]["com"]["offers"].size() == 2
 		and String(snap["jianghu"]["bounty"]["active"]["state"]) == "accepted",
-		"step4a AC7: everything of step 4a (seed, bounty taken, offers + progress - the 馒头 in hand -, totals, chick) saves as version 4 and comes back equal", d)
+		"step4a AC7: everything of step 4a (seed, bounty taken, offers + progress - the 馒头 in hand -, totals, chick) saves as the current version (%d) and comes back equal" % SaveGame.VERSION, d)
 	r.check(ss._diff(obs, _observables()) == "" and cm.find_taken("bun").get("step", -1) == 1 and story.talk_scene("tanuki") == "J-馒头-送",
 		"step4a AC7: and the game looks the same (villain at his place, HUD list, the 馒头 still in hand -> 茶摊老板 takes it)", ss._diff(obs, _observables()))
 	# crossing 08:00 after loading: one new draw, the bounty untouched, nothing paid
@@ -1259,7 +1206,7 @@ func test_upgrade() -> void:
 	var v1_ok: bool = smp.unlocked and jh.board.visible and b.main_done == 0 and cm.offers.size() == 2 and not b.offer().is_empty()
 	smp.save_now("test")
 	var cur = JSON.parse_string(FileAccess.get_file_as_string(SaveGame.path()))
-	var v1_written: bool = int(cur["version"]) == 4 and cur["state"].has("jianghu")
+	var v1_written: bool = int(cur["version"]) == SaveGame.VERSION and cur["state"].has("jianghu")
 	var v3 = cur.duplicate(true)
 	v3["version"] = 3
 	v3["state"].erase("jianghu")
@@ -1276,9 +1223,9 @@ func test_upgrade() -> void:
 		await reload_game()
 		ok[pair[0]] = rd["ok"] and smp.coins == int(cur["state"]["sample"]["coins"]) and jh.board.visible and b.main_done == 0 and cm.offers.size() == 2
 		smp.save_now("test")
-		ok[pair[0] + "_written"] = int(JSON.parse_string(FileAccess.get_file_as_string(SaveGame.path()))["version"]) == 4
+		ok[pair[0] + "_written"] = int(JSON.parse_string(FileAccess.get_file_as_string(SaveGame.path()))["version"]) == SaveGame.VERSION
 	r.check(v1_ok and v1_written and ok.values().all(func(v): return v),
-		"step4a AC7: version 1 (第②步), 2 and 3 saves load: step 4a starts empty (the first 悬赏 already due, today's 委托 drawn) and they are written back as version 4",
+		"step4a AC7: version 1 (第②步), 2 and 3 saves load: step 4a starts empty (the first 悬赏 already due, today's 委托 drawn) and they are written back as the current version",
 		str(res) + str(ok))
 
 
@@ -1482,8 +1429,9 @@ func test_dialogue_fit() -> void:
 		dlg.kind = "speaker" if e.has("who") else String(e.get("kind", "旁白"))
 		dlg.speaker_name = dlg.name_for(e)
 		dlg.full_text = String(e["text"])
+		dlg.screen_text = dlg._screen(dlg.full_text)       # 中英文切换 v1: the line as shown in the language being played
 		dlg._apply_style()
-		var pages: PackedStringArray = dlg.paginate(dlg.full_text)
+		var pages: PackedStringArray = dlg.paginate(dlg.screen_text)
 		n_pages += pages.size()
 		if pages.size() > 1:
 			multi += 1
@@ -1504,8 +1452,16 @@ func test_dialogue_fit() -> void:
 			max_lines = maxi(max_lines, nl)
 			if h > dlg.text_room() + 0.01 or w > tw + 0.5 or pg.strip_edges() == "":
 				bad.append("%s '%s' lines %d h %.1f w %.1f" % [e["tag"], pg.substr(0, 16), nl, h, w])
-		if "".join(pages).replace("\n", "") != dlg.full_text.replace("\n", ""):
+		var gone := "\n " if Lang.is_en() else "\n"     # (English pages may drop the space they were cut at)
+		var joined := "".join(pages)
+		var whole := dlg.screen_text
+		for ch in gone:
+			joined = joined.replace(ch, "")
+			whole = whole.replace(ch, "")
+		if joined != whole:
 			bad.append("%s text lost '%s'" % [e["tag"], dlg.full_text.substr(0, 16)])
+		if Lang.is_en() and Lang.translation().has_cjk(dlg.screen_text):
+			bad.append("%s not translated '%s'" % [e["tag"], dlg.full_text.substr(0, 24)])
 		if e.has("image"):
 			var pr: Rect2 = dlg.picture_panel.get_global_rect()
 			if not Rect2(Vector2.ZERO, vp).encloses(pr) or pr.end.y > vp.y - Dialogue.BOX_H - 6.0 + 0.5:
@@ -1562,6 +1518,10 @@ func play_pages(text: String, who: String) -> Array:
 
 
 func test_pages() -> void:
+	if Lang.is_en():
+		# Chinese paging (pages end at 。，！); the English pages are checked by tests/i18n_suite.gd (test_english_paging, test_midline)
+		r.check(true, "补充 (%s): Chinese-text paging check - skipped in the English run, see i18n_suite" % "pages")
+		return
 	await game()
 	await r.frames(3)
 	var best: Dictionary = {}
@@ -1608,6 +1568,10 @@ func test_view() -> void:
 
 ## A long line on screen while the window changes size: it is laid out again (text inside the box, in pages that fit).
 func test_resize() -> void:
+	if Lang.is_en():
+		# Chinese paging (pages end at 。，！); the English pages are checked by tests/i18n_suite.gd (test_english_paging, test_midline)
+		r.check(true, "补充 (%s): Chinese-text paging check - skipped in the English run, see i18n_suite" % "resize")
+		return
 	await game()
 	var vp0 := await set_window(Vector2i(1920, 810))
 	story.data["scenes"]["T-缩放"] = [{"who": "tiger", "text": long_speech()}, {"kind": "提示", "text": "（下一句）"}]
@@ -1714,23 +1678,19 @@ func test_screens() -> void:
 			await r.frames(3)
 			if not g.hud.prompt.visible or not scr.encloses(g.hud.prompt.get_global_rect()):
 				bad.append("%s prompt at %s %s" % [w, pt, g.hud.prompt.get_global_rect()])
-		# the 序章 · 完 page
-		story.prologue_end.open()
-		for i in 120:
-			if story.prologue_end.buttons_shown():
-				break
+		# the 序章 · 完 caption (新手指引 v1: it replaced the 序章 · 完 page) and a long 指引完成 caption
+		for cap in ["序章 · 完", g.guide.uf("step_done", {"title": "告示榜与比武", "coins": 100})]:
+			g.guide.caption_label.text = cap
+			g.guide.caption_label.modulate.a = 1.0
 			await r.process_frame
-		var pe: Control = story.prologue_end.root
-		var all_in := true
-		for c in pe.find_children("*", "Control", true, false):
-			if c.is_visible_in_tree() and (c is Label or c is Button) and not scr.grow(0.5).encloses(c.get_global_rect()):
-				all_in = false
-				bad.append("%s 序章完 '%s' %s" % [w, c.get("text"), c.get_global_rect()])
-		story.prologue_end.is_open = false
-		story.prologue_end.root.visible = false
+			var cf: Font = g.guide.caption_label.get_theme_font("font")
+			var cw := cf.get_string_size(Lang.t(cap), HORIZONTAL_ALIGNMENT_LEFT, -1, g.guide.caption_label.get_theme_font_size("font_size")).x
+			if cw > vp.x - 4.0 or not scr.encloses(g.guide.caption_label.get_global_rect()):
+				bad.append("%s caption '%s' w %.0f" % [w, cap, cw])
+			g.guide.caption_label.modulate.a = 0.0
 		await r.frames(2)
 	await set_window(Vector2i(1440, 810))
-	r.check(bad.is_empty(), "修复 v1: at 480x270 (1440x810), 640x360 and 500x280 (1000x560): every Esc page (button included), the full 门派簿, the HUD list with its longest lines, every toast, both boards' prompts and the 序章 · 完 page stay on the screen", str(bad.slice(0, 12)))
+	r.check(bad.is_empty(), "修复 v1: at 480x270 (1440x810), 640x360 and 500x280 (1000x560): every Esc page (button included), the full 门派簿, the HUD list with its longest lines, every toast, both boards' prompts and the 序章 · 完 / 指引完成 captions stay on the screen", str(bad.slice(0, 12)))
 
 
 ## A save made indoors with the chick following: after loading, the chick waits outside that room's door (not inside).

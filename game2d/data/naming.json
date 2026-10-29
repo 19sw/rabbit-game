@@ -1,0 +1,24 @@
+{
+  "_说明": "主角起名（改名与起名 v1，外部文件层）。新游戏时“新游戏”之后、开场动画之前弹出起名框；Esc 页的“改名（R）”也用它（不花钱，马上生效）。default_name = 默认名字（框里预先填好；旧存档读进来也是它）。max_chars = 最多几个汉字；max_letters_en = 全是字母时最多几个（空格不算；和界面语言无关，中英混合按比例共用）。random_names = “随机”按钮从这里挑（英文模式显示它们在 data/i18n/en.json 里的英文）。errors = 不让确定时的提示。台词里主角的名字写成 {name}，显示时换成玩家起的名字。英文在 data/i18n/en.json。",
+  "default_name": "小兔",
+  "max_chars": 5,
+  "max_letters_en": 12,
+  "random_names": ["阿糯", "白小楼", "月白", "团子", "云白", "长耳", "小满", "豆豆"],
+  "ui": {
+    "title": "给这只小兔起个名字吧",
+    "rename_title": "给他改个名字",
+    "limit": "最多 {0} 个汉字或 {1} 个字母",
+    "confirm": "确定",
+    "random": "随机",
+    "cancel": "取消",
+    "keys": "回车 确定 · Esc 返回",
+    "rename_button": "改名（R）",
+    "name_line": "名字：{0}",
+    "renamed": "名字改好了：{0}"
+  },
+  "errors": {
+    "empty": "名字不能是空的",
+    "too_long": "名字太长了",
+    "missing_char": "这个字显示不了，换一个吧"
+  }
+}

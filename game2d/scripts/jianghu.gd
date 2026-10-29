@@ -313,6 +313,9 @@ func menu_commissions() -> Array:
 		elif st == "taken":
 			status = ui("commission_taken") % c.step_text(o)
 			opts.append(_opt(ui("opt_c_abandon") % nm, "c_ask_abandon", i))
+		elif main.get("schedule") != null and main.schedule.commission_asleep(String(o["kind"])):
+			status = main.schedule.ui("commission_asleep")      # 坐下与人物作息 v1 F1: the person it needs is asleep
+			opts.append(_opt(main.schedule.ui("opt_c_asleep") % nm, "", i, true))
 		else:
 			var full := taken >= int(rules().get("max_commission", 2))
 			opts.append(_opt((ui("opt_c_full") if full else ui("opt_c_accept")) % nm, "c_detail", i, full))
@@ -378,6 +381,9 @@ func do_action(e: Dictionary, token: int) -> void:
 			var m3 := com.accept(arg)
 			if m3 != "":
 				await _say(m3)
+			elif arg >= 0 and arg < com.offers.size() and main.get("schedule") != null \
+					and main.schedule.commission_asleep(String(com.offers[arg]["kind"])):
+				await _say(main.schedule.ui("commission_asleep"))    # 坐下与人物作息 v1: the page was opened before bedtime
 		"c_abandon":
 			await _say(com.abandon(arg))
 		"c_turnin":

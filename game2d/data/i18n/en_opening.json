@@ -1,0 +1,20 @@
+{
+ "_说明": "开场过场动画 v1 的英文（格式同 en.json）。旁白的英文就是方案 docs/design/开场过场动画-方案-v1.md 里那 7 句，按中文的分行在同样的位置拆开（一行一句，拼回去和方案逐字相同）。",
+ "lines": {
+  "这是一个由走兽飞禽组成的江湖。": "This is a jianghu of beasts and birds.",
+  "门派林立，各怀绝技。": "Sects rise everywhere, each with its own art.",
+  "胜负，往往只在一招之间。": "A duel is often won or lost in a single move.",
+  "山上曾有一座门派。": "Once, a sect stood on this mountain.",
+  "身法轻灵，专在危难时护人脱险。": "Light of foot, it came to the rescue of those in danger.",
+  "山下的人，至今还记得它。": "The folk below still remember it.",
+  "直到那一年，藏经阁塌了半座。": "Until that year, when half the Scripture Library fell.",
+  "弟子们一个接一个，下了山。": "One by one, the disciples went down the mountain.",
+  "如今，山门破旧，只剩三个人守着。": "Now the gate is old and worn, and only three remain.",
+  "一位不爱提起过去的师父；": "A Master who never speaks of the past;",
+  "一个嘴欠却护短的师兄——": "a Senior Brother with a sharp tongue and a soft heart—",
+  "还有一只小兔子。": "And a little rabbit.",
+  "他的故事，从一个漏雨的早晨开始。": "His story begins one rainy morning.",
+  "E 继续 · 按住 Esc 跳过": "E Continue · Hold Esc to Skip",
+  "重看序幕": "Replay Prologue"
+ }
+}

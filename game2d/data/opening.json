@@ -1,0 +1,72 @@
+{
+  "_说明": "开场过场动画的设置（外部文件层，scripts/opening.gd 读取）。改字幕或节奏只改这里；英文在 data/i18n/en_opening.json。时间单位是秒，从每个画面开始算。art：插画清单（opening_art_hd.json = 高清 960×540 版，按一半大小铺满 480×270 的画面；改回 opening_art.json 就是旧的 480×270 版）。pixel_aa：高清图用像素对齐的取样（窗口放大倍数不是 2 的倍数时也不会一格宽一格窄、推近时不闪边）。camera（坐标都按 480×270 的画面算）：定镜写 center 中心点和 zoom 倍数；只有第 1、7 张运镜，写 from → to，move 是开始和结束的秒数，中间缓入缓出（ease: sine），移动一次后停住；画面位置取整像素。lines 是旁白，一行一句，在 line_times 的时间淡入。effects：flash 闪白（alpha 亮度）；shake 震动只有第 4 张那一声雷一次（px 最大幅度、seconds 时长，trauma 方式迅速衰减）。panels：第 6 张三格依次亮起的时间（格子位置在 assets/opening/ 的插画清单里）。",
+
+  "art": "opening_art_hd.json",
+  "pixel_aa": true,
+  "skip_hold_seconds": 1.0,
+  "fade_in_seconds": 0.8,
+  "crossfade_seconds": 0.8,
+  "line_fade_seconds": 0.6,
+  "end_fade_seconds": 1.4,
+  "hint": "E 继续 · 按住 Esc 跳过",
+  "replay_button": { "text": "重看序幕", "pos": [6, 253], "size": [52, 12], "font_size": 9 },
+  "subtitle": { "width": 440, "bottom": 252, "font_size": 11 },
+
+  "scenes": [
+    {
+      "image": "opening_hd_01_jianghu.png",
+      "seconds": 8.0,
+      "lines": ["这是一个由走兽飞禽组成的江湖。"],
+      "line_times": [1.0],
+      "camera": { "from": { "center": [209, 135], "zoom": 1.15 }, "to": { "center": [271, 135], "zoom": 1.15 }, "move": [0.4, 7.4], "ease": "sine" }
+    },
+    {
+      "image": "opening_hd_02_ring.png",
+      "seconds": 8.0,
+      "lines": ["门派林立，各怀绝技。", "胜负，往往只在一招之间。"],
+      "line_times": [0.8, 3.4],
+      "camera": { "center": [240, 135], "zoom": 1.0 }
+    },
+    {
+      "image": "opening_hd_03_sect_glory.png",
+      "seconds": 9.0,
+      "lines": ["山上曾有一座门派。", "身法轻灵，专在危难时护人脱险。", "山下的人，至今还记得它。"],
+      "line_times": [0.6, 2.8, 5.2],
+      "camera": { "center": [240, 135], "zoom": 1.0 }
+    },
+    {
+      "image": "opening_hd_04_that_year.png",
+      "seconds": 8.0,
+      "lines": ["直到那一年，藏经阁塌了半座。", "弟子们一个接一个，下了山。"],
+      "line_times": [1.4, 4.0],
+      "camera": { "center": [240, 135], "zoom": 1.0 },
+      "effects": [
+        { "type": "flash", "at": 0.9, "seconds": 0.45, "alpha": 0.85 },
+        { "type": "shake", "at": 0.9, "seconds": 0.3, "px": 3 },
+        { "type": "flash", "at": 4.6, "seconds": 0.3, "alpha": 0.45 }
+      ]
+    },
+    {
+      "image": "opening_hd_05_sect_now.png",
+      "seconds": 7.0,
+      "lines": ["如今，山门破旧，只剩三个人守着。"],
+      "line_times": [1.0],
+      "camera": { "center": [240, 135], "zoom": 1.0 }
+    },
+    {
+      "image": "opening_hd_06_three.png",
+      "seconds": 8.0,
+      "lines": ["一位不爱提起过去的师父；", "一个嘴欠却护短的师兄——"],
+      "line_times": [0.8, 3.4],
+      "panels": [0.4, 3.0, 5.6],
+      "camera": { "center": [240, 135], "zoom": 1.0 }
+    },
+    {
+      "image": "opening_hd_07_dorm_rain.png",
+      "seconds": 8.0,
+      "lines": ["还有一只小兔子。", "他的故事，从一个漏雨的早晨开始。"],
+      "line_times": [0.8, 3.4],
+      "camera": { "from": { "center": [240, 135], "zoom": 1.0 }, "to": { "center": [296, 140], "zoom": 2.0 }, "move": [0.8, 6.8], "ease": "sine" }
+    }
+  ]
+}

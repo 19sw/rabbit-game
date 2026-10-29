@@ -13,5 +13,16 @@
   "npcs": {
     "crane": { "room": "hall", "spot": "crane" },
     "bear":  { "room": "kitchen", "spot": "bear" }
-  }
+  },
+  "_seats说明": "坐下与人物作息 v1：能坐的地方（共 8 处）。pos = 小兔坐着时脚下那一点在房间里的像素坐标（垫子、蒲团就在垫子中间；板凳、长凳在凳子前面一点，免得站进凳子的碰撞框里），lift = 画面往上抬几像素（看起来坐在凳面上）；radius = 离这一点多近出现“按 E 坐下”；line = 第一次坐这里时冒的小气泡（不填 = 没有）；pose = 坐姿（坐姿重画 v1）：back = 背对镜头、面朝桌子 / 灶台坐在凳面上（assets/schedule/rabbit_sit_back.png），cross = 面朝镜头盘腿打坐（rabbit_sit_cross.png），不填 = 旧的正面坐姿。以后加座位只改这里。位置对应 pixel2d/interiors/layout 里的 cushion / futon / stool / bench，pixel2d/schedule/tools/generate_schedule_art.py --check 会核对。",
+  "seats": [
+    { "id": "dorm_cushion_1", "room": "dorm_main", "type": "cushion", "pos": [71, 140],  "lift": 0,  "radius": 24, "pose": "cross" },
+    { "id": "dorm_cushion_2", "room": "dorm_main", "type": "cushion", "pos": [146, 136], "lift": 0,  "radius": 24, "pose": "cross" },
+    { "id": "hall_futon_1",   "room": "hall",      "type": "futon",   "pos": [267, 178], "lift": 0,  "radius": 24, "pose": "cross" },
+    { "id": "hall_futon_master", "room": "hall",   "type": "futon",   "pos": [318, 181], "lift": 0,  "radius": 24, "pose": "cross", "line": "（坐上去软塌塌的，师父坐了几十年。）" },
+    { "id": "hall_futon_3",   "room": "hall",      "type": "futon",   "pos": [369, 178], "lift": 0,  "radius": 24, "pose": "cross" },
+    { "id": "hall_futon_4",   "room": "hall",      "type": "futon",   "pos": [56, 160],  "lift": 0,  "radius": 24, "pose": "cross" },
+    { "id": "kitchen_stool",  "room": "kitchen",   "type": "stool",   "pos": [350, 156], "lift": 22, "radius": 24, "pose": "back", "line": "（灶火暖烘烘的，有点想睡。）" },
+    { "id": "kitchen_bench",  "room": "kitchen",   "type": "bench",   "pos": [229, 168], "lift": 16, "radius": 24, "pose": "back" }
+  ]
 }

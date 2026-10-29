@@ -1,7 +1,9 @@
 class_name Combat
 extends Node
-## Combat manager: fighters (师兄 + bandits), hit resolution (player <-> enemies), hitstop, dodge-success and
-## counter feedback, the auto swap ("闪身换位") landing check, the 师兄 spar flow (choice -> fight in the
+## Combat manager: fighters (师兄 + bandits), hit resolution (player <-> enemies), hitstop, dodge-success feedback,
+## 格挡 GP (试玩反馈 v1: a blow landing in the guard stance is caught - no damage, blue ring + sparks, hitstop, a small
+## camera shake, the enemy staggered unless it has super armour - and the player's counter is dealt straight to it), the
+## auto swap ("闪身换位") landing check, the 师兄 spar flow (choice -> fight in the
 ## training-yard arena -> result -> reset), bandit aggro / leash / knock-out / "山贼被赶跑了！", and player
 ## death -> respawn. Numbers: cards/*.tres; places and texts: data/combat.json; arena: map_data.json areas.
 
@@ -9,7 +11,18 @@ signal spar_finished(win: bool)
 signal spar_closed(win: bool)       # the result panel is gone and both are back home (序章 v1: the story goes on)
 signal bandits_cleared_signal
 signal respawned                    # after a knock-out the player is back on his feet at the respawn point
-signal counter_landed               # 新手指引 v1: a counter (反击) hit an enemy
+signal counter_landed               # a counter (反击) hit an enemy - 试玩反馈 v1: the GP counter
+# 试玩反馈 v1: combat events for sounds (developer B's AudioService listens; nothing here plays a sound itself)
+signal gp_started                       # K / right mouse button: the guard stance began
+signal gp_success(enemy: Fighter)       # a blow was caught ("当")
+signal gp_whiffed                       # the stance ended without catching anything (pressed too early)
+signal player_hit_enemy(enemy: Fighter, damage: int, heavy: bool)   # heavy = attack 2 / a GP counter blow / a chase blow
+signal player_hurt(enemy: Fighter, damage: int)
+signal dodge_started(swap: bool)
+signal enemy_alert(enemy: Fighter)      # the red "!" appeared over it
+signal enemy_down(enemy: Fighter)       # knocked down (bandits / villains)
+signal player_down                      # the player was knocked out
+signal choice_moved(index: int)         # the spar invitation's selected option changed (keys or mouse)
 
 const DATA_PATH := "res://data/combat.json"
 const RULES_CARD := "res://cards/combat_rules.tres"
@@ -17,6 +30,8 @@ const CARD_FOR := {"fox": "shixiong", "wolf": "wolf", "boar": "boar"}
 const ARENA_LAYER := 8
 const ARENA_WALL := 32.0
 const CHOICE_CLOSE_DIST := 56.0
+const SHAKE_SECONDS := 0.15            # GP camera shake: length and size (px)
+const SHAKE_PX := 2.0
 
 var main: Node
 var player: Player
@@ -66,10 +81,15 @@ var _timer := 0.0
 # 第④步第一批: called after an enemy hit lands on the player (before the knock-out check) - the 悬赏 fights use it for
 # their 20 % line (Bounty.on_player_hit(f) -> true when it ended the fight; the player is then refilled, not knocked out)
 var after_hit: Callable = Callable()
+var last_lock_forced := false     # the last player_attack hit its lock target only through the lock (闪身追击)
+var gp_log: Array = []            # 试玩反馈 v1: every caught blow {enemy, staggered, t} (tests)
+var _alert_on := {}               # fighter -> "!" showing last frame (enemy_alert fires on the rising edge)
+var _shake_left := 0.0
 
 
 func _init() -> void:
 	name = "Combat"
+	add_to_group("combat")
 	process_priority = -100
 	process_physics_priority = -100
 
@@ -91,6 +111,7 @@ func setup(m: Node) -> void:
 		if n is Fighter:
 			fighters.append(n)
 			n.knocked_out.connect(_on_knocked_out)
+			n.downed.connect(func(f): enemy_down.emit(f))
 			if n.id == String(data.get("spar_npc", "fox")):
 				spar_fighter = n
 			else:
@@ -109,6 +130,9 @@ func setup(m: Node) -> void:
 	m.add_child(hud)
 	hud.place_hp(Rect2(m.hud.minimap.position, m.hud.minimap.size))
 	player.dodge_succeeded.connect(_on_dodge_success)
+	player.dashed.connect(func(_a, _b): dodge_started.emit(player.last_dodge_was_swap))
+	player.gp_started.connect(func(): gp_started.emit())
+	player.gp_whiffed.connect(func(): gp_whiffed.emit())
 
 
 static func card_for(npc_id: String) -> String:
@@ -179,31 +203,77 @@ func swap_landing(p: Player, enemy: Node2D) -> Variant:
 
 
 # ------------------------------------------------------------------ hits
-## Player attack resolution. Returns how many enemies were hit.
-func player_attack(center: Vector2, radius: float, base: int, knock: float, counter: bool, aim: Vector2, stage: int) -> int:
+## Player attack resolution. Returns how many enemies were hit. `lock` (闪身追击): the chase's locked target - it is hit
+## even when the circle just misses it (the caller only passes it when nothing solid is in between).
+func player_attack(center: Vector2, radius: float, base: int, knock: float, aim: Vector2, stage: int, lock: Node2D = null) -> int:
 	var n := 0
-	var any_counter := false
+	last_lock_forced = false
 	for f in fighters:
 		if not f.is_active():
 			continue
 		if center.distance_to(f.global_position) > radius + f.stats.body_radius:
-			continue
-		var mult := (player.stats.counter_multiplier if counter else 1.0) * rules.back_multiplier * rules.difficulty_multiplier
-		var dmg := maxi(1, int(round(base * mult)))
+			if f != lock:
+				continue
+			last_lock_forced = true
+		var dmg := maxi(1, int(round(base * rules.back_multiplier * rules.difficulty_multiplier)))
 		if f.take_hit(dmg, player.global_position, knock):
 			n += 1
-			any_counter = any_counter or counter
-			hud.damage_number(f.global_position + Vector2(0, -30), dmg, "counter" if counter else "hit", t("counter"))
+			hud.damage_number(f.global_position + Vector2(0, -30), dmg, "hit")
 			fx.spark((f.global_position + Vector2(0, -12) + (player.global_position + Vector2(0, -12))) * 0.5)
+			player_hit_enemy.emit(f, dmg, stage == 2 or player.last_attack_chased)
 			_check_spar_end()
-	fx.slash(player.global_position, aim, stage, counter and n > 0)
+		elif f == lock:
+			last_lock_forced = false
+	fx.slash(player.global_position, aim, stage, false)
 	if n > 0:
-		hitstop(rules.counter_hitstop if any_counter else rules.hitstop)
-		if any_counter and not fx.counter_popup(player.global_position + Vector2(0, -34)):
-			hud.show_banner(t("counter") + "！", "", 0.4)
-		if any_counter:
-			counter_landed.emit()
+		hitstop(rules.hitstop)
 	return n
+
+
+## 武学 (A) 燕回旋: the spin's blow - every active enemy whose body touches the circle of `card.radius` round the rabbit
+## takes card.damage (same multipliers as J), is pushed card.knockback px and, without super armour, staggered
+## card.stagger s (Fighter.skill_hit). Returns how many were hit.
+signal skill_spin_hit(enemy: Fighter, damage: int)
+
+
+func skill_spin(p: Player, card: Resource) -> int:
+	var n := 0
+	for f in fighters.duplicate():
+		if not f.is_active():
+			continue
+		if p.global_position.distance_to(f.global_position) > float(card.radius) + f.stats.body_radius:
+			continue
+		var dmg := maxi(1, int(round(int(card.damage) * rules.back_multiplier * rules.difficulty_multiplier)))
+		if f.skill_hit(dmg, p.global_position, float(card.knockback), float(card.stagger)):
+			n += 1
+			hud.damage_number(f.global_position + Vector2(0, -30), dmg, "hit")
+			fx.spark((f.global_position + Vector2(0, -12) + (p.global_position + Vector2(0, -12))) * 0.5)
+			skill_spin_hit.emit(f, dmg)
+			player_hit_enemy.emit(f, dmg, true)
+			_check_spar_end()
+	if n > 0:
+		hitstop(rules.hitstop)
+	return n
+
+
+## 试玩反馈 v1: one blow of the GP counter, dealt straight to the enemy whose blow was caught (in place: never misses
+## while it is still in the fight). Gold "反击" number, gold arc; the first blow pops "反击!". Returns true if it landed.
+func gp_counter_hit(f: Node2D, base: int, knock: float, aim: Vector2, stage: int) -> bool:
+	fx.slash(player.global_position, aim, stage, true)
+	if f == null or not is_instance_valid(f) or not (f as Fighter).is_active():
+		return false
+	var dmg := maxi(1, int(round(base * rules.back_multiplier * rules.difficulty_multiplier)))
+	if not f.take_hit(dmg, player.global_position, knock):
+		return false
+	hud.damage_number(f.global_position + Vector2(0, -30), dmg, "counter", t("counter"))
+	fx.spark((f.global_position + Vector2(0, -12) + (player.global_position + Vector2(0, -12))) * 0.5)
+	hitstop(rules.counter_hitstop)
+	if stage == 1 and not fx.counter_popup(player.global_position + Vector2(0, -34)):
+		hud.show_banner(t("counter") + "！", "", 0.4)
+	player_hit_enemy.emit(f, dmg, true)
+	counter_landed.emit()
+	_check_spar_end()
+	return true
 
 
 ## Enemy strike at `center` (circle `radius`): dodge-shadow check, then damage if the player's body is inside.
@@ -213,11 +283,15 @@ func enemy_strike(f: Fighter, center: Vector2, radius: float) -> void:
 		return
 	if center.distance_to(player.global_position) > radius + player.stats.body_radius:
 		return
+	if player.in_gp_stance():
+		_gp_success(f)
+		return
 	if player.take_damage(f.stats.damage, f.global_position):
 		f.hits_landed += 1
 		hud.damage_number(player.global_position + Vector2(0, -30), f.stats.damage, "hurt")
 		fx.spark(player.global_position + Vector2(0, -12))
 		hitstop(rules.hitstop)
+		player_hurt.emit(f, f.stats.damage)
 		_check_spar_end()
 		if after_hit.is_valid() and after_hit.call(f):
 			return
@@ -227,6 +301,26 @@ func enemy_strike(f: Fighter, center: Vector2, radius: float) -> void:
 
 func enemy_shadow_check(center: Vector2, radius: float) -> void:
 	player.check_shadow(center, radius)
+
+
+## 试玩反馈 v1: `f`'s blow landed inside the guard stance (from any side). No damage; blue ring + sparks between them,
+## hitstop, a small camera shake; the enemy is knocked back and staggered gp_enemy_stagger s unless its card has super
+## armour (then it only takes the damage); the player's counter starts (invulnerable until it ends).
+func _gp_success(f: Fighter) -> void:
+	var st: PlayerStats = player.stats
+	player.gp_catch(f)
+	var staggered := false
+	if not f.stats.super_armor:
+		staggered = f.gp_stagger(st.gp_enemy_stagger, player.global_position, st.gp_knockback)
+	var dir := f.global_position - player.global_position
+	dir = dir.normalized() if dir.length() > 0.5 else CharSheet.dir_vector(player.facing)
+	fx.gp_flash(player.global_position + Vector2(0, -12) + dir * 10.0, dir)
+	hitstop(st.gp_hitstop)
+	_shake_left = SHAKE_SECONDS
+	gp_log.append({"enemy": f, "staggered": staggered, "t": Time.get_ticks_msec()})
+	if OS.has_feature("web"):
+		print("combat: gp success")
+	gp_success.emit(f)
 
 
 func _on_dodge_success() -> void:
@@ -256,27 +350,48 @@ func _physics_process(delta: float) -> void:
 			elif b.engaged and not story_no_leash and b.stats.leash_range > 0.0 and b.home.distance_to(player.global_position) > b.stats.leash_range:
 				b.start_return()
 	for f in fighters:
-		fx.set_alert(f, f.alert and f.state == "windup" and f.visible)
+		var on: bool = f.alert and f.state == "windup" and f.visible
+		fx.set_alert(f, on)
+		if on and not _alert_on.get(f, false):
+			enemy_alert.emit(f)
+		_alert_on[f] = on
 	# 脱战回血 pauses while the 门派簿 / ending page is open (the tree pause covers the Esc page); dialogue does not block it
 	var story = main.get("story")
 	if not (story != null and story._modal_open()):
 		player.tick_regen(delta, in_combat())
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if hud == null:
 		return
+	_update_shake(delta)
 	hud.update_player(player.hp, player.stats.max_hp, player.regen_active)
 	var mh = main.hud
 	var avoid := [hud.hp_panel.get_global_rect(), Rect2(mh.minimap.global_position, mh.minimap.size).grow(1)]
 	for c in [mh.objective, mh.clock, mh.hint, hud.result_panel, hud.choice, mh.get("tasks")]:
 		if c != null and c.visible:
 			avoid.append(c.get_global_rect())
+	var sk = main.get("skills")
+	if sk != null and sk.hud != null and sk.hud.icons_visible():
+		avoid.append(sk.hud.icons_rect())     # 武学 (A): the U / I icons under the HP panel
 	var ban := hud.banner_rect()
 	if ban.has_area():
 		avoid.append(ban.grow(2))
 	hud.avoid_rects = avoid
 	hud.update_plates(fighters, [player.global_position])
+
+
+## GP camera shake: a small random offset that fades out (runs during the hitstop too).
+func _update_shake(delta: float) -> void:
+	var cam: Camera2D = main.get("camera")
+	if cam == null:
+		return
+	if _shake_left > 0.0:
+		_shake_left = maxf(0.0, _shake_left - delta)
+		var k := _shake_left / SHAKE_SECONDS
+		cam.offset = Vector2(rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0)).round() * SHAKE_PX * k
+	elif cam.offset != Vector2.ZERO:
+		cam.offset = Vector2.ZERO
 
 
 ## 脱战回血: "in combat" = a spar is on (choosing excluded), or a bandit is engaged. (<5 s since the last damage /
@@ -320,14 +435,34 @@ func handle_input(event: InputEvent) -> bool:
 		hud.move_choice(1)
 		_confirm_choice()
 	elif event.is_action_pressed("move_up"):
-		hud.move_choice(0)
+		_move_choice(0)
 	elif event.is_action_pressed("move_down"):
-		hud.move_choice(1)
+		_move_choice(1)
 	elif event.is_action_pressed("interact"):
 		_confirm_choice()
+	elif event is InputEventMouseMotion:
+		# 试玩反馈 v1: the mouse over an option selects it
+		var i := hud.choice_at(event.position)
+		if i >= 0:
+			_move_choice(i)
+		return false
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		# a click on an option picks it; anywhere else it does nothing (and never swings)
+		var i := hud.choice_at(event.position)
+		if i >= 0:
+			_move_choice(i)
+			_confirm_choice()
+	elif event is InputEventMouseButton:
+		pass                     # other buttons / releases while choosing: swallowed
 	else:
 		return false
 	return true
+
+
+func _move_choice(i: int) -> void:
+	if i != hud.choice_index:
+		hud.move_choice(i)
+		choice_moved.emit(i)
 
 
 func _confirm_choice() -> void:
@@ -547,6 +682,7 @@ func _player_died() -> void:
 		return
 	player_dead = true
 	deaths += 1
+	player_down.emit()
 	player.dead = true
 	player.input_enabled = false
 	hud.fade_out(t("player_down"), 0.5)

@@ -1,83 +1,179 @@
 {
-  "_说明": "新手指引 + 任务面板（外部文件层，docs/design/新手指引与任务看板-方案-v1.md）。steps = 五步指引，按顺序：id 内部名，title 面板上的名字，todo 要做什么，place 在哪里，reward 奖励铜钱，objective 左上角目标栏的字（不含“目标：”）。graduate_reward = 五步都完成后的出师奖励，book = 门派簿记的条目。hidden_default = 指引一开始是否关闭（false = 开着）。intro_scene = 序章结束后师父说的那句（在 scenes 里）。caption_seconds = 屏幕中央“序章 · 完”和“指引完成”字幕显示多久（秒）。spar_hint = 第 1 步切磋时屏幕上的按键提示。board = 任务面板的文字。改完保存即生效（tests/guide_suite.gd 会和方案比对）。",
+  "_说明": "新手指引 + 任务面板（外部文件层，docs/design/新手指引与任务看板-方案-v1.md）。steps = 五步指引，按顺序：id 内部名，title 面板上的名字，todo 要做什么，place 在哪里，reward 奖励铜钱，objective 左上角目标栏的字（不含“目标：”）。graduate_reward = 五步都完成后的出师奖励，book = 门派簿记的条目。hidden_default = 指引一开始是否关闭（false = 开着）。intro_scene = 序章结束后师父说的那句（在 scenes 里）。caption_seconds = 屏幕中央“序章 · 完”和“指引完成”字幕显示多久（秒）。spar_hint = 第 1 步切磋时屏幕上的按键提示。ui = 字幕和进度的文字（{名字} 由游戏填）。board = 任务面板的文字。改完保存即生效（tests/guide_suite.gd 会和方案比对）。 condition_scenes = 哪些对话（场景编号的开头）算第 4 步“听厨娘讲”、第 5 步“看比武告示牌”。",
   "steps": [
-    { "id": "combat", "title": "战斗", "todo": "和师兄切磋：闪避一次、反击一次，再赢下切磋", "place": "练武场", "reward": 10,
-      "objective": "指引 1/5：找师兄切磋，闪避、反击，赢一场" },
-    { "id": "trial", "title": "梅花桩试炼", "todo": "报名梅花桩试炼，拿到任一评价（铜、银、金都算）", "place": "练武场试炼木牌", "reward": 10,
-      "objective": "指引 2/5：梅花桩试炼拿到一个评价" },
-    { "id": "repair", "title": "修缮", "todo": "找老周修好宿舍屋顶（要花 30 文）", "place": "宿舍门口", "reward": 15,
-      "objective": "指引 3/5：找老周修宿舍屋顶" },
-    { "id": "stall", "title": "小食摊", "todo": "听厨娘讲小食摊和每日收入（只是说话，不用修厨房）", "place": "厨房", "reward": 5,
-      "objective": "指引 4/5：去厨房找厨娘说说话" },
-    { "id": "board", "title": "告示榜与比武", "todo": "在村口江湖告示榜接一条委托并交差；顺路看一眼比武告示牌", "place": "村口", "reward": 10,
-      "objective": "指引 5/5：村口告示榜接委托、交差，看比武告示" }
+    {
+      "id": "combat",
+      "title": "战斗",
+      "todo": "和师兄切磋：格挡（GP）成功一次，再赢下切磋",
+      "place": "练武场",
+      "reward": 10,
+      "objective": "指引 1/5：找师兄切磋，格挡（GP）成功一次，赢一场"
+    },
+    {
+      "id": "trial",
+      "title": "梅花桩试炼",
+      "todo": "报名梅花桩试炼，拿到任一评价（铜、银、金都算）",
+      "place": "练武场试炼木牌",
+      "reward": 10,
+      "objective": "指引 2/5：梅花桩试炼拿到一个评价"
+    },
+    {
+      "id": "repair",
+      "title": "修缮",
+      "todo": "找老周修好宿舍屋顶（要花 30 文）",
+      "place": "宿舍门口",
+      "reward": 15,
+      "objective": "指引 3/5：找老周修宿舍屋顶"
+    },
+    {
+      "id": "stall",
+      "title": "小食摊",
+      "todo": "听厨娘讲小食摊和每日收入（只是说话，不用修厨房）",
+      "place": "厨房",
+      "reward": 5,
+      "objective": "指引 4/5：去厨房找厨娘说说话"
+    },
+    {
+      "id": "board",
+      "title": "告示榜与比武",
+      "todo": "在村口江湖告示榜接一条委托并交差；顺路看一眼比武告示牌",
+      "place": "村口",
+      "reward": 10,
+      "objective": "指引 5/5：村口告示榜接委托、交差，看比武告示"
+    }
   ],
   "graduate_reward": 10,
   "book": "新手指引·出师",
   "hidden_default": false,
   "caption_seconds": 2.0,
   "intro_scene": "G-师父-开始",
-  "spar_hint": "看到师兄抬手（前摇）→ 按空格闪避 → 马上按 J 反击",
+  "spar_hint": "看到师兄发红、头上冒“!” → 按 K（或鼠标右键）格挡 → 自动反击",
   "ui": {
     "prologue_caption": "序章 · 完",
-    "step_done": "指引完成：%s  +%d 文",
-    "graduate": "新手指引·出师  +%d 文",
-    "objective_track": "%s",
-    "progress_combat": "闪避 %s · 反击 %s · 赢一场 %s",
-    "progress_board": "委托交差 %s · 看比武告示 %s",
+    "step_done": "指引完成：{title}  +{coins} 文",
+    "graduate": "新手指引·出师  +{coins} 文",
+    "progress_combat": "格挡 {gp} · 赢一场 {win}",
+    "progress_board": "委托交差 {commission} · 看比武告示 {arena}",
     "yes": "√",
-    "no": "□"
+    "no": "□",
+    "mark_current": "▶",
+    "mark_pending": "·"
   },
   "scenes": {
     "G-师父-开始": [
-      { "who": "crane", "text": "先把门里的事摸熟，有不懂的按 Q 看看。" },
-      { "kind": "提示", "text": "按 Q 打开任务面板：新手指引、悬赏、委托、修缮、比武、收徒都在里面。" }
+      {
+        "who": "crane",
+        "text": "先把门里的事摸熟，有不懂的按 Q 看看。"
+      },
+      {
+        "kind": "提示",
+        "text": "按 Q 打开任务面板：新手指引、悬赏、委托、修缮、比武、收徒都在里面。"
+      }
     ]
   },
-  "_board说明": "board = 任务面板的文字。tabs 六栏的名字（顺序不要改）。keys = 面板底部的按键提示。各栏条目的写法见下面各项（%s / %d 由游戏填）。",
+  "_board说明": "board = 任务面板的文字。tabs 六栏的名字（顺序不要改）。keys = 面板底部的按键提示。各条目写法里的 {名字} 由游戏填进去（{coins} 铜钱、{day} 第几天 等），换语言时只改这里的文字即可；obj_* = 追踪某一条时左上角目标栏显示的字。",
   "board": {
     "title": "任务（Q 关闭）",
-    "tabs": ["新手指引", "悬赏", "委托", "修缮", "比武", "收徒"],
+    "tabs": [
+      "新手指引",
+      "悬赏",
+      "委托",
+      "修缮",
+      "比武",
+      "收徒"
+    ],
     "keys": "←→ 换栏  ↑↓ 选择  E 追踪  Q / Esc 关闭",
-    "page": "%d/%d 页",
+    "page": "{page}/{pages} 页",
     "tracking": "【追踪中】",
-    "step": "%s %d. %s（+%d 文）",
-    "step_detail": "%s · 去：%s",
-    "step_progress": "进度：%s",
-    "graduate_item": "%s 出师（全部完成再 +%d 文）",
-    "graduate_detail": "门派簿记“%s”",
+    "step": "{mark} {n}. {title}（+{coins} 文）",
+    "step_detail": "{todo} · 去：{place}",
+    "step_progress": "进度：{progress}",
+    "graduate_item": "{mark} 出师（全部完成再 +{coins} 文）",
+    "graduate_detail": "门派簿记“{book}”",
     "toggle_off": "关闭指引（关了也照样发钱）",
     "toggle_on": "打开指引",
     "toggle_detail": "关闭后左上角不再提示指引",
     "guide_all_done": "指引全部完成",
-    "bounty_offer": "悬赏：%s · %s · 榜上可接 · 赏 %d 文，名望 +%d",
-    "bounty_patrol": "巡山：2 个狼山贼 · 山路 · 榜上可接 · 赏 %d 文",
-    "bounty_taken": "悬赏：%s · %s · 已接，未打赢 · 赏 %d 文，名望 +%d",
-    "bounty_won": "悬赏：%s · 已打赢，回告示榜交榜 · 赏 %d 文，名望 +%d",
-    "bounty_next": "下一条悬赏：第 %d 天辰时上榜",
-    "bounty_done": "已揭榜 %d/3 条 · 巡山 %d 回",
+    "bounty_offer": "悬赏：{name} · {place} · 榜上可接 · 赏 {coins} 文，名望 +{fame}",
+    "bounty_patrol": "巡山：2 个狼山贼 · 山路 · 榜上可接 · 赏 {coins} 文",
+    "bounty_taken": "悬赏：{name} · {place} · 已接，未打赢 · 赏 {coins} 文，名望 +{fame}",
+    "bounty_won": "悬赏：{name} · 已打赢，回告示榜交榜 · 赏 {coins} 文，名望 +{fame}",
+    "bounty_next": "下一条悬赏：第 {day} 天辰时上榜",
+    "bounty_done": "已揭榜 {main}/3 条 · 巡山 {patrols} 回",
     "bounty_where": "去：村口江湖告示榜接榜",
-    "com_item": "委托：%s · %s · %s · %d 文",
+    "com_item": "委托：{name} · {client}托付 · {status} · {coins} 文",
     "com_open": "可接（去村口告示榜）",
-    "com_taken": "进行中：%s",
+    "com_taken": "进行中：{step}",
     "com_ready": "办妥了，回告示榜交差",
     "com_done": "已交差",
     "com_none": "今天的委托辰时（8 点）贴出",
-    "com_total": "累计完成 %d 条 · 家业进度 %d/%d（每 %d 条家业 +1）",
-    "repair_item": "修缮：%s · 找%s（%s） · %d 文 · 家业 +%d",
-    "repair_done": "修缮：%s · 已修好",
-    "repair_names": { "roof": "宿舍屋顶", "dorm_old": "旧弟子房", "kitchen": "厨房和小食摊" },
-    "repair_who": { "roof": ["老周", "宿舍门口"], "dorm_old": ["看门老伯", "山门"], "kitchen": ["厨娘", "厨房"] },
-    "arena_next": "比武大会：第 %d 天午时报名 · 村口擂台告示牌 · 报名费 %d 文",
-    "arena_open": "比武大会：今天报名中（午时至酉时） · 村口擂台告示牌 · 报名费 %d 文",
-    "arena_entered": "比武大会：本届已参加 · 下届第 %d 天",
-    "arena_titles": "夺魁 %d 次（困难 %d 次） · 首次夺魁 %d 文，名望 +%d",
-    "disciple_need": "收徒：旧弟子房 %s · 名望 %d/%d · 家业 %d/%d（任一项到 %d 格）",
+    "com_total": "累计完成 {total} 条 · 家业进度 {progress}/{every}（每 {every} 条家业 +1）",
+    "repair_item": "修缮：{name} · 找{who}（{where}） · {coins} 文 · 家业 +{estate}",
+    "repair_done": "修缮：{name} · 已修好",
+    "repair_names": {
+      "roof": "宿舍屋顶",
+      "dorm_old": "旧弟子房",
+      "kitchen": "厨房和小食摊"
+    },
+    "repair_who": {
+      "roof": [
+        "老周",
+        "宿舍门口"
+      ],
+      "dorm_old": [
+        "看门老伯",
+        "山门"
+      ],
+      "kitchen": [
+        "厨娘",
+        "厨房"
+      ]
+    },
+    "arena_next": "比武大会：第 {day} 天午时报名 · 村口擂台告示牌 · 报名费 {fee} 文",
+    "arena_open": "比武大会：今天报名中（午时至酉时） · 村口擂台告示牌 · 报名费 {fee} 文",
+    "arena_entered": "比武大会：本届已参加 · 下届第 {day} 天",
+    "arena_titles": "夺魁 {titles} 次（困难 {hard} 次） · 首次夺魁 {coins} 文，名望 +{fame}",
+    "disciple_need": "收徒：旧弟子房 {dorm} · 名望 {fame}/{need_fame} · 家业 {estate}/{need_estate}（任一项到 {need} 格）",
     "disciple_dorm_ok": "已整理",
     "disciple_dorm_no": "未整理（找看门老伯）",
     "disciple_coming": "收徒：条件够了，明早辰时山门外会来一个少年",
     "disciple_waiting": "收徒：少年在山门外等着，去见他",
-    "disciple_joined": "师弟：%s · 每天伙食费 %d 文",
-    "locked": "（未开放）"
+    "disciple_joined": "师弟：{job} · 每天伙食费 {upkeep} 文",
+    "locked": "（未开放）",
+    "obj_bounty_taken": "悬赏：{name} · {place}",
+    "obj_bounty_won": "悬赏：{name} · 回榜交榜",
+    "obj_bounty_offer": "悬赏：{name} · 去告示榜接榜",
+    "obj_patrol_offer": "巡山 · 去告示榜接榜",
+    "obj_commission": "委托：{name} · {status}",
+    "obj_repair": "修缮：{name} · 找{who}",
+    "obj_arena_next": "比武大会：第 {day} 天午时 · 村口擂台",
+    "obj_arena_open": "比武大会：今天报名中 · 村口擂台",
+    "obj_disciple_waiting": "收徒：去山门外见少年",
+    "obj_disciple_need": "收徒：整理旧弟子房，名望或家业到 {need} 格"
+  },
+  "_advanced说明": "武学与经营第一批（B）：进阶指引。原来五步和出师都完成后，左上角目标栏和任务看板接着显示“进阶 n/4”，金色箭头照样指路。steps = 四步（id 内部名，title 名字，todo 要做什么，place 去哪，reward 奖励铜钱，objective 目标栏的字）；每一步做到就算完成并马上发钱，不用按顺序。fame_need = 第 4 步要几格名望（不够时目标栏写 objective_low_fame，任务看板写 low_fame_hint）。finish_caption = 四步都完成后的结束语（和“序章 · 完”一样淡入淡出）。旧存档：已经做到的步骤算完成，但不补发铜钱。",
+  "advanced": {
+    "steps": [
+      { "id": "farm", "title": "开菜园", "todo": "找厨娘开菜园（40 文），种下第一颗种子", "place": "厨房，找厨娘", "reward": 15, "objective": "进阶 1/4：开菜园，种下第一颗种子" },
+      { "id": "water", "title": "浇水收菜", "todo": "井边打水给地浇一次水，并收下第一棵菜", "place": "水井、菜园", "reward": 5, "objective": "进阶 2/4：给地浇一次水，收下第一棵菜" },
+      { "id": "gather", "title": "采集与药膳", "todo": "采一份竹笋或草药，再请厨娘做一份药膳", "place": "后山竹林、山路、厨房", "reward": 5, "objective": "进阶 3/4：采一份竹笋或草药，请厨娘做药膳" },
+      { "id": "skill", "title": "师父传功", "todo": "找师父传功，学会燕回旋", "place": "正殿", "reward": 10, "objective": "进阶 4/4：找师父传功，学会燕回旋" }
+    ],
+    "fame_need": 2,
+    "objective_low_fame": "进阶 4/4：名望到 {need} 格后找师父（现在 {fame} 格）",
+    "low_fame_hint": "去梅花桩试炼或接悬赏可以涨名望",
+    "finish_caption": "进阶 · 完",
+    "step_done": "进阶完成：{title}  +{coins} 文",
+    "board_step": "{mark} 进阶 {n}. {title}（+{coins} 文）",
+    "progress_farm": "开菜园 {open} · 种下 {plant}",
+    "progress_water": "浇水 {water} · 收菜 {harvest}",
+    "progress_gather": "采集 {gather} · 药膳 {meal}",
+    "progress_skill": "名望 {fame}/{need} 格 · {hint}",
+    "finish_item": "{mark} 进阶 · 完（四步共 {coins} 文）"
+  },
+  "prologue_transition": { "_说明": "序章结尾的转场（秒）：变暗、“序章 · 完”停留、亮起。", "fade_out_seconds": 1.5, "caption_seconds": 2.0, "fade_in_seconds": 1.5 },
+  "condition_scenes": {
+    "stall": "X-厨娘",
+    "board": "A-告示牌"
   }
 }

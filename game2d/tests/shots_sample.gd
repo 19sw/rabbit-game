@@ -114,19 +114,16 @@ func unlock() -> void:
 	story.set_stage(8)
 	await near(story._npc("crane"))
 	await tap(KEY_E)
+	# 新手指引 v1: no 序章 · 完 page / 继续逛逛 - the game goes straight on, then 师父's guide line
 	for i in 900:
 		if story.sect_book.is_open:
 			await tap(KEY_ESCAPE)
-		elif story.prologue_end.is_open:
-			if story.prologue_end.buttons_shown():
-				break
-			await frames(2)
 		elif story.dialogue.active:
 			await tap(KEY_E)
+		elif main.sample.unlocked and not story.busy and not main.guide._intro_pending:
+			break
 		else:
 			await frames(2)
-	await tap(KEY_DOWN)
-	await tap(KEY_E)
 
 
 func repair(who: String, shots: Array) -> void:

@@ -6,7 +6,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
-		<title>动物武侠 DEMO</title>
+		<title>山门小院</title>
 		<style>
 html, body, #canvas {
 	margin: 0;
@@ -48,8 +48,8 @@ body {
 }
 
 #loader-logo {
-	width: 387px;
-	height: 66px;
+	width: 309px;
+	height: 87px;
 	image-rendering: pixelated;
 	image-rendering: crisp-edges;
 }
@@ -87,6 +87,25 @@ body {
 	min-height: 18px;
 }
 
+#lang-switch {
+	position: absolute;
+	top: 10px;
+	right: 14px;
+	z-index: 3;
+	font: 14px/1 "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+	color: #8d8273;
+	user-select: none;
+}
+
+#lang-switch span {
+	cursor: pointer;
+	padding: 2px 4px;
+}
+
+#lang-switch span.on {
+	color: #f6dc78;
+}
+
 #loader-notice {
 	display: none;
 	max-width: 560px;
@@ -110,8 +129,9 @@ body {
 			需要开启 JavaScript 才能运行。
 		</noscript>
 
+		<div id="lang-switch"><span data-lang="zh">中文</span>|<span data-lang="en">English</span></div>
 		<div id="loader">
-			<img id="loader-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIEAAAAWCAYAAADnw/+rAAAE8UlEQVR42u1asUozQRCehHuCYJVCgoVFYmcTUomkzBOEPINVSh8hlc8gfyF5hCNYyI+NcIWxEAmS4kCQgF3SJH9hZp2bm5ndjTb+uhC83M7OfvPNzM7uRoDf9uNbJXZAs97Y4PND/lyJkQsdG4sjRJ8m/5WYvmtLNJJ4owRN57fQ2m97iZbktLE+XVKbzm8BAKC13w5yJpWXMDXrjc1PDIREIom3EkHLpyDHiHLGWE2Xhonq4gFBnekCZPkErcOBiCk0OEMDlAdTyJhddYm2BuoqBYHmoBiCNB0cnAU2JNikoJg+XqpYp/Pbgr7S/Nu+0DLjC1BpVbHG0BWKynFbEJ+0qvE+DRe3qxAEYpbs6EgV+DbrfASG4CmNPRzA9PHSzfmQP1foKqA6Y9vH35uBvx2DGHFes7wYQV2w1RP8PKC1Po5NK4cuCLq1qjppulgXCRIcKdVZKldYvgMy3Jc1qvOEpR2xICklrFuSglc7jxOtFckK7m6tCuliLSaRL5h4sNM5pEClOhN8IU1e4Hs2Zm8yWS7P4PhkBHfXQwAAOD4ZOEcsZ2PW9/Hsn89qmfgdieG6eEYs80wsf91aFR5yUO2UEihdrLd9WYlsbQy2i/tZpVlvbKgcDSZnT56piYMcS7hahwO4ux6WAjSJrVfUgdgkR3IHU3A+Wa6fzsPfS+8kYrgtWvBR+Yv7WdBJgco1640N2mOtBjzptL2HFMBagtD33Vq1gOvs6MAlOh9fpcS09tuwnI1hORu77/j5zLItyViOk7KE6ujWqiUZfEf7JMLoOAmXFawhjerXnDWd3xY+2v6K4tBWtZDA9AV0QoFbJUGrVxyURCAlljpGi2pcFumyTeUkHOliXToq0eDFzMex73hGEEJ8zN0BYo8prb7TF++3yujO9wQU+CrPoNNPS7UTZVasHq2M+vR2c+7+Ynu7OXf66bOkh47Dfn58WuWZSCKvh9J4Po/UpzlHs9vqx3do80cbqWNXeVb67tMfiyuRHEcJ+PunG3UcRCJRD9+lU8LpXDH3AVawaHVaG4/2ffZ0EHtslkqetAnt9FOHcVfOom4MtQl4ppUjGcRMpwSjAXQVkAyOIVA7TlmbLb5ChDhIOyFYiUBtDanZX6HTOlZawVnV7vzppkVaLrV7BQ0kNQD1SLLWfQUlEEmUdFibVRxLA4DjShdrJxfqrGa9sUEeaYCH2ONrnX4atAJwOxAPv0nknBWOiC9XvfeNy/bv6fAVAAAmoz0AANevnWnl83I5OKgefu6mpNPx9JkHLfbhe0s/JwVlO/0UJqMs+MckTR/Oj9xp9liZyTnlXEp3BVRuedUr2MFtRXlc4ZKQeng6fHVK0DjJCK0O05MF1yMBtAjSbipjf52UcKADY35VpHheWPJol03W3b522uA4LbnJaM/ZoWGjvkpCr4ypk7jyUICceJo5ElH4nj5L850OX2ECPVMfx071YJByAn2JAQAAw7a6r+ClxDemJKeUFMSqHePdCg49UScPzsS3ScHz9mS05xRRkn1Rz7OMgpH0iJErkMZLDwaCpEvVS5yFN2oSgbvuW2LHgPiLalnX2dHBRtq4oh1aoCAGrs+76aHXjRYpXDHfpWvlQdLDy4F2z25hpJi08iJdrfJTw3f9JxMeKFayV3ZV6FNOx9AIlb5zPbwvZIdujdHwa3o5Vvhtv+1/b/8AofPt+erh7zEAAAAASUVORK5CYII=" alt="动物武侠 DEMO">
+			<img id="loader-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGcAAAAdCAYAAAC3+HJeAAAEDElEQVR42u1avWobQRDeO+4JhCsVQrhQcXLnRrgyQWWewOgZXLnMI6jyM6QKfgRhXKRQE1AhuQhCBBWCQBCkkxtdmoyYm5vZnf05kYAXBJZ3d/abb352dlfGvLd/tmUhk8puv8LfX3c/shgZIfNjG9XhHDh8dQ4mdbWdG2OMGfZGXkphgKvt3Ax7oySKh2AAHWL1cGGSdHatVwQb5rA2sYY1h3UNLCbLp4UYOFQHybguTJLOyYwTqxQ7/+/fsXK9G1prOJi04qC16GJ0lqIPIqqIUSrUy1ffPyc1eIo27uTmdZfOQRtRRcZLUYcjqki9SWpkDAeTuoEOay/vpcaNxWeMMY/LTRbqoA19NE7M9FMOCpvFQzdrTga331BQ407ulD3bH60KaQwheX6Icw4Hk2SRT/eiggI7bJ7sBt8tnGRIMlbbeaPv+nZ6MozGe8tuvwIMeC5NSVJFJuGTxpfdfkUNRDmwcQYYpfbt5QF9W8iRw5Fna9zCNhn4/3iu1jCSp0lzMRYXSRx2TVXl4sxVgUqcNIzjYxhpI/WRAWksxDC2taQIHnfyRlq0ydPoQsmtR4KeDy4L5LF5MpRYmBsz36taUmCVoktz4IQ1r2+nqijVpPYi5Ym4jbm+crio0ZAlRZXPLUbMlsCl9sLXGw+bJ2/PCNnPYuRwY1znmMflJiu7/YqmJiyHcw46Hozpy9Fsf2wUHzXjvFkqMWOM+f31k6H3arRJMmBubLPJAfLwmJu7WSOlYYzQj6OH0wFXcxQDHv+2W6ivoei1FeVTjBwMOpRom4y2GkeeK2qgH6LHlto0umv5AaNI43NNNRV7LWLO+ARgixrt7QB1qlRRzxkRZHOOnLdViaWU4YpM7gAJfdQ5XCnH15movJu72enjyiJ0LF07T1VNparIQiNTSmfUOVxR4OtMXKT64ocPXTu3eVTZ7VfwsXmt5n2jrb0IFII9AXtiqqjV4KXez0UxN362P54+lOdTQfDzy0dn+OMxrn7XnZzPFX3t/MJUUlBlUYI4+QdHRSoRCmvg+R8efolnJY4Lbm3bRbNYrdmI1vSn2ovoEy+37uNyk91fXVZUdmiq5fYdqZLDY8EwGCc1IDWMjcfCmPP/kCLEKC6HoMaWUq3GqXzSITUaZxju9oEahjNiYev0bc/TiyAPcVVC3FwNXte6PjpLTkadgDMMF3UcLprqi1RnEeoZWPHQFCjNw4rb9q1hb8Q6DMbm+zzNYZKiQPsUAuPp2KzN9IXD+Xl6USPF9cJYdvsVJZaSalP8/uqysj0P+D5XYDxcxFH9KD7gB+vk0ieZcfCGTDdqTJKWFCmN+JDKYQo9z1A8XCFgwyc5i02fs/zSkqukQolt88bBBw/GodVPcmDz3v6/9gdbW37kUFlpRAAAAABJRU5ErkJggg==" alt="山门小院">
 			<div id="loader-bar" class="indeterminate"><div id="loader-fill"></div></div>
 			<div id="loader-text">加载中</div>
 			<div id="loader-notice"></div>
@@ -129,7 +149,47 @@ const engine = new Engine(GODOT_CONFIG);
 	const fill = document.getElementById('loader-fill');
 	const text = document.getElementById('loader-text');
 	const notice = document.getElementById('loader-notice');
-	const loadingText = text.textContent;
+	// 中英文切换 v1: 「中文 | English」 top right. The choice is kept in localStorage "aw_lang" - the game (scripts/lang.gd)
+	// reads the same key; first visit: the browser's language. The texts in both languages come from data/title.json +
+	// data/i18n/en.json (filled in by tools/sync_assets.py).
+	const TEXTS = {"zh": {"title": "山门小院", "loading": "加载中", "starting": "加载完成，正在启动…", "failed": "加载失败：", "unknown": "未知错误", "slow": "加载有点慢，点此刷新重试", "missing": "浏览器缺少运行所需的功能：", "no_canvas": "您的浏览器不支持 canvas。", "no_js": "需要开启 JavaScript 才能运行。"}, "en": {"title": "The Mountain Courtyard", "loading": "Loading", "starting": "Loaded, starting…", "failed": "Failed to load: ", "unknown": "Unknown error", "slow": "Loading is slow — click here to reload", "missing": "Your browser is missing features this game needs:", "no_canvas": "Your browser doesn't support canvas.", "no_js": "JavaScript must be enabled to play."}};
+	const switcher = document.getElementById('lang-switch');
+	function storedLang() {
+		try {
+			const v = localStorage.getItem('aw_lang');
+			if (v === 'zh' || v === 'en') {
+				return v;
+			}
+		} catch (e) {}
+		const nav = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+		return nav.startsWith('zh') ? 'zh' : 'en';
+	}
+	let lang = storedLang();
+	let pct = -1;
+	const T = (k) => TEXTS[lang][k];
+	function paint() {
+		document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+		document.title = T('title');
+		for (const s of switcher.querySelectorAll('span')) {
+			s.classList.toggle('on', s.dataset.lang === lang);
+		}
+		text.textContent = pct < 0 ? T('loading') : (pct >= 100 ? T('starting') : T('loading') + '  ' + pct + '%');
+		if (notice.dataset.retry === '1') {
+			notice.textContent = T('slow');
+		}
+	}
+	switcher.addEventListener('click', function (ev) {
+		const l = ev.target.dataset && ev.target.dataset.lang;
+		if (l !== 'zh' && l !== 'en') {
+			return;
+		}
+		lang = l;
+		try {
+			localStorage.setItem('aw_lang', l);
+		} catch (e) {}
+		paint();
+	});
+	paint();
 	let initializing = true;
 
 	function hideLoader() {
@@ -138,18 +198,19 @@ const engine = new Engine(GODOT_CONFIG);
 		}
 		initializing = false;
 		loader.classList.add('done');
+		switcher.remove();             // in the game the title screen has its own switch
 		setTimeout(() => loader.remove(), 400);
 	}
 
 	function displayFailureNotice(err) {
 		console.error(err);
-		let msg = '未知错误';
+		let msg = T('unknown');
 		if (err instanceof Error) {
 			msg = err.message;
 		} else if (typeof err === 'string') {
 			msg = err;
 		}
-		notice.textContent = '加载失败：' + msg;
+		notice.textContent = T('failed') + msg;
 		notice.style.display = 'block';
 		bar.style.display = 'none';
 		initializing = false;
@@ -162,7 +223,7 @@ const engine = new Engine(GODOT_CONFIG);
 			return;
 		}
 		console.warn('loader: slow start, offering a reload');
-		notice.textContent = '加载有点慢，点此刷新重试';
+		notice.textContent = T('slow');
 		notice.style.display = 'block';
 		notice.style.cursor = 'pointer';
 		notice.dataset.retry = '1';
@@ -178,16 +239,16 @@ const engine = new Engine(GODOT_CONFIG);
 	});
 
 	if (missing.length !== 0) {
-		displayFailureNotice('浏览器缺少运行所需的功能：\n' + missing.join('\n'));
+		displayFailureNotice(T('missing') + '\n' + missing.join('\n'));
 		return;
 	}
 	engine.startGame({
 		'onProgress': function (current, total) {
 			if (current > 0 && total > 0) {
-				const pct = Math.max(0, Math.min(100, Math.floor((current / total) * 100)));
+				pct = Math.max(0, Math.min(100, Math.floor((current / total) * 100)));
 				bar.classList.remove('indeterminate');
 				fill.style.width = pct + '%';
-				text.textContent = pct >= 100 ? '加载完成，正在启动…' : loadingText + '  ' + pct + '%';
+				paint();
 			} else {
 				bar.classList.add('indeterminate');
 			}

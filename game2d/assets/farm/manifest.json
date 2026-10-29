@@ -1,0 +1,157 @@
+{
+  "_说明": "武学与经营第一批（经营）的图，pixel2d/farm/tools/generate_farm_art.py 生成，tools/sync_assets.py 复制到 game2d/assets/farm/。",
+  "bucket": {
+    "cell": [
+      16,
+      16
+    ],
+    "file": "bucket.png",
+    "frames": [
+      "full",
+      "empty"
+    ]
+  },
+  "crops": {
+    "cell": [
+      32,
+      32
+    ],
+    "columns": [
+      "seed",
+      "sprout",
+      "young",
+      "ripe"
+    ],
+    "file": "crops.png",
+    "foot_y": 26,
+    "rows": [
+      "greens",
+      "radish",
+      "pumpkin"
+    ]
+  },
+  "farm_tilled": {
+    "file": "farm_tilled.png",
+    "map_px": [
+      1664,
+      992
+    ],
+    "plots": [
+      [
+        0,
+        0
+      ],
+      [
+        64,
+        0
+      ],
+      [
+        0,
+        64
+      ],
+      [
+        64,
+        64
+      ],
+      [
+        0,
+        128
+      ],
+      [
+        64,
+        128
+      ],
+      [
+        128,
+        0
+      ],
+      [
+        192,
+        0
+      ],
+      [
+        128,
+        64
+      ],
+      [
+        192,
+        64
+      ],
+      [
+        128,
+        128
+      ],
+      [
+        192,
+        128
+      ]
+    ],
+    "size": [
+      224,
+      160
+    ],
+    "west_w": 96
+  },
+  "farm_weeds": {
+    "file": "farm_weeds.png",
+    "map_px": [
+      1664,
+      992
+    ],
+    "size": [
+      224,
+      160
+    ],
+    "west_w": 96
+  },
+  "gather_herbs": {
+    "cell": [
+      32,
+      32
+    ],
+    "draw_at": [
+      -16,
+      -26
+    ],
+    "file": "gather_herbs.png",
+    "fps": 6,
+    "frames": 3
+  },
+  "gather_shoots": {
+    "cell": [
+      32,
+      32
+    ],
+    "draw_at": [
+      -16,
+      -26
+    ],
+    "file": "gather_shoots.png",
+    "fps": 6,
+    "frames": 3
+  },
+  "note": {
+    "file": "note.png",
+    "size": [
+      16,
+      16
+    ]
+  },
+  "plot_wet": {
+    "file": "plot_wet.png",
+    "size": [
+      32,
+      32
+    ]
+  },
+  "ripe_sparkle": {
+    "cell": [
+      16,
+      16
+    ],
+    "file": "ripe_sparkle.png",
+    "fps": 6,
+    "frames": 4,
+    "loop": true
+  }
+}

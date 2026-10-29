@@ -13,6 +13,10 @@
     "kitchen":  { "price": 60, "estate": 2, "who": "bear" }
   },
   "fame": { "bronze": 1, "silver": 1, "gold": 1 },
+  "_more_repairs说明": "武学与经营第一批：修缮“开菜园”（找厨娘谈）。单独放在 more_repairs 里（repairs 仍是原来三处）：price 价钱，estate 家业格数，who 找谁。菜园的其他数字在 data/farm.json。",
+  "more_repairs": {
+    "farm": { "price": 40, "estate": 1, "who": "bear" }
+  },
   "_第三步说明": "第③步（docs/design/第三步-擂台与收徒-方案-v1.md）的规则与数字。arena = 比武大会：interval_days 每几天一届（第 3、6、9……天，序章结束那天算第 1 天），open_hour / close_hour 报名时间（12 点起，18 点前），fee 报名费，rounds 三轮对手（card = cards/ 里的数值卡，school 门派，name 称呼），lose_fraction 生命掉到多少比例判这一轮输（20%），between_heal 两轮之间回多少生命（上限 = 主角最大生命），first_win_coins / first_win_fame 第一次夺冠的铜钱和名望格数，win_coins / win_fame 之后每次夺冠，fame_max 名望最多几格；hard = 补充 v1.1 的困难难度（报名时选，只算这一届，报名费一样）：首次困难夺冠 / 之后困难夺冠的铜钱和名望（对手用 rounds 里 card_hard 的数值卡：生命、伤害和普通一样，不被打断、出招更密、猴子连打两下、牦牛冲撞更勤、蛇侧步 60%）。disciple = 收徒：need_repair 必须先修好哪一处（旧弟子房），need_fame / need_estate 名望或家业任一项达到几格，arrive_hour 第二天几点出现，join_estate 收下加几格家业，upkeep 每天伙食费、upkeep_hour 几点扣，estate_max 家业最多几格，day_hour / night_hour 白天在院子里、夜里回旧弟子房的钟点，jobs 三种活计：cook 帮厨（stall_income 小食摊每天收入，needs_repair 要先修好厨房），spar 陪练（per_day 每天（按日历日，过了半夜才算新的一天）几次、win_coins 赢一次给几文、wins_for_fame 累计赢几次 +1 名望、card 师弟陪练的数值卡），sweep 打扫（days_for_estate 每干满几天 +1 家业）。",
   "arena": {
     "interval_days": 3,

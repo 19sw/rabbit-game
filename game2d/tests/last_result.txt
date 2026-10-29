@@ -1,0 +1,1264 @@
+PASS  spawn: player starts at the spawn point  ((240.0, 935.0))
+PASS  spawn: in front of the dorm door (tile 7,28)  ((240.0, 935.0))
+PASS  spawn: spawn point is not inside anything
+PASS  spawn: idle facing down
+PASS  spawn: controls hint shown
+PASS  font: every UI character exists in the CJK font  (missing: )
+PASS  move: key D moves right, plays walk_right then idle_right  (moved (42.0, 0.0), walk anim walk_right, idle anim idle_right)
+PASS  move: key A moves left, plays walk_left then idle_left  (moved (-42.0, 0.0), walk anim walk_left, idle anim idle_left)
+PASS  move: key W moves up, plays walk_up then idle_up  (moved (0.0, -42.0), walk anim walk_up, idle anim idle_up)
+PASS  move: key S moves down, plays walk_down then idle_down  (moved (0.0, 42.0), walk anim walk_down, idle anim idle_down)
+PASS  move: key Right moves right, plays walk_right then idle_right  (moved (42.0, 0.0), walk anim walk_right, idle anim idle_right)
+PASS  move: key Left moves left, plays walk_left then idle_left  (moved (-42.0, 0.0), walk anim walk_left, idle anim idle_left)
+PASS  move: key Up moves up, plays walk_up then idle_up  (moved (0.0, -42.0), walk anim walk_up, idle anim idle_up)
+PASS  move: key Down moves down, plays walk_down then idle_down  (moved (0.0, 42.0), walk anim walk_down, idle anim idle_down)
+PASS  move: diagonal D+S moves down-right at normal speed  ((45.0, 45.0))
+PASS  move: diagonal Up+A moves up-left with a 4-direction walk animation  ((-30.0, -30.0) walk_left)
+PASS  A1 move: dorm door -> training-yard centre takes 5.5-6.5 s (v1: ~4.08 s)  (5.85 s)
+PASS  walls/cliffs: north - no pass-through  (102 pushes tested, 0 skipped (start blocked by something else))
+PASS  walls/cliffs: south - no pass-through  (98 pushes tested, 0 skipped (start blocked by something else))
+PASS  walls/cliffs: west - no pass-through  (52 pushes tested, 0 skipped (start blocked by something else))
+PASS  walls/cliffs: east - no pass-through  (52 pushes tested, 0 skipped (start blocked by something else))
+PASS  walls/cliffs: cliff1 - no pass-through  (115 pushes tested, 7 skipped (start blocked by something else))
+PASS  walls/cliffs: cliff2 - no pass-through  (84 pushes tested, 8 skipped (start blocked by something else))
+PASS  walls: back-wall gap (to the bamboo grove) is passable  ((1008.0, 240.0))
+PASS  walls: mountain gate passage is passable  ((1040.0, 1317.0))
+PASS  cliff: stone stairs are passable  ((1040.0, 1456.0))
+PASS  objects: no object can be walked through (buildings, trees, bamboo, rocks, well, fence, racks...)  (545 pushes on 323 footprints, 18 footprints boxed in by neighbours; kinds: ["bamboo", "stele", "stone_qing", "bamboo_hedge", "tile_stash", "bamboo_gate", "stump_axe", "stone_crack", "stone_moss", "tree", "pillar_broken", "rubble", "library_ruin", "building", "beam", "lantern_stone", "bench", "incense", "rack", "drum", "woodpile", "jar", "laundry", "stake", "dummy", "fence", "basin", "well", "weight", "drying", "gate", "lion", "rock", "signpost", "boulder", "village_arch", "lantern_pole", "haystack"]; failures: [])
+PASS  objects: NPCs cannot be walked through  ([])
+PASS  bounds: cannot walk off the map edge  (81 edge pushes, out: [])
+PASS  reach: 村口 (village square) reachable from the spawn (grid search)  ((1456.0, 1808.0))
+PASS  reach: 竹林 (bamboo clearing) reachable from the spawn (grid search)  ((976.0, 144.0))
+PASS  reach: 练武场 (training yard) reachable from the spawn (grid search)  ((1008.0, 944.0))
+PASS  reach: 正殿前 (main hall front) reachable from the spawn (grid search)  ((1040.0, 688.0))
+PASS  reach: 厨房门口 (kitchen door) reachable from the spawn (grid search)  ((1488.0, 976.0))
+PASS  reach: 藏经阁 (library ruins) reachable from the spawn (grid search)  ((464.0, 656.0))
+PASS  reach: 东园 (east garden) reachable from the spawn (grid search)  ((1616.0, 656.0))
+PASS  reach: 山门外 (outside the gate) reachable from the spawn (grid search)  ((1040.0, 1296.0))
+PASS  reach: 山路 (mountain road) reachable from the spawn (grid search)  ((464.0, 1456.0))
+PASS  reach: 村口茶摊 (tea stall) reachable from the spawn (grid search)  ((1296.0, 1872.0))
+      walkable cells 45206, reachable from spawn 45152 (99.9%)
+PASS  reach: walked from the spawn to 村口 (village square) with the movement keys  (19.9 s, 67 turns, end (1458.0, 1812.0))
+PASS  reach: walked from the spawn to 竹林 (bamboo clearing) with the movement keys  (9.6 s, 37 turns, end (980.0, 151.0))
+PASS  npc: 8 NPCs placed  (8)
+PASS  npc: 师父 · 仙鹤 at characters.toml tile [32, 20], idle facing down
+PASS  npc: 师兄 · 狐狸 at characters.toml tile [30, 29], idle facing down
+PASS  npc: 厨娘 · 熊 at characters.toml tile [47, 29], idle facing down
+PASS  npc: 看门老伯 · 老狗 at characters.toml tile [33, 39], idle facing down
+PASS  npc: 茶摊老板 · 狸猫 at characters.toml tile [40, 57], idle facing left
+PASS  npc: 村民 · 鸭子 at characters.toml tile [44, 57], idle facing left
+PASS  npc: 小山贼甲 · 狼 at characters.toml tile [14, 46], idle facing right
+PASS  npc: 小山贼乙 · 野猪 at characters.toml tile [17, 46], idle facing left
+PASS  npc: no prompt when nobody is near
+PASS  npc: 师父 has free ground next to it to talk from  ((1040.0, 697.0))
+PASS  npc: 师兄 - near shows 按 E 交谈, E opens '来过两招？', leaving hides it  (prompt true, invite true, hidden after leaving true)
+PASS  npc: 厨娘 has free ground next to it to talk from  ((1520.0, 985.0))
+PASS  npc: 看门老伯 has free ground next to it to talk from  ((1072.0, 1305.0))
+PASS  npc: 茶摊老板 has free ground next to it to talk from  ((1296.0, 1881.0))
+PASS  npc: 村民 has free ground next to it to talk from  ((1424.0, 1881.0))
+PASS  npc: 小山贼甲 has free ground next to it to talk from  ((464.0, 1529.0))
+PASS  npc: 小山贼乙 has free ground next to it to talk from  ((560.0, 1529.0))
+PASS  dash: Space dashes ~85 px in the facing direction  (90.0 px)
+PASS  dash: leaves fading afterimages  (5 afterimages at once)
+PASS  dash: afterimages fade out and are removed
+PASS  dash: cooldown blocks an immediate second dash
+PASS  dash: Shift dashes again after the cooldown  (90.0 px)
+PASS  dash: cannot dash through the north wall  ((656.0, 394.0) -> (656.0, 389.0))
+PASS  dash: cannot dash through the north wall from the bamboo side  ((656.0, 340.0) -> (656.0, 353.0))
+PASS  dash: cannot dash through the south wall  ((336.0, 1240.0) -> (336.0, 1249.0))
+PASS  dash: cannot dash through the west wall  ((138.0, 960.0) -> (127.0, 960.0))
+PASS  dash: cannot dash through the east wall  ((1908.0, 704.0) -> (1923.0, 704.0))
+PASS  dash: cannot dash through the cliff edge  ((336.0, 1306.0) -> (336.0, 1311.0))
+PASS  dash: cannot dash through the lower stone bank  ((1296.0, 1588.0) -> (1296.0, 1573.0))
+PASS  dash: cannot dash through the dorm wall (from the front)  ((336.0, 936.0) -> (336.0, 933.0))
+PASS  dash: cannot dash through the dorm roof (from behind)  ((336.0, 756.0) -> (336.0, 775.0))
+PASS  dash: cannot dash through the main hall  ((912.0, 652.0) -> (912.0, 645.0))
+PASS  dash: cannot dash through the kitchen fence  ((1744.0, 958.0) -> (1744.0, 978.0))
+PASS  dash: cannot dash through the NPC 师兄  ((976.0, 989.0) -> (976.0, 965.0))
+PASS  dash: dash sweep along north wall, south wall and cliff edge never passes  ([])
+PASS  ambience: on by default with 8 lantern lights  (8 lights)
+PASS  ambience: tint is warm and dimmer than the original  ((0.94, 0.88, 0.8, 1.0))
+PASS  ambience: L turns it off
+PASS  ambience: L turns it back on
+PASS  camera: view stays inside the map near (40.0, 40.0)  (view [P: (0.0, 0.0), S: (480.0, 480.0)])
+PASS  camera: view stays inside the map near (2008.0, 40.0)  (view [P: (1568.0, 0.0), S: (480.0, 480.0)])
+PASS  camera: view stays inside the map near (40.0, 1900.0)  (view [P: (0.0, 1440.0), S: (480.0, 480.0)])
+PASS  camera: view stays inside the map near (2008.0, 1900.0)  (view [P: (1568.0, 1440.0), S: (480.0, 480.0)])
+PASS  camera: view stays inside the map near (1008.0, 944.0)  (view [P: (768.0, 692.0), S: (480.0, 480.0)])
+PASS  camera: follows the player on whole pixels  ((1008.0, 932.0))
+PASS  A1 speed: walk speed is ~30% below v1's 190 px/s and lives in the player card (moved from tuning.json)  (133 px/s)
+PASS  A1 dash: speed / time / cooldown identical to v1
+PASS  A1 dash: distance still ~85 px (same as v1)  (90.0 px)
+PASS  A2 time: one game day = 48 real minutes (1 game hour = 2 real minutes)  (2880 s/day)
+PASS  A2 time: tuning start hour is 8:00
+PASS  A2 time: running node advances 1 h per 120 s (6 s -> 0.05 h)  (0.0500 h)
+PASS  A2 time: 120 s -> 8:00 becomes 9:00  (9.0)
+PASS  A2 time: wraps past midnight  (0.5)
+PASS  A2 time: a new game starts at 辰时 08:00  (8.000 辰时 08:00)
+      dawn 6.5: tint (0.86, 0.74, 0.82, 1.0) lamps 0.00
+      noon 12.0: tint (1.0, 1.0, 0.98, 1.0) lamps 0.00
+      dusk 18.0: tint (0.9, 0.6, 0.46, 1.0) lamps 0.74
+      night 21.5: tint (0.3891, 0.4591, 0.7075, 1.0) lamps 1.00
+      deep 2.0: tint (0.305, 0.375, 0.605, 1.0) lamps 1.00
+PASS  A3 look: noon > dawn > night > deep night brightness, clearly different  ({ "dawn": 0.77128797769547, "noon": 0.99855601787567, "dusk": 0.65367203950882, "night": 0.46211767196655, "deep": 0.37672400474548 })
+PASS  A3 lamps: off at noon
+PASS  A3 lamps: off at 8:00
+PASS  A3 lamps: fully on at night
+PASS  A3 lamps: still on in deep night
+PASS  A3 lamps: off after dawn (7:00)
+PASS  A3 look: tint changes smoothly (max step per game minute 0.0085)
+PASS  A3 look: 23:59 joins 0:00 without a jump
+PASS  A3 look: darkest moment is still bright enough to see (tint luminance 0.37)
+PASS  A3 lamps: ambience lights lit at night
+PASS  A3 lamps: ambience lights dark at noon
+PASS  A4 clock: 18:00 shows 酉时 18:00  (酉时 18:00)
+PASS  A4 clock: 时辰 + HH:MM text for 14 sample times
+PASS  A2 key: T fast-forwards 1 hour (8:00 -> 9:00) and the clock follows  (9.000 巳时 09:00)
+PASS  A2 key: 9 more T presses -> 酉时 18:00  (18.000)
+PASS  A4 key: L still turns ambience off (clock stays)
+PASS  A4 key: L turns it back on with the current time's tint
+PASS  A5 minimap: top-left, round, about 56 px across (half the old 104 px)  ((56.0, 56.0) at (6.0, 6.0))
+PASS  A5 minimap: built from the map thumbnail (padded, so the circle never runs off the map)
+PASS  A5 minimap: centred on the player, the arrow shows his facing (6 places x 4 facings)
+PASS  A5 minimap: walking right scrolls the map left under the arrow, pointing right  ((1008.0, 944.0) -> (1141.0, 944.0))
+PASS  A5 star: sits at the current objective (or on the rim towards it)  ((14.41172, 29.23529))
+PASS  A5 star: blinks (visible and hidden within 1.5 s)
+PASS  A5 minimap: never covers the player at normal places
+PASS  A5 layout: minimap, objective line, clock and key hint do not overlap  ({ "minimap": [P: (6.0, 6.0), S: (56.0, 56.0)], "objective": [P: (67.0, 33.0), S: (200.0, 18.5)], "clock": [P: (438.0, 6.0), S: (36.0, 20.0)], "hint": [P: (6.0, 422.5), S: (271.0, 51.5)] })
+      corner: player at screen (40.0, 60.0), minimap alpha 0.12
+PASS  A5 minimap: fades if the player would be hidden behind it (map corner)
+PASS  occlusion: player stopped at the dorm ridge is sorted behind the dorm (and not inside the roof)  (feet (336.0, 775.0), dorm base 928.0)
+PASS  occlusion: in front of the dorm the player is sorted in front
+PASS  occlusion: under a tree canopy (behind the trunk) the tree draws over the player  ((655.0, 594.0))
+PASS  AC1 doc: 战斗数据方案-v1.3.md exists  (/Users/difengliu/Documents/Codex/游戏DEMO/game2d/../docs/design/战斗数据方案-v1.3.md)
+PASS  AC1 cards: all 140 values in appendix A of v1.3 match the .tres cards (试玩反馈 v1: the 2 看破反击 rows are gone from the card)
+PASS  试玩反馈 v1 cards: the 看破反击 fields (counter_window, counter_multiplier) are no longer on the player card
+PASS  试玩反馈 v1 cards: the GP numbers on cards/player.tres are the plan's (stance 0.25, too early 0.4, cooldown 0.3, counter 30, stagger 0.6, hitstop 0.1)
+PASS  AC1 cards: every card field is documented (v1.3 appendix A; the GP fields: 试玩反馈 plan, above)
+PASS  AC1 decisions (v1.2 table; 试玩反馈 v1: GP counter 30 = the old 12 + 18 counter): 师兄 120/12, wind-up 0.85, interval 1.4-2.2, sidestep 10%, no super armour, stagger delay 0.5; 狼 60/14; 野猪 110/22; chase 0.6 s / 96 px
+PASS  AC1 math: 师兄 at 12 damage beats the player on the 7th hit (v1.2)  (7 hits)
+PASS  AC1 data: tuning.json no longer holds walk_speed and says where it went
+PASS  art: combat sheets (4 characters) and effect sheets are loaded through the sync tool
+PASS  art: combat frames are 32x32
+PASS  font: every combat UI character exists in the font
+PASS  AC7 HUD: '生命 100/100' bar next to the minimap, overlapping nothing  (生命 100/100 [P: (68.0, 5.0), S: (74.0, 24.0)] )
+PASS  AC3 combo: J starts attack 1, auto-faces the enemy, hits for 8  (stage 1 facing right dmg 8)
+PASS  AC7 feedback: slash effect and damage number '8' shown
+PASS  AC3 buffer: an early second press is remembered and becomes attack 2 at the combo window  (attack 2 started after 8 more frames)
+PASS  AC3 combo: attack 2 hits for 12  (12)
+PASS  AC3 combo: only two hits - the combo ends after attack 2
+PASS  AC3 buffer: presses older than 0.30 s are dropped (no third attack)
+PASS  AC3 auto-face: an enemy 130 px away (outside 96 px) does not turn the player
+PASS  AC3 attack: moving while attacking is slowed to 0.2x walking speed  (26.6 px/s)
+PASS  AC3 i-frames: hits during the 0.30 s dodge window do no damage; after it they do  (hp 100 -> during 100 -> after 88)
+PASS  AC7 hurt: stun + red damage number
+PASS  AC3 hurt: 0.55 s protection after being hit
+PASS  AC3 dodge: dodging 0.5 s before the strike is NOT a dodge success (shadow rule: 0.30 s)
+PASS  AC7 wind-up: red '!' over 师兄 once his direction is locked
+PASS  AC3 dodge success: dodging at the end of the wind-up -> success ('看破！'), no damage  (successes 2 hp 100 ["看破！"])
+PASS  试玩反馈 v1: 看破反击 is gone - the combo right after a dodge success does the ordinary 8 + 12 (no x1.5, no gold 反击)  (8 + 12, gold [])
+PASS  AC3 swap: dodging towards 师兄 (40 px) lands behind him (~28 px) with afterimages  (end (1004.0, 959.0) fox (976.0, 959.0) ghosts 5)
+PASS  AC3 swap: dodging 90 deg away from the enemy is a normal dodge
+PASS  AC3 swap: an enemy 80 px away (> 64) is not swapped with
+PASS  AC3 swap safety: next to 163 obstacles (walls, cliffs, buildings, fences, trees, rocks...) the swap never lands inside or beyond them  (kinds ["tile", "bamboo", "stele", "stone_qing", "bamboo_hedge", "tile_stash", "bamboo_gate", "stump_axe", "stone_crack", "stone_moss", "tree", "pillar_broken", "rubble", "library_ruin", "building", "beam", "lantern_stone", "bench", "incense", "rack", "drum", "woodpile", "jar", "laundry", "stake", "dummy", "fence", "basin", "well", "weight", "drying", "gate", "lion", "rock", "signpost", "boulder", "village_arch", "lantern_pole", "haystack"]; failures [])
+PASS  AC4 spar: E -> '来过两招？ 切磋 / 算了'; key 2 (算了) does not start a fight
+PASS  AC4 spar: ↓ + E also chooses 算了
+PASS  AC4 spar: ↑ + E chooses 切磋 - fight starts, 师兄 shows name plate + HP bar
+PASS  AC4 spar: start message shown  (切磋开始！)
+PASS  AC4 spar: during the spar E does nothing and no '按 E 交谈' prompt appears
+PASS  AC4 arena: walking and dashing at every edge never leaves the 练武场 during a spar  (arena [P: (608.0, 768.0), S: (800.0, 384.0)] )
+PASS  AC4 arena: after the spar the yard is open again
+PASS  AC4/AC5 lose flow: an idle player loses (HP <= 20%%), '你输了' + a line from 师兄  (你输了 / 师兄：看准了按 K 接住，挡住就能还手。, 22.7 s, hp 16)
+PASS  AC4 reset: after the result both are back to full HP and 师兄 returns to his place
+PASS  AC4/AC5 win flow: the GP bot wins, '你赢了！' + a line from 师兄  (5.0 s, player hp 100)
+PASS  AC4 rematch: E on 师兄 offers the spar again
+      bot idle   : 0/3 wins, mean winning time 0.0 s, times [21.9, 23.6, 23.3], 师兄 HP left [120, 120, 120]
+      bot gp     : 8/8 wins, mean winning time 5.0 s, times [4.9, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0], 师兄 HP left [18, 10, 10, 10, 10, 10, 10, 10]
+      bot chase  : 8/8 wins, mean winning time 5.1 s, times [5.7, 5.1, 5.3, 5.0, 5.0, 5.0, 5.0, 5.0], 师兄 HP left [24, 20, 20, 20, 20, 20, 20, 20]
+      bot dodger : 8/8 wins, mean winning time 5.2 s, times [6.3, 5.0, 5.3, 5.0, 5.0, 5.0, 5.0, 5.0], 师兄 HP left [20, 20, 20, 20, 20, 20, 20, 20]
+      bot masher : 24/24 wins, mean winning time 5.4 s, times [6.0, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.9, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4, 5.4], 师兄 HP left [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+      bot gp_p   : 8/8 wins, mean winning time 7.7 s, times [7.3, 7.7, 7.3, 7.9, 7.8, 7.5, 8.0, 7.6], 师兄 HP left [12, 12, 12, 12, 12, 12, 12, 12]
+      bot chase_p: 8/8 wins, mean winning time 12.3 s, times [13.8, 12.2, 12.1, 11.9, 12.2, 11.9, 12.4, 11.5], 师兄 HP left [20, 20, 20, 20, 20, 20, 20, 20]
+      bot dodger_p: 8/8 wins, mean winning time 14.9 s, times [14.2, 15.3, 15.5, 15.0, 14.7, 15.1, 15.0, 14.4], 师兄 HP left [16, 16, 24, 16, 16, 16, 16, 16]
+PASS  AC5 bot: a player who only stands still always loses  (0/3)
+PASS  AC5 bot (试玩反馈 v1): the GP bot (K so the stance meets the blow) wins every time, also when it only attacks with the GP counter and right after it  (8/8, punish-only 8/8)
+PASS  AC5 bot: the dodge-at-wind-up-end + chase bot wins every time  (8/8)
+PASS  AC5 bot: the dodge-only bot wins every time  (8/8, mean 5.2 s)
+PASS  AC5 bot: the GP bot and the dodge + chase bot both win faster than the dodge-only bot  (gp 4.97 s, chase 5.15 s vs dodge-only 5.22 s)
+PASS  AC5 bot: attacking only after a dodge, the chase wins faster than waiting out the chase window  (chase_p 12.3 s vs dodger_p 14.9 s (18% less time))
+PASS  AC5 bot: the attack-masher now wins often - 24/24 = 100% (target >= 50%)
+PASS  AC4 arena: 师兄 stayed inside the 练武场 through all bot spars  ((871.0, 936.0)..(1044.0, 1108.0))
+PASS  AC8 card: walking speed follows player.tres walk_speed (200 -> 200 px/s, back to 133)
+PASS  AC8 card: a boar card saved with max_hp 150 gives a 150-HP boar; the real card still gives 110
+PASS  AC6 respawn: below the gate stairs (tile 32,43), free ground, 587 / 493 px from 狼 / 野猪 (v1.1 4.1)  ((1040.0, 1392.0) 587 493)
+PASS  AC6 bandits: not engaged from afar; entering the 192 px discovery range starts the fight with name plates + HP bars
+PASS  AC3/AC6 bandits (v1.2): 狼 60 HP / 14 dmg, 野猪 110 HP / 22 dmg from their cards
+PASS  AC6 bandits: measured chase speed 狼 126 px/s vs 野猪 80 px/s (cards 126 / 80)
+PASS  AC6 leash: beyond 320 px from home the bandits give up, walk back and heal  (0.3 s)
+PASS  AC6 boar: wind-up with '!' then a straight charge (96 px in 0.3 s)
+PASS  AC6 death: an idle player is knocked out by the bandits -> '你被打倒了' (12.1 s)
+PASS  AC3 bandits stronger: idle death 12.1 s vs v1 16.4 s (26% faster)
+PASS  AC6 respawn: back at the respawn point with full HP; bandits back home with full HP
+PASS  AC6 bandits: the GP bot knocks out both (10.9 s, 0 deaths) -> '山贼被赶跑了！'  (山贼被赶跑了！)
+PASS  AC6 bandits: knocked-out bandits fade out and stay gone
+PASS  AC6 bandits: nothing re-engages after they were driven off
+PASS  AC4 chase: J 0.07 s after a dodge dashes to 师兄 (71 px away) and hits him (attack 1, 8)  (chases 1, arrived at 32.0 px, dmg 8, afterimages 8, time 3 frames)
+PASS  AC4 chase: the dash runs at dodge speed (3 frames for 39 px)
+PASS  AC4 chase: attack 2 follows the chase hit as usual (12)  (12)
+PASS  AC4 chase: 0.55 s after -> chase + hit  (dodge end 80 px from 师兄, chased true, moved 57.3 px, 师兄 HP 120 -> 112)
+PASS  AC4 chase: 0.65 s after -> attack in place, no dash  (dodge end 80 px from 师兄, chased false, moved 8.9 px, 师兄 HP 112 -> 112)
+PASS  AC4 chase: 1.0 s after -> attack in place, no dash  (dodge end 80 px from 师兄, chased false, moved 8.9 px, 师兄 HP 112 -> 112)
+PASS  AC4 chase: out of range (110 px) -> attack in place, no dash  (dodge end 110 px from 师兄, chased false, moved 8.9 px, 师兄 HP 112 -> 112)
+PASS  AC4 chase: in range (90 px) -> chase + hit  (dodge end 90 px from 师兄, chased true, moved 67.3 px, 师兄 HP 112 -> 104)
+PASS  AC4 chase: with no enemy in a fight, J after a dodge is an ordinary attack
+PASS  试玩反馈 v1 chase: after a dodge success (看破) the chase hit is an ordinary 8 + 12 - no 看破反击 any more  (dodge end 87 px away, success true, dmg 8 + 12)
+PASS  试玩反馈 v1 chase fix: 师兄 side-steps away right as the chase blow starts - it still lands (4/4)  (["8", "8", "8", "8"])
+PASS  AC4 chase + swap: after a swap, J is the chase attack (already in reach: hits at once)  (swap true dmg 8)
+PASS  AC4 chase + swap: J pressed during the swap is buffered and chases on landing  (dmg 8)
+PASS  AC4 chase safety: next to 70 obstacles (37 kinds) the chase never passes through or into them  (70 chases started; kinds ["tile", "bamboo", "stele", "stone_qing", "bamboo_hedge", "tile_stash", "bamboo_gate", "stump_axe", "stone_crack", "stone_moss", "tree", "pillar_broken", "rubble", "beam", "lantern_stone", "bench", "incense", "rack", "drum", "woodpile", "jar", "laundry", "stake", "dummy", "fence", "basin", "well", "weight", "drying", "gate", "lion", "rock", "signpost", "boulder", "village_arch", "lantern_pole", "haystack"]; failures [])
+PASS  AC4 chase: positive control - in the open the same chase reaches the bandit  (28.9 px, chased true, blocked false, end (1003.648, 1061.791))
+PASS  AC4 chase arena: 11 chases at the 练武场 edges and corners never leave it; a target outside the wall stops the chase at the edge  ( forced end (621.0, 966.0))
+PASS  AC5 Esc: pauses everything - clock, enemies (position / state / timers / animation), player, timers, banner, numbers (1.5 s + J / Space / move keys while paused)  (changed while paused: )
+PASS  AC5 Esc: the help page is shown while paused
+PASS  AC5 Esc again: resumes from exactly the paused state, then time and enemies move on  (diff at resume: ; hour 8.0036 -> 8.0078)
+PASS  AC5 Esc: (sanity) the snapshot does change while the game runs
+PASS  AC5 Esc: the spar result timer stops while paused and runs on after  (2.333 2.317 2.183)
+PASS  AC5 page: the help page fits on the screen ([P: (14.0, 112.0), S: (453.0, 256.0)] inside (480.0, 480.0))
+PASS  AC5 page: lists every key with its use (试玩反馈 v1: K / 鼠标右键 格挡) and the play tips (combo, i-frames, 格挡 GP / 反击, swap, chase, spar, bandits)  (keys true tips true missing glyphs '')
+PASS  AC5 page: no text is cut off
+PASS  AC5 page: '继续' resumes by mouse click (without swinging), Enter, or E  (click true (no attack true) enter true e true)
+PASS  AC5 hint: the on-screen key hint says 'Esc：查看全部按键'  (WASD / 方向键：移动    J：攻击    空格 / Shift：闪避    E：交谈 / T：时间快进 1 小时    L：氛围灯光开关    H：显示/隐藏本提示 / Esc：查看全部按键和玩法（游戏暂停）)
+PASS  AC6 plates: in 30 close arrangements neither bandit's name plate covers the other bandit or the player, nor each other
+PASS  AC6 plates: names still shown when there is room
+PASS  AC6 result: no damage number is drawn over the spar result panel (and numbers sit under it)
+PASS  AC6 banner: '看破！' never overlaps '切磋开始！' (real dodge + forced worst case)
+PASS  AC6 focus click: the click that focuses the game (or the page's first click on the web) does not attack; later clicks and J do  (after focus 0, later 1, web first 0, second 1, J true)
+      bandits vs masher run 0: cleared after 12.2 s (狼 0 HP, 野猪 0 HP left)
+      bandits vs masher run 1: cleared after 11.2 s (狼 0 HP, 野猪 0 HP left)
+      bandits vs masher run 2: cleared after 11.6 s (狼 0 HP, 野猪 0 HP left)
+      bandits vs masher: 3/3 cleared
+PASS  regen AC4: the player card has regen_delay 5 and regen_per_sec 3  (5.0 3.0)
+PASS  regen AC1: no regen within 5 s after damage (60 HP after 4.7 s)  (60 -> 60)
+PASS  regen AC1: regen starts at ~5 s after the damage  (first +1 at 5.30 s)
+PASS  regen AC1: +3 HP/s (+-0.2) measured over 10 s  (30 HP in 10 s)
+PASS  regen AC1: stops at max HP (100) and stays there  (mid 91, now 100)
+PASS  regen AC1: a new hit restarts the 5 s wait  (60 -> 60)
+PASS  regen: a hit that is dodged (i-frames) does not count as damage / reset the wait  (took false hp 61)
+PASS  regen AC2: no regen during a spar (70 HP after 9 s, damage was 9 s ago)  (state fighting hp 70)
+PASS  regen AC5: end of a spar still heals fully  (100)
+PASS  regen AC2: after the spar nothing for 5 s, then regen starts  (after 4.5 s: 50, after 6.5 s: 54)
+PASS  regen AC2: (setup) the wolf noticed the player  (dist 110)
+PASS  regen AC2: no regen while a bandit is engaged (9 s, no damage taken)  (hp 50)
+PASS  regen AC2: (setup) the wolf gave up the chase (leash)  (far dist 414, leash 320)
+PASS  regen AC2: regen starts only after 5 s out of combat (leash)  (4.5 s: 50, 6.5 s: 54)
+PASS  regen AC3: paused during the 5 s wait -> the wait does not run (3 s + pause 4 s + 1.5 s = 4.5 s awake: still 60)  (60 60 60)
+PASS  regen AC3: after the pause the wait finishes and regen starts  (63)
+PASS  regen AC3: HP identical before / after 5 s of Esc pause, and regen goes on after resuming  (before 69 during 69 after 75)
+PASS  regen AC3: no regen while the 门派簿 is open  (64 64 67)
+PASS  regen: regen goes on while a dialogue is on screen (8 s: 60 -> ~66)  (talking true hp 69)
+PASS  regen AC4: no cue at full HP
+PASS  regen AC4: no cue while waiting (5 s)
+PASS  regen AC4: cue on while regenerating
+PASS  regen AC4: cue off at full HP  (hp 100)
+PASS  title AC4: the title screen is the main scene (opens first)
+PASS  title AC1: Godot boot splash image is off (no Godot logo when the engine starts)
+PASS  title AC2/AC6: project name (browser tab / window title) = the title text in data/title.json  (山门小院)
+PASS  title AC1: own project icon (favicon is not the Godot logo)  (res://assets/title/icon.png)
+PASS  title: crisp pixels - nearest filter and integer window scaling
+PASS  title AC2: both standees are in the scene
+PASS  title AC2: standees are about 96 px tall  (rabbit 100, crane 99)
+PASS  title AC2: rabbit on the left facing right, crane on the right facing left  ((150.0, 233.0) / (336.0, 233.0))
+PASS  title AC2: standees play their idle (breathing) frames
+PASS  title AC2: standees are fully inside the 480x270 picture
+PASS  title AC2: at least 3 onlookers - 师兄 fox, 厨娘 bear, 看门老伯 dog  (["fox", "bear", "dog"])
+PASS  title AC2: onlookers are the existing 32 px sprites at a whole-number scale, idle animation playing
+PASS  title AC2/AC6: pixel title logo shows the text from data/title.json  (logo text '山门小院' vs title.json '山门小院')
+PASS  title AC2: logo is at the top, fully visible, integer-scaled  ([P: (137.0, 5.0), S: (206.0, 58.0)])
+PASS  title: all sprites sit on whole pixels (crisp)
+PASS  title: every title / menu character exists in the UI font
+PASS  title AC3: effect nodes present (mist ×2, leaves back/front, qi motes, ripple, wind)  (["mist0", "mist1", "leaves_back", "leaves_front", "motes", "ripple", "wind"])
+PASS  title AC3: every effect draws something  (nothing drawn: )
+PASS  title AC3: bamboo + ginkgo leaves swirl around the two (in front and behind)  (19 leaves, 9 in front)
+PASS  title AC3: leaves and mist keep moving over time  (leaf moved 21.4 px in 1 s)
+PASS  title AC3: the ripple loops (same picture every 2.6 s)
+PASS  title AC3: the mist strip wraps without a visible seam  (0 rows differ a lot at the seam)
+PASS  title AC3: qi motes around both of them  (["rabbit", "crane"])
+PASS  title AC3: effects stay restrained (≤30 leaves, motes ≤0.8 opacity, ripple ≤0.5, no slash / spark effects)  (leaves 19, mote max 0.75, ripple 0.50, combat fx 0)
+PASS  title AC6: effects.intensity scales the effects (0 = off)
+PASS  title AC6: a new title text is never shown with the old logo (falls back to text until the logo is regenerated)
+PASS  title AC6: positions and effect counts come from data/title.json (edited copy moves / changes them)
+PASS  title AC4: 开始游戏 is selected first and clearly highlighted  (selected (1.0, 0.92, 0.7, 0.97) / other (0.12, 0.09, 0.1, 0.72))
+PASS  title AC4: ↑↓ and W / S move the selection (wrapping)  ([2, 1, 2, 1, 2, 1])
+PASS  title AC4: the highlight follows the selection
+PASS  title AC4: Enter, Space and E each confirm the selected item (opened 按键与玩法 each time)  ([true, true, true])
+PASS  title AC4: mouse hover selects (and highlights) the button under it  (hover help -> 2, hover start -> 1)
+PASS  title AC4: clicking 按键与玩法 opens the page, clicking 返回 closes it
+PASS  title AC4: 按键与玩法 shows exactly the Esc page's keys and tips (same PauseMenu.KEYS / TIPS, one source)
+PASS  title AC4: help page heading / back button from title.json, and the title is not paused  (按键与玩法 / 返回（Esc） / paused false)
+PASS  title AC4: help page fits on the screen
+PASS  title AC4: Esc / E / Enter return from the help page to the title (selection kept, nothing started)  (esc true e true enter true)
+PASS  title AC5: Esc on the title does nothing (no pause page, nothing paused, nothing chosen)  (paused false, pause menus 1, help open false)
+PASS  title AC4: 开始游戏 fades out first  (fade alpha after 0.2 s: 0.42)
+PASS  title AC4: after the fade the game scene replaces the title
+PASS  title AC4: the game starts at the opening spot (in bed in the dorm room) facing down  ((3063.0, 92.0))
+PASS  title AC4: the game starts at 08:00  (辰时 08:00)
+PASS  title AC4: the fade-in overlay is separate from the game scene
+PASS  title AC4: game state after 开始游戏 is identical to a direct launch (38 values: player, clock, objective, HUD, NPCs, combat, camera, scene tree)
+PASS  title AC4: the key that started the game does not act in it (no attack / dodge / step); the fade-in overlay is gone  (pos (3063.0, 92.0) stage 0 dash 0.00 overlay gone true)
+PASS  title AC5: in the game started from the title, Esc pauses (help page) and Esc again resumes
+PASS  title AC4: clicking 开始游戏 starts the game at the opening spot (the click does not attack)
+PASS  title AC4: Space starts the game too (and does not make the rabbit dodge)
+PASS  story AC7: every line of the approved script is in data/story.json word for word, and nothing else (143 lines, both directions)  (missing []; extra [])
+PASS  story AC7: the 6 choices are the script's word for word  (missing [] extra [])
+PASS  story AC7: 门派簿 names, entries and hint are the script's word for word  ([])
+PASS  story AC7: the 11 objectives are the script table's '左上角目标文字' in order (v4: step 1 has three)  (data ["擦干地上的水", "看看桌上的字条", "去练武场找师兄", "去正殿见师父", "去厨房找厨娘", "从山门下山", "沿山路去村口", "去村口找茶摊老板", "去后山竹林找回瓦片", "把瓦片的事告诉师父", "序章完成"] vs script ["擦干地上的水", "看看桌上的字条", "去练武场找师兄", "去正殿见师父", "去厨房找厨娘", "从山门下山", "沿山路去村口", "去村口找茶摊老板", "去后山竹林找回瓦片", "把瓦片的事告诉师父", "序章完成"])
+PASS  story AC7: every character of the story, objectives and 门派簿 exists in the UI font  (missing: )
+PASS  story AC7: the example objectives, '示例目标完成' and the placeholder bubble are gone
+PASS  story AC1: 开始游戏 on the title screen enters the game
+PASS  story AC1 (v3): 开始游戏 -> inside the dorm, asleep in bed, S1-醒来 starts, no objective yet
+PASS  story AC3 (v4 opening): asleep, the leak fills the bucket drop by drop up to the brim (0.55 -> 1.00), then the 画面 line  (hidden true rising true '屋顶漏下的雨水，一滴一滴落进床边的木桶。桶里的水越来越满。')
+PASS  story AC3 (v4 opening): '……哗啦。' - the full bucket overflows into a puddle on the floor, then the 画面 line  (puddle 1.00)
+PASS  story AC3 (v4 opening): woken by the splash he sits up as he says '……嗯？什么声音……'
+PASS  story AC3 (v3 opening): he gets out of bed onto free floor  ((3027.0, 139.0))
+PASS  story AC5: the key hint shows once the opening conversation is over
+PASS  story AC1 step 0: objective '目标：擦干地上的水' and the minimap star (擦干地上的水: on the rag in the corner)  (stage 0, star true at (6.636278, 36.52006))
+PASS  story AC1 step 0: objective '目标：擦干地上的水' and the minimap star (outside: on the dorm door)  (stage 0, star true at (27.85069, 25.41327))
+PASS  story AC3 (v4): leaving before wiping keeps 擦干地上的水 (师兄 has nothing to say yet)  (arrived)
+PASS  story AC3 (v4): E at the rag in the corner picks it up (S1-抹布)  (arrived ["S1-抹布"])
+PASS  story AC1 step 0: objective '目标：擦干地上的水' and the minimap star (on the puddle)  (stage 0, star true at (49.38118, 19.52386))
+PASS  story AC3 (v4): three E at the puddle wipe it up (S1-擦水渍) and the bucket is poured out  (arrived)
+PASS  story AC1 step 0: objective '目标：看看桌上的字条' and the minimap star (看看桌上的字条: on the note)  (stage 0, star true at (5.229704, 31.24247))
+PASS  story AC3 (v3): E at the little table reads S1-字条 (字条 style) and moves the story on  (arrived ["S1-字条"] 字条)
+PASS  story AC1 step 1: objective '目标：去练武场找师兄' and the minimap star (on 师兄 (outdoors; from inside: on his doorway, on the rim))  (stage 1, star true at (41.82977, 46.37764))
+PASS  story AC2: talking to 厨娘 (inside the kitchen) before 师父 plays S4-厨娘-任务前 and does not move the story on  (arrived ["S4-厨娘-任务前"])
+PASS  story AC3: 师兄 -> S2-师兄-初见 (choice) -> the spar starts at once (no 算了 the first time)  (["S2-师兄-初见"] fighting)
+PASS  story AC3: winning the spar plays S2-师兄-你赢了  (["S2-师兄-你赢了"])
+PASS  story AC1 step 2: objective '目标：去正殿见师父' and the minimap star (on the hall door (师父 is inside))  (stage 2, star true at (32.51668, 5.447847))
+PASS  story AC4 (v3): walking into the hall through its door to 师父  (arrived)
+PASS  story AC1 step 2: objective '目标：去正殿见师父' and the minimap star (inside the hall: in the hall's place on the map)  (stage 2, star true at (27.91654, 24.33041))
+PASS  story AC1 step 3: objective '目标：去厨房找厨娘' and the minimap star (on the kitchen door (厨娘 is inside))  (stage 3, star true at (27.86728, 50.99962))
+PASS  story AC1 step 4: objective '目标：从山门下山' and the minimap star (on 看门老伯)  (stage 4, star true at (10.27721, 42.65956))
+PASS  story AC2: no bandits on the road before step 5 is done
+PASS  story AC1 step 5: objective '目标：沿山路去村口' and the minimap star (on 村口)  (stage 5, star true at (41.96598, 46.27433))
+PASS  story AC2: after 老伯 (step 5) both bandits stand on the road
+PASS  story AC2: walking down the road, the bandits' opening lines start by themselves  (scene S6-山贼-开战)
+PASS  story AC2: after their lines the bandits attack
+PASS  story AC1: driving the bandits off plays S6-山贼-胜利  (deaths 0)
+PASS  story AC1 step 6: objective '目标：去村口找茶摊老板' and the minimap star (on 茶摊老板)  (stage 6, star true at (48.73842, 37.94574))
+PASS  story AC1 step 7: objective '目标：去后山竹林找回瓦片' and the minimap star (on the stele)  (stage 7, star true at (19.3089, 6.705288))
+PASS  story AC4: entering the clearing plays S8-进林 by itself  (scene)
+PASS  story AC4: bowing 青石 -> 苔石 -> 裂石 (walking + E) solves the puzzle  (["stone_qing", "stone_moss", "stone_crack"])
+PASS  story AC4: walking through the parted bamboo to the stash plays S8-找到瓦片  (scene)
+PASS  story AC1 step 8: objective '目标：把瓦片的事告诉师父' and the minimap star (on the hall door (师父 is inside))  (stage 8, star true at (46.38855, 41.81525))
+PASS  story AC4 (v3): back inside the hall for the ending  (arrived)
+PASS  story AC6: the ending opens 门派簿 with 名望 (incl. 赢了师兄一回 after a won spar) and 家业 entries  (["打跑山路上的山贼", "解开竹林断碑", "赢了师兄一回", "找回了老周的瓦"])
+PASS  story AC1 (新结尾): no 序章 · 完 page / buttons any more; the caption 「序章 · 完」 fades in and out by itself in ~2 s (1.97 s)
+PASS  story AC1 step 9: objective '目标：指引 1/5：找师兄切磋，格挡（GP）成功一次，赢一场' and the minimap star (no star - the guide's gold arrow instead)  (stage 9, star false at (27.91654, 19.53041))
+PASS  story AC1 (新结尾): the game goes on (no return to the title): everything after the prologue is open (老周, trial board, coins, 比武 board, 江湖告示榜 with today's 2 委托), the save is written, 师父's guide line plays, the gold arrow shows  ([true, ["story", "door", "door", "story", "story", "story", "door", "door", "story", "door", "story", "door", "story", "door", "door", "story", "door", "story", "story", "story", "story", "story", "story", "story", "story", "door", "story+guide+unlock+commission", "story"], ["S8-找到瓦片", "S9-师父-收尾", "G-师父-开始"]])
+      playthrough used 10 doors
+PASS  story AC5: the text types in letter by letter  (1 -> 4 of 8)
+PASS  story AC5: Space shows the whole line, Enter goes on (Space does not dodge)
+PASS  story AC5: a character line shows his portrait (the 128x128 HD picture, drawn 64x64 in the box) and the name 小兔
+PASS  story AC5: during a conversation the player cannot walk or attack
+PASS  story AC5: Esc still opens the help page during a conversation, and back
+PASS  story AC5: after the conversation the player can move again
+PASS  story AC5: all 9 speakers show their own portrait + 称呼; 旁白 / 提示 / 碑文 / 画面 / 字条 have no portrait and their own look  ([])
+PASS  story AC5: the choice appears with the line before it
+PASS  story AC5: ↓ + E picks option B and its answer follows  (嗯。路上小心，最近山路不太平。)
+PASS  story AC5: key 2 picks option B  (哈哈，好！那你先把今天的菜买回来。)
+PASS  story AC2: '按 E 交谈' and what each NPC says follow the steps (gating, '之后' lines; no prompt where the script has nothing)  ([])
+PASS  story AC2: 村民 says S7-村民 once, then S7-村民-之后
+PASS  story AC2: the '之后' lines do not move the story on
+PASS  story AC5: optional lines (v4: the room things incl. 字条 / 木桶 / 衣柜 / 香炉 / 祖师像 / S10-*, and 水井, 菜地, 石狮, 藏经阁封条, 茶摊) - '按 E 查看', E plays the script's line  ([])
+PASS  story AC3: losing the spar plays S2-师兄-你输了 (different lines) and still goes on to step 2  (S2-师兄-你输了)
+PASS  story AC3: afterwards 师兄 says S2-师兄-之后 and offers the spar again (切磋 / 算了)
+PASS  story AC6: 门派簿 shows 名望 / 家业 with one segment each and the hint line  (■□□□□□□□□□ ■□□□□□□□□□)
+PASS  story AC6: Esc closes 门派簿 (and does not open the Esc page)
+PASS  story AC6: after a lost spar 门派簿 has no '赢了师兄一回'  (["打跑山路上的山贼", "解开竹林断碑", "找回了老周的瓦"])
+PASS  story AC1: the rabbit walks out, the camera rests on 师父 for his last line
+PASS  story AC1 (新结尾): after the last line he is back in the game (step 9; the objective is the guide's first step, not 序章完成)
+PASS  story AC5: after the ending 师兄 says S9-师兄 (then the usual invitation)
+PASS  story AC2: before step 5 is done the bandits are not on the road (invisible, not solid, never attack)
+PASS  story AC2: S5-老伯 puts the bandits on the road
+PASS  story AC2: coming near starts S6-山贼-开战 by itself
+PASS  story AC5: during the bandits' lines they stand still and do no damage (2 s next to them)
+PASS  story AC2: after the lines both attack
+PASS  story AC2: knocked out by the bandits -> wake up below the stairs, S6-山贼-失败, still at step 6 (目标：沿山路去村口)  (S6-山贼-失败)
+PASS  story AC2: both bandits are back home with full HP (even the one already knocked out)
+PASS  story AC2: winning plays S6-山贼-胜利, step 6 done; the opening lines played only once
+PASS  story AC2: driven off, the bandits do not come back
+      grove walks: scene / arrived, now at (562.0, 332.0)
+PASS  story AC4: S8-进林 plays on the first entry into the clearing only
+PASS  story AC4: before the puzzle the bamboo clump blocks the way to the stash (collision)  ((582.0, 250.0))
+PASS  story AC4: E at the stele reads the inscription (first time)  (按 E 读碑文 碑文)
+PASS  story AC4: E at the stele reads the inscription (again time)  (按 E 读碑文 碑文)
+PASS  story AC4: 青石 / 苔石 / 裂石 are three different pictures
+PASS  story AC4: a wrong stone -> chaotic gust, '……不对。风不是往这边吹的。'
+PASS  story AC4: 青石 lights up and the wind blows towards 苔石; then a wrong stone puts every light out (start again)
+PASS  story AC4: after the 3rd mistake the hint '村民说，跟着风走……' comes once (not after the 4th)  (["S8-拜错", "S8-卡住提示"] / ["S8-拜错"])
+PASS  story AC4: 青石 -> 苔石 -> 裂石 lights all three (wind 苔石 -> 裂石) and solves it
+PASS  story AC1: once solved the star moves to the stash
+PASS  story AC4: '沙——' the clump parts (two halves slide aside)
+PASS  story AC4: after the puzzle the player walks through the opening into the pocket (collision)  ((545.0, 250.0))
+PASS  story AC4: S8-找到瓦片 shows the old cloth picture, 获得：旧布, step 8  (["S8-找到瓦片"] pic true)
+PASS  story AC5: no walking bubbles before step 7
+PASS  story AC5: 老伯's bubble line appears while walking past (walking goes on)  ({ "text": "瓦被山贼藏进后山了？……竹林那条小路，好多年没人走了。", "pos": (1072.0, 1247.0), "who": "dog" } shown true label '瓦被山贼藏进后山了？……竹林那条小路，好多年没人走了。' moved (-39.90015, 0.0))
+PASS  story AC5: each bubble line appears once
+PASS  story AC5: 师兄's two bubble lines come one after the other  (["听说你一个人把山贼打跑了？……行啊你。哼，我才不羡慕。", "（小声）下次带上我。"])
+PASS  story AC5: 厨娘's bubble too - all 4 '回门派途中' lines  (["瓦被山贼藏进后山了？……竹林那条小路，好多年没人走了。", "听说你一个人把山贼打跑了？……行啊你。哼，我才不羡慕。", "（小声）下次带上我。", "盐买回来啦？好孩子。去后山小心点，林子里湿，别摔着。"])
+PASS  story AC6: B does nothing before 门派簿 has been opened at the end
+PASS  story AC6: afterwards B opens 门派簿 again (game holds), B / E / Esc closes it
+PASS  story AC6: the B key is listed on the Esc page (PauseMenu.KEYS)
+PASS  interior AC5: every optional line has exactly one place (木桶 / 衣柜 / 抹布 / 水渍 inside the dorm, 香炉 inside the hall, no outdoor 木桶 / 晾衣绳 / 香炉 spot left, no wall clothes; 封条 at the library door)  (dup [] missing [])
+PASS  interior AC5: every room interactable points at a thing of the room art (rooms.json anchors)  ([])
+PASS  interior AC3 (v4): while he sleeps the leaks drip into the bucket (3 drops in 4 s) and onto 师兄's pillow; nothing drips on his bed
+PASS  interior AC3: afterwards both leaks drip on (师兄's pillow and the bucket), continuously  (3 / 4)
+PASS  interior AC3 (v4): leaving the dorm before wiping keeps 目标：擦干地上的水  (arrived)
+PASS  interior AC3 (v4): the table has nothing before the floor is wiped; afterwards E reads the note -> 目标：去练武场找师兄  (arrived)
+PASS  interior AC3: the note is read once (no prompt on the table afterwards)
+PASS  interior AC2: all 5 doors - walk in (fade, just inside the door, facing in), walk out (outside the right door, facing out), no bounce back  ([])
+PASS  interior AC2: in / out of the kitchen 3 times in a row: exactly 6 door fades  (6)
+PASS  interior AC2: holding the key on after a door does not bounce back through it
+PASS  interior AC2: walking along the front of a building does not enter it (only walking into the door)
+PASS  interior AC2: no door while a conversation is on screen
+PASS  interior AC2: front dorm east door -> 主角与师兄宿舍, west door -> 杂物间
+PASS  interior fix: the 4 one-tile doors work from -16 / -12 / -8 / 0 / +8 / +12 / +16 px off centre, in and out (56 walks)  ([])
+PASS  interior fix: walking along the dorm front across both wide door strips does not go in
+PASS  interior AC2: 藏经阁 stays sealed - walking into its door does nothing, E there plays S5-藏经阁封条  ((243.0, 645.475) S5-藏经阁封条 S5-藏经阁封条)
+PASS  interior AC7/AC2: in every room walking and dodging into the walls never leaves the floor (110 pushes)  ([])
+PASS  interior AC2: even with the door trigger off, nobody walks or dodges out of a room through the doorway (plug)  ([])
+PASS  interior AC2: furniture blocks the way (walked into 56 pieces from below)  ([])
+PASS  interior AC2: the camera stays on the room (scrolls inside the big hall, centred where a room is smaller than the view)  ([])
+PASS  interior AC2: in every room each interactable (and the NPC spot) is reachable from the door - grid search + a real walk to all 20 things with the prompt showing  ([])
+PASS  interior AC4: 师父 stands inside the hall before the ancestor portrait (facing it), 厨娘 inside the kitchen by the stove  ((4416.0, 170.0) up (4397.0, 912.0))
+PASS  interior AC4: inside, 师父 / 厨娘 say what each step allows (steps 3, 4, 9 gating unchanged)  ([])
+PASS  interior AC4: 师父 turns to him to talk, then back to the portrait; '之后' does not move on
+PASS  interior AC5: every room's optional lines play from their thing, each line once per E, word for word  ([])
+PASS  interior minimap: target inside -> star on that building's door (from outside); from another room / target outdoors -> on the rim towards his doorway; in the same room -> its place; indoors the circle shows the room  (true true true true true)
+PASS  interior AC7: indoor light - never darker than luminance 0.46 (deep night outside 0.38, inside 0.46; noon inside 0.97), the oil lamp glows indoors at night only
+PASS  interior AC7: no combat indoors - no fighter is ever inside, J indoors hits nothing and starts nothing, a running spar keeps the doors shut  (inside [] hit true fighting true stayed true)
+PASS  polish AC4: the two leaks drip into the bucket and onto 师兄's pillow (head end of his bed); nothing lands on his bed  (["bucket", "pillow"])
+PASS  polish AC5: no clothes on the wall, a wardrobe instead (with an open look); broom and rag together in the south-west corner  (broom (21.0, 231.0) rag (41.0, 230.0))
+PASS  polish AC2: every room has a separate daylight layer (window / door light, shafts) on top of an unlit picture
+PASS  polish AC4: after the opening: full bucket, the puddle on the floor, 目标：擦干地上的水
+PASS  polish AC4: star on the rag first; E at the puddle without the rag -> hint '先去墙角拿抹布' (ui.need_rag in story.json), nothing wiped  (arrived prompt true hints ["先去墙角拿抹布"])
+PASS  polish AC4: leaving before wiping is allowed - objective unchanged, the star points at the dorm door  (arrived)
+PASS  polish AC4 fix: the key hint never covers the rag in the corner or the rabbit (it moves to the other bottom corner while one is in use; now: left)  ([])
+PASS  polish AC4 fix: the key hint moves to the bottom-right when something is in its bottom-left place, and comes back when it is free
+PASS  polish AC4: E at the rag in the corner: S1-抹布, the rag leaves the floor, the star moves to the puddle  (arrived ["抹布……拧一拧还能用。", "走到水渍旁边，按 E 擦干。"])
+PASS  polish AC4: with the rag, E at the puddle 3 times: it shrinks ring by ring (1 -> 0.66 -> 0.34 -> 0), the third plays S1-擦水渍 (the note stays closed until then)  (arrived sizes [0.66, 0.34] scene S1-擦水渍 lines ["嘿咻——", "……好了，干了。顺手把桶里的水也倒掉。", "小兔把木桶里的水倒掉，放回原处。屋顶还在滴，桶又开始接水。", "咦，桌上好像有张字条。"])
+PASS  polish AC4: S1-擦水渍 pours the bucket out (level 0), then 目标：看看桌上的字条 with the star on the table
+PASS  polish AC4: after pouring the bucket goes on catching drops (level 0.02 -> 0.16, never above 0.60)
+PASS  polish AC4: wiping counted 3, the hint shown once (only when it was pressed without the rag)
+PASS  polish AC5: E at the wardrobe opens it - the panel shows the 4 garments (64x64 icons) while S1-衣柜 plays word for word  (arrived prompt true open true icons true lines ["打开衣柜，里面叠着几件衣服。", "两件换洗的练功服，一件比一件旧。", "最底下那件，补丁是师父亲手缝的。针脚歪歪扭扭的……师父的剑法可比针线活好多了。", "还有一件小时候的衣服，袖子短得只到胳膊肘了。一直没舍得扔。"])
+PASS  polish AC5: when the lines end the panel closes and the wardrobe door is shut again; he can walk (panel above the dialogue box, never over the objective line / minimap / HP bar)  ([P: (91.0, 64.0), S: (298.0, 92.0)] obj [P: (67.0, 33.0), S: (145.0, 18.5)] box top 400)
+PASS  polish AC5: the 4 garment icons use the rabbit's outfit palette (cream top, blue-grey collar / sash)  (cream 885 blue 237)
+PASS  polish AC5: the wardrobe can be opened again (optional line) and closes cleanly again
+PASS  polish AC1: round minimap, 56 px across at the base resolution, top-left
+PASS  polish AC1: star inside the range sits at the target's place; outside it sits on the rim pointing at the target (angle vs atan2, 8 far + 8 near spots)  ([])
+PASS  polish AC1: indoors the circle shows the room; outdoor target from inside -> star on the rim towards the doorway; target inside from outside -> on that building's door  (true true true)
+PASS  polish AC1: the objective line sits beside the minimap - no overlap with the circle, the HP bar or the clock (long text too)  ([P: (67.0, 33.0), S: (147.0, 18.5)] [(34.0, 34.0), 28.0])
+PASS  polish AC1: the minimap turns almost transparent (0.12) when the player / a thing to press E on / an NPC is under it, opaque again when nothing is  (open 1.00 player 0.12(true) well 0.12(true) npc 0.12 back 1.00)
+PASS  polish AC1: while a conversation is on screen the minimap is put away, back afterwards  (0.00 1.00)
+      dorm_main day 0.97 dusk 0.72(r-b 0.38) night 0.47 lights ["oil_lamp"]
+      storage day 0.97 dusk 0.72(r-b 0.38) night 0.56 lights ["moon"]
+      dorm_old day 0.97 dusk 0.72(r-b 0.38) night 0.56 lights ["moon"]
+      hall day 0.97 dusk 0.72(r-b 0.38) night 0.47 lights ["candle", "eternal_lamp"]
+      kitchen day 0.97 dusk 0.72(r-b 0.38) night 0.47 lights ["stove_fire"]
+PASS  polish AC2: indoors in all 5 rooms - day bright with the window / shaft layer full; dusk warmer; night darker (>= the room's floor) with the shafts off (faint moonlight) and the room's own light sources lit (油灯 / 烛台 + 长明灯 / 灶火 / 窗口月光)  ([])
+PASS  polish AC2: the lamp-less old dorm and storage keep a higher night floor (readable by the window light)
+      dorm_main in 22.0h: step 0.0020 total 0.060
+      dorm_main out 22.0h: step 0.0020 total 0.060
+      hall in 22.0h: step 0.0020 total 0.060
+      hall out 22.0h: step 0.0020 total 0.060
+      dorm_main in 18.5h: step 0.0013 total 0.039
+      dorm_main out 18.5h: step 0.0013 total 0.039
+      hall in 18.5h: step 0.0013 total 0.039
+      hall out 18.5h: step 0.0013 total 0.039
+      dorm_main in 12.0h: step 0.0011 total 0.033
+      dorm_main out 12.0h: step 0.0011 total 0.033
+      hall in 12.0h: step 0.0011 total 0.033
+      hall out 12.0h: step 0.0011 total 0.033
+PASS  polish AC2: walking in / out of a door (night, dusk, noon) the light changes smoothly - sampled every frame, no jump above 0.02 luminance  ([])
+      compound wall (gate wing tiles): feet (996.0, 1219.0) covered 1.00, fade 1.00, alpha at his middle 0.30, in front -> off true
+      tree canopy: feet (654.0, 580.0) covered 1.00, fade 1.00, alpha at his middle 0.30, in front -> off true
+PASS  polish AC3: behind the compound wall tiles (gate wing) and a tree canopy the picture fades around him (alpha 0.30 at his middle) - and not when he stands in front; colliders unchanged; roofs have no fade entry (solid since 房子整栋实心 v1)  ([])
+PASS  polish AC3: an NPC behind a tree canopy is seen through the same way (and it clears when they leave)
+PASS  polish AC3: render-only - the outdoor objects still draw the original map pictures (no image changed)
+PASS  polish AC3 fix: sweep of 8022 reachable spots x 4 facings where an outdoor picture covers him (bamboo, stele, bamboo_hedge, stone_qing, stump_axe, stone_crack, stone_moss, tree, pillar_broken, rubble, lantern_stone, incense, bench, rack, drum, woodpile, dummy, laundry, jar, stake, well, fence, basin, weight, drying, gate, lion, rock, signpost, boulder, village_arch, lantern_pole, haystack) - he is at least 90% visible everywhere (worst 0.96 at (284.0, 84.0) down)  ([])
+      woodpile (1756,876) (1757.0, 876.0) 1.00
+      pine edge (1421.0, 436.0) 1.00
+      bamboo edge (1692.0, 84.0) 1.00
+      top-edge bamboo (29.0, 20.0) 1.00
+PASS  polish AC3 fix: arriving (walking sideways onto the spot) at the woodpile, a pine edge, a bamboo edge and the top-edge bamboo (the old dorm eave tips are solid now, 房子整栋实心 v1) - he is at least 90% visible with the real fade (his sprite pixels)  ([] spots ["woodpile (1756,876)", "pine edge", "bamboo edge", "top-edge bamboo"])
+      door dorm_main: in true (door), out true (door)
+      door storage: in true (door), out true (door)
+      door dorm_old: in true (door), out true (door)
+      door hall: in true (door), out true (door)
+      door kitchen: in true (door), out true (door)
+PASS  building AC4: all five doors can still be walked into and out of from the ground in front (real keys, the game's own trigger)  ([])
+PASS  building fix: every door (small ones +-20 px, the hall +-40 px off centre) enters from straight, off-centre and diagonal approaches (30 walks)  ([])
+PASS  building fix: walking sideways along the front of every building (through the widened door strip) does not enter
+PASS  building AC4: the sealed library ruin stays solid from the front (no door)  ((243.0, 645.0))
+      buildings found: 7
+PASS  building AC1: 7 outdoor buildings (宿舍 x2, 正殿, 厨房, 藏经阁废墟, 村口茅屋 x2)  (["library_ruin@192,416", "building@832,416", "building@160,768", "building@1440,768", "building@160,1056", "building@1568,1731", "building@1824,1763"])
+      library_ruin@192,416: 78 pushes planned, stopped by the building N 6 E 24 W 28, worst overlap 0 px
+      building@832,416: 110 pushes planned, stopped by the building N 12 E 28 W 28, worst overlap 0 px
+      building@160,768: 78 pushes planned, stopped by the building N 38 E 20 W 20, worst overlap 0 px
+      building@1440,768: 70 pushes planned, stopped by the building N 30 E 20 W 20, worst overlap 0 px
+      building@160,1056: 66 pushes planned, stopped by the building N 26 E 20 W 20, worst overlap 0 px
+      building@1568,1731: 56 pushes planned, stopped by the building N 18 E 17 W 19, worst overlap 0 px
+      building@1824,1763: 56 pushes planned, stopped by the building N 18 E 17 W 19, worst overlap 0 px
+PASS  building AC1: pushing the rabbit into every building from the north, east and west (straight and diagonal, real keys) - zero pixels of his sprite on the roof / wall picture  ([])
+      sweep library_ruin@192,416: 2749 free spots, worst overlap 0 px
+      sweep building@832,416: 3997 free spots, worst overlap 0 px
+      sweep building@160,768: 1781 free spots, worst overlap 0 px
+      sweep building@1440,768: 1493 free spots, worst overlap 0 px
+      sweep building@160,1056: 1349 free spots, worst overlap 0 px
+      sweep building@1568,1731: 781 free spots, worst overlap 0 px
+      sweep building@1824,1763: 863 free spots, worst overlap 0 px
+PASS  building AC1: sweep of 13013 free spots (2 px grid) around the buildings - wherever the building is drawn over him no pixel of any of his frames is on it  ([])
+PASS  building fix: holding a diagonal into the walls / eaves of every building (41 slides along N, E, W) he keeps sliding - no snag on the eave steps  ([])
+PASS  building AC1: an NPC / bandit body cannot put its feet on any of 15804 sampled building pixels (collision covers the whole footprint)  ([])
+PASS  building AC1: a bandit-sized body pushed at every building from N / E / W (340 pushes) never gets its feet onto the building  ([])
+PASS  building AC1: the bandit (wolf) exists as a Fighter
+      client spot: x176 -> feet (176.0, 1057.0) overlap 0
+      client spot: x200 -> feet (200.0, 1063.0) overlap 0
+      client spot: x260 -> feet (260.0, 1063.0) overlap 0
+      client spot: x320 -> feet (320.0, 1063.0) overlap 0
+      client spot: x344 -> feet (344.0, 1055.0) overlap 0
+PASS  building AC2: north of the old disciples' house (x 176..344) he is stopped at the ridge (feet y <= 1064), no pixel overlap  (["x176 -> feet (176.0, 1057.0) overlap 0", "x200 -> feet (200.0, 1063.0) overlap 0", "x260 -> feet (260.0, 1063.0) overlap 0", "x320 -> feet (320.0, 1063.0) overlap 0", "x344 -> feet (344.0, 1055.0) overlap 0"])
+PASS  building AC2: the client's old spot (260, 1071) is now solid ground (roof)
+PASS  building AC3: the fade system has no entry for any building (238 pictures watched: trees, bamboo, gate...)  ([])
+      tree idx 97: feet (31.0, 400.0) fade 1.00 alpha 0.30 shader true, in front -> off true
+      bamboo idx 0: feet (14.0, 10.0) fade 1.00 alpha 0.30 shader true, in front -> off true
+      gate idx 176: feet (950.0, 1186.0) fade 1.00 alpha 0.30 shader true, in front -> off true
+      village_arch idx 217: feet (1446.0, 1730.0) fade 1.00 alpha 0.30 shader true, in front -> off true
+PASS  building AC3: tree canopy, bamboo and the 山门 gate tower still fade around him (and clear when he steps out)  ([])
+PASS  building AC3: walking up through the 山门 passage the gate tower fades around him and he gets through (y 1340 -> 1007)
+PASS  building AC3: the 村口牌坊 passage stays passable (y 1848)
+      reach thing well: nearest reachable spot 1 px (radius 32)
+      reach thing garden: nearest reachable spot 1 px (radius 38)
+      reach thing lion: nearest reachable spot 1 px (radius 30)
+      reach thing library_seal: nearest reachable spot 1 px (radius 38)
+      reach thing tea_table: nearest reachable spot 1 px (radius 32)
+      reach thing stele: nearest reachable spot 1 px (radius 30)
+      reach stone stone_qing: nearest reachable spot 3 px (radius 28)
+      reach stone stone_crack: nearest reachable spot 3 px (radius 28)
+      reach stone stone_moss: nearest reachable spot 3 px (radius 28)
+      reach npc crane: nearest reachable spot 1 px (radius 40)
+      reach npc fox: nearest reachable spot 1 px (radius 40)
+      reach npc bear: nearest reachable spot 1 px (radius 40)
+      reach npc dog: nearest reachable spot 4 px (radius 40)
+      reach npc tanuki: nearest reachable spot 1 px (radius 40)
+      reach npc duck: nearest reachable spot 1 px (radius 40)
+      reach npc wolf: nearest reachable spot 1 px (radius 40)
+      reach npc boar: nearest reachable spot 1 px (radius 40)
+      reach grove (north of the wall): nearest reachable spot 21 px (radius 30)
+      reach grove rect: nearest reachable spot 1 px (radius 576)
+      reach bandit trigger rect: nearest reachable spot 1 px (radius 300)
+      reach bandit trigger radius (wolf): nearest reachable spot 1 px (radius 130)
+      reach bandit trigger radius (boar): nearest reachable spot 1 px (radius 130)
+      reach respawn point: nearest reachable spot 1 px (radius 14)
+      reach spawn: nearest reachable spot 1 px (radius 4)
+      reach door dorm_main: nearest reachable spot 1 px (radius 10)
+      reach door storage: nearest reachable spot 1 px (radius 10)
+      reach door dorm_old: nearest reachable spot 1 px (radius 10)
+      reach door hall: nearest reachable spot 1 px (radius 10)
+      reach door kitchen: nearest reachable spot 1 px (radius 10)
+      reach breach V1 (north wall, west V): nearest reachable spot 1 px (radius 4)
+      reach breach V2 (north wall, east V): nearest reachable spot 1 px (radius 4)
+      reach north meadow beyond the breach: nearest reachable spot 1 px (radius 4)
+PASS  building AC4: 32 outdoor places (true 12x6 foot box, 2 px grid, flood from the spawn) - interactables, puzzle stones, NPCs, grove, bandit trigger, respawn, the five doors, both wall breaches - are reachable (the stash behind the bamboo clump opens with the puzzle: story suite)  ([])
+      walk spawn -> west of 正殿 (770,440): arrived at (772.0, 447.0)
+      walk into the walkway behind 正殿 (770,440 -> 780,400): arrived at (779.0, 403.0)
+      walk along 正殿's walkway, west end to east end: arrived at (1233.0, 401.0)
+      walk and back to the west end: arrived at (783.0, 401.0)
+      walk from the walkway up through the back gap along the dirt path (1010,400 -> 1008,330): arrived at (1008.0, 332.0)
+      walk from the grove side back down the path to the walkway: arrived at (1008.0, 398.0)
+      walk along 正殿's walkway west to the 藏经阁 end, then the whole walkway behind 藏经阁 to its west end: arrived at (137.0, 400.0)
+      walk and back east along 藏经阁's walkway: arrived at (399.0, 399.0)
+      walk breach V1: north arrived ((276.0, 332.0)), south again arrived ((292.0, 399.0))
+      walk breach V2: north arrived ((306.0, 333.0)), south again arrived ((330.0, 400.0))
+PASS  building AC4: real key walks from the spawn - around 正殿 into the walkway behind it and its full length both ways, up the back gap's dirt path and back, the full walkway behind 藏经阁 (west pocket included), both wall breaches both ways  ([])
+PASS  sample AC2: data/economy.json matches the plan item by item (本钱 30, 铜/银/金 10/20/40, repeat 5, stall 15 at 08:00, roof 30 / old dorm 20 / kitchen 60, 家业 1/1/2, 名望 +1 per tier)  ([])
+PASS  sample AC2: the numbers live in the external economy table (not in the code)
+PASS  sample AC2: the plan's budget works out (本钱 = roof; tiers 70 + 2 repeats = old dorm + kitchen)
+PASS  sample AC2: three repairs in the table
+PASS  sample AC3: trial card = the plan (12 poles, 60 s, 金 40 / 银 50 / 铜 60, 2 dummies, 8 damage, fail at 20 %)
+PASS  sample AC3: medal lines 金 ≤40 s, 银 ≤50 s, 铜 ≤60 s, slower = none
+PASS  sample AC9: every new character (lines, UI, title, Esc tips) exists in the project UI font
+PASS  sample extra: prices / hours / seconds in the lines and Esc tips come from economy.json and the trial card (roof 35 -> '35 文')  (小兔来啦。你从竹林里找回来的瓦，我一片片都码好了。
+宿舍那屋顶，破洞可不小。下雨天，你那木桶接得过来吗？
+接不过来……昨晚还漫了一地。
+瓦是现成的，就收个工钱，35 文。今天就给你补上。
+花 35 铜钱请老周修屋顶？
+
+灶膛不倒烟了，屋顶也不漏了！
+门口的摊子也搭好了。往后每天辰时（9 点）收一回钱，记到门里账上。
+那我每天早上都来闻闻馒头香。
+闻可以，偷吃不行。
+梅花桩试炼：桩一根根亮起，依次踩)
+PASS  sample extra: with the real table the lines say 30 again
+PASS  sample AC1: at the start nothing of the sample is there (老周, board, poles, dummies, coins, stall)  ({ "mouse": false, "mouse_solid": false, "board": false, "poles": false, "dummies": false, "coins": false, "stall": false })
+PASS  sample AC1: during the prologue (every stage, stage 9 included until 继续逛逛) no sample person, prop, talk, E target or coin counter  ([])
+PASS  sample AC1: the end of the prologue (新手指引 v1: no 继续逛逛 page, straight on) -> 老周, the trial board / poles / dummies and the coin counter (30) appear, toast for the 本钱  ({ "mouse": true, "mouse_solid": true, "board": true, "poles": true, "dummies": true, "coins": true } coins 30 '铜钱 30')
+PASS  sample AC1: the food stall only after the kitchen repair
+PASS  sample F1: the toast '师父给的本钱：铜钱 +30' is fully readable - clear of the coin counter and the HP bar  (toast [P: (180.0, 55.0), S: (165.0, 24.0)] coins [P: (146.0, 5.0), S: (61.0, 19.0)] hp [P: (68.0, 5.0), S: (74.0, 24.0)])
+PASS  sample AC1: after it 老周 / 老伯 / 厨娘 talk about the repairs, 师父 about the two roads  ({ "mouse": "X-老周-修屋顶", "dog": "X-老伯-旧弟子房", "bear": "X-厨娘-修厨房", "crane": "X-师父-两条路" })
+PASS  sample AC1: at the trial board the prompt '按 E 看木牌' shows
+PASS  sample AC1: the coin counter is beside the HP bar  (hp [P: (68.0, 5.0), S: (74.0, 24.0)] coins [P: (146.0, 5.0), S: (61.0, 19.0)])
+PASS  sample: 老周 waits by the dorm door without blocking it  ((412.0, 950.0))
+PASS  sample AC1: 师父 points to the board and the repairs  (["X-师父-两条路"])
+PASS  sample AC4 roof: the confirm question 是 / 否 - 否 leaves coins and roof alone
+PASS  sample AC4/AC2: not enough coins -> '还差 18 文', nothing taken, nothing repaired  (["花 30 铜钱请老周修屋顶？", "铜钱不够，还差 18 文。", "钱不够也不打紧，我就在这儿，凑够了再来。"])
+PASS  sample AC4 roof: pay 30 -> fade out / in -> the outside roof picture is the mended one  (coins 0 fade true)
+PASS  sample AC4 roof: the room is the dry one - no drips (leak animation off), no bucket, no puddle  (tex res://assets/sample/interiors/dorm_main_fixed drips 0)
+PASS  sample AC4 roof: after-lines, 门派簿 entry '请老周修好了宿舍屋顶', 家业 +1
+PASS  sample AC4 roof: only once - afterwards 老周 says the after lines and takes nothing  (["X-老周-修好之后"])
+PASS  sample AC4 roof: the bucket can no longer be looked at
+PASS  sample AC4 dorm_main: the repaired room is walkable (every E spot reachable from the door) and its door leads out  (unreachable [], out: door)
+PASS  sample AC4 old dorm: 19 of 20 -> '还差 1 文', nothing taken
+PASS  sample AC4 old dorm: pay 20 -> the clean room (made beds, lamp light), entry '整理好了旧弟子房', after-lines
+PASS  sample AC4 old dorm: only once
+PASS  sample AC4 dorm_old: the repaired room is walkable (every E spot reachable from the door) and its door leads out  (unreachable [], out: door)
+PASS  sample AC4 old dorm: the empty beds are described as made  (X-空床-整理后)
+PASS  sample AC4 kitchen: 59 of 60 -> '还差 1 文', nothing taken, no stall
+PASS  sample AC4 kitchen: pay 60 -> mended roof outside, rebuilt stove inside (2 fires), the food stall at the door (solid)
+PASS  sample AC4 kitchen: entry '厨房小食摊开张', 家业 +2 (1 + 1 + 2 = 4 more)
+PASS  sample AC4 kitchen: only once
+PASS  sample AC4 kitchen: the repaired room is walkable (every E spot reachable from the door) and its door leads out  (unreachable [], out: door)
+PASS  sample AC4 kitchen: with the stall up the kitchen door still works and the yard below is open  (walked 106 px down; room 'kitchen')
+PASS  sample AC5: crossing 08:00 pays the stall once (+15) with the toast '小食摊今日收入 +15'  (0 0 15)
+PASS  sample F1: the toast '小食摊今日收入 +15' is fully readable - clear of the coin counter and the HP bar  (toast [P: (197.5, 55.0), S: (130.0, 24.0)] coins [P: (146.0, 5.0), S: (61.0, 19.0)] hp [P: (68.0, 5.0), S: (74.0, 24.0)])
+PASS  sample AC5: only once per day (no second payment the same day)  (15)
+PASS  sample AC5: the next morning pays again (+15)  (30)
+PASS  sample AC5: the running clock crossing 08:00 pays as well  (45)
+PASS  sample AC3: E at the board -> 报名 是 -> the trial runs; the yard closes; pole 1 lights, the others are dark
+PASS  sample F1: during the trial a toast (e.g. the stall income) stays clear of the trial clock and the coins  ([P: (226.5, 55.0), S: (130.0, 24.0)] / [P: (149.0, 81.0), S: (182.0, 39.0)])
+PASS  sample AC3: the clock / pole count / medal lines are on screen  (用时 0.0 秒)
+PASS  sample AC3: only the lit pole counts (pole 2 first: nothing; 1 then 2: both done, 3 lights)  (0 1 2)
+PASS  sample AC3: during the trial E does nothing and HP does not regenerate (counts as combat, 6.5 s)  (hp 60)
+PASS  sample AC3: the yard exits are closed during the trial  ((1040.0, 1150.533))
+PASS  sample AC3: a turning arm that sweeps over him: -8 HP and a short stun  (hp 92)
+PASS  sample AC3: dodging through a sweeping arm - the dodge's i-frames, no damage  (hp 92->92)
+PASS  sample AC3: down to 20 % HP -> '这次失败', HP back to full, the yard opens  (knocked hp 100)
+PASS  sample AC3: past 60 s -> 超时, this run fails, the yard opens
+PASS  sample AC3: a failed run pays nothing
+PASS  sample AC3: Esc page has '放弃试炼' during the trial; it ends the run and resumes the game
+PASS  sample AC3: no '放弃试炼' on the Esc page outside the trial
+PASS  sample AC3: clicking '放弃试炼' does the same
+PASS  sample AC3: first finish in 45 s -> 银 (and 铜 within 60 s): first-time rewards 20 + 10, 名望 +2  (silver 30 铜钱 +30  名望 +2 格)
+PASS  sample AC3: then 金 in 38 s -> +40 and 名望 +1 (铜 / 银 not paid again)  (70)
+PASS  sample AC3: a repeat with at least 铜 -> 5 each time, nothing else  (75)
+PASS  sample AC3: a repeat 金 -> also only 5  (80)
+PASS  sample AC3: 名望 +1 per tier, first time only (+3 in total)  (1 -> 4)
+PASS  sample AC6: 门派簿 shows the coins ('铜钱：80 文') and two 10-segment bars  (铜钱：80 文)
+PASS  sample AC6: everything done -> 名望 4 / 家业 5 (序章 1 + 3 tiers; 序章 1 + 1 + 1 + 2)  (■■■■□□□□□□ ■■■■■□□□□□)
+PASS  sample AC6: the new entries are listed  (["打跑山路上的山贼", "解开竹林断碑", "梅花桩试炼·铜", "梅花桩试炼·银", "梅花桩试炼·金"] / ["找回了老周的瓦", "请老周修好了宿舍屋顶", "整理好了旧弟子房", "厨房小食摊开张"])
+PASS  sample AC6: the longer 门派簿 still fits on the screen  ([P: (62.0, 136.0), S: (357.0, 208.0)])
+PASS  sample AC3: a full trial run with the real keys (walk + dodge bot) reaches a medal  (gold in 32.1 s, 4 hits, 12 dodges)
+      bot run: gold in 32.1 s, 4 hits, 12 dodges
+PASS  sample AC9: Esc page tips page 2 (→) covers the trial, repairs, coins, the stall and saving; fits, nothing cut off
+PASS  sample AC9: ← goes back to page 1; Esc closes
+PASS  sample AC7: a save is written at doors (in / out), story progress, the end of a trial and the daily income  ({ "door in": true, "door out": true, "story": true, "trial": true, "income": true })
+PASS  sample AC7: tests write only user://test_save.json (the player's slot is untouched)
+PASS  sample AC7: the repairs (and the unlock) were saved too  (["story", "story", "story+guide+unlock+commission", "story", "story", "story", "story", "guide+repair+story", "story", "door", "story", "repair+story", "story", "door", "guide+story", "disciple+repair+story", "story", "door", "door", "commission", "commission+income", "disciple", "commission+income", "commission", "income", "commission", "story+trial", "story+trial", "story+trial", "story+trial", "story+trial+guide", "story+trial", "story+trial", "story+trial", "story+trial", "door", "door", "skills_learned+story", "story+trial", "commission+income"])
+PASS  sample AC7: with a save the title offers 继续游戏 (enabled, selected first)
+PASS  sample AC7: 继续游戏 restores a state equal to the saved snapshot (story, flags, coins, repairs, trial tiers, book, time, place, HP)
+PASS  sample AC7: and it looks the same (coin counter, 老周, board, stall, mended pictures, rooms, no drips, indoors, clock, talk, book)
+PASS  sample AC7: no opening scene replays; he is in the old dorm with 73 HP and 42 coins
+PASS  sample AC7: the restored game is playable (walks out through the door)
+PASS  sample AC7: a mid-prologue save (rag taken, one wipe) restores the same gating state; nothing of the sample shows
+PASS  sample AC7: the restored prologue goes on (the third wipe finishes the floor)
+PASS  sample AC7: 新游戏 with a save asks '会覆盖存档，确定吗？' (取消 first; Esc / 取消 keep the save)  (asked true kept true default true kept2 true)
+PASS  sample AC7: 确定 starts a new game from the opening (the old save is replaced)
+PASS  sample AC7: the old save is gone once a new game is confirmed
+PASS  sample AC7: without a save 继续游戏 is greyed out and skipped
+PASS  sample AC7: ↑ skips the greyed 继续游戏
+PASS  sample AC7: a corrupt / empty / wrong-version / malformed save -> '存档无法读取，已重新开始', a fresh game, no hang; the bad file is set aside  ({ "garbage": true, "empty": true, "version": true, "malformed": true, "bad values": true })
+PASS  sample AC7: after a bad save 继续游戏 is greyed out again
+PASS  step3 AC3/AC6/AC7: economy.json arena / disciple = the plan (every 3 days 12-18, fee 10, 20 %, +50, 60/+2 then 40/+1, cap 10; condition 5/5 after the old dorm, 08:00, +1, upkeep 5, 帮厨 25, 陪练 +3 / 5 wins, 打扫 5 days)  ([])
+PASS  step3 AC3: cards monkey / yak / snake = the plan table (HP 70/130/100, damage 10/20/14, wind-up 0.5/0.9/0.6 s, speed 140/80/120); yak charges with super armour like the boar, snake sidesteps 40 %, monkey attacks often  ([])
+PASS  step3 AC7: 师弟's 陪练 card is weaker than 师兄 (HP 80 < 120, damage 8 < 12, slower wind-up, no sidestep), the spar ends at 20 %
+PASS  step3 AC10: the rule numbers live in the economy table (not in the code)
+PASS  step3 AC10: every new character (lines, UI, book, Esc tips) exists in the project UI font
+PASS  step3 AC10: the Esc tips page 3 numbers come from economy.json  (序章结束那天算第 1 天。第 3、6、9……天的午时到酉时（12–18 点），村口擂台旁的告示牌按 E 报名，报名费 10 文；每届只能上台一次。连打三轮：猴子)
+PASS  step3 AC10 (PM ruling): the pine obj_11 and the bush obj_42 under the ring are hidden and their colliders removed while the ring stands
+PASS  step3 AC10: the ring (+ notice board) stand on the open grass west of the arch, south of the road - no map object, collider or person under it; solid while no tournament runs  ([])
+PASS  step3 AC10: with the ring standing, the road / arch / tea stall / village path are all still walkable (gate stairs -> arch -> tea stall -> south path -> mountain road)  (["arrived", "arrived", "arrived", "arrived"])
+PASS  step3 AC1: during the prologue the ring, the board and the youngster are not there
+PASS  step3 AC1: the day the prologue ends is day 1 (ended on clock day 2)  (anchor 2 day 1)
+PASS  step3 AC1: open on day 3/6/9 12:00-18:00 only (11:59 no, 12:00 yes, 17:59 yes, 18:00 no, day 4/5 no); the next date is right at every edge; day 9 = 第 3 届  ([])
+PASS  step3 AC1: running clock: midnight turns day 2 into day 3 (closed in the morning), opens when it passes 12:00, closes when it passes 18:00  (2->3 true false true false)
+PASS  step3 AC1: the notice board on day 1 says '下届比武大会：第 3 天午时' (and today's day)  (比武大会告示：每 3 天一届，午时至酉时在此报名。今天是第 1 天。
+下届比武大会：第 3 天午时。)
+PASS  step3 AC1: the 门派簿 shows the same next date  (["下届比武大会：第 3 天午时（今天第 1 天）", "悬赏 0/3 条（下一条第 2 天辰时） · 委托 0 条（家业进度 0/5）"])
+PASS  step3 AC1: on day 3 at 12:30 the board takes entries (第 1 届, fee 10) and the 门派簿 says it is open today; 算了 = nothing happens  (比武大会 · 第 1 届：今日午时至酉时报名，报名费 10 文。三轮闯关：灵猴门、铁牛帮、青蛇派。
+点到为止：生命掉到两成就算输。两轮之间回 50 点生命。头一回夺魁赏 60 文，之后每回 40 文。
+交 10 文报名比武大会？)
+PASS  step3 AC1: at 18:00 entries are closed; the board points at day 6
+PASS  step3 AC4: the 门派簿 with the new lines still fits the screen  ([P: (93.0, 138.0), S: (295.0, 205.0)])
+PASS  step3 AC2: 7 coins, fee 10: '还差 3 文', nothing taken, no tournament, still not entered  (比武大会 · 第 1 届：今日午时至酉时报名，报名费 10 文。三轮闯关：灵猴门、铁牛帮、青蛇派。
+点到为止：生命掉到两成就算输。两轮之间回 50 点生命。头一回夺魁赏 60 文，之后每回 40 文。
+交 10 文报名比武大会？
+选哪种难度？（只算这一届，报名费都是 10 文）
+铜钱不够，还差 3 文。
+报名费还差一点)
+PASS  step3 AC2: with 25 coins 报名 takes 10 (15 left) and the tournament starts (第 1 届 entered)
+PASS  step3 AC3: the monkey's blows take him under 20 % -> '第 1 轮 · 出局', HP refilled, standing outside the ring, the ring solid again  (第 1 轮 · 出局 hp 100)
+PASS  step3 AC2: after going out, the same edition cannot be entered again (board: 本届已参加; nothing taken)
+PASS  step3 AC2/AC3: 第 2 届: Esc page offers '弃权（Q）'; Q ends it (refilled, outside, no refund), the edition counts as entered
+PASS  step3 AC3: no '弃权' on the Esc page outside a tournament
+PASS  step3 AC2: with exactly 10 coins entering works (0 left); after the title the same edition is closed as well  (won true coins 60)
+PASS  step3 AC3: round intro: banner '第 1 轮：灵猴门 猴子', the monkey's line over his head, the rabbit waits  (第 1 轮：灵猴门 猴子)
+PASS  step3 AC3: the fight: the monkey is engaged inside the ring's walls
+PASS  step3 AC3: no regen in the ring (50 HP stays 50 after 6.5 s without a hit)  (50)
+PASS  step3 AC3: walking into the ropes on every side (real keys) he stays inside the ring; E does nothing  (x 686..883 y 1833..1862)
+PASS  step3 AC3: the monkey at 20 % loses the round; between rounds +50 HP (40 -> 90), then '第 2 轮：铁牛帮 牦牛'  (第 1 轮 · 胜！)
+PASS  step3 AC3: +50 never goes past 100 (70 -> 100)
+PASS  step3 AC3: round 3 banner '第 3 轮：青蛇派 蛇'
+PASS  step3 AC3: 弃权 in round 3: out of the ring, refilled, opponents gone, 师兄's spar set back, the game calm (saving allowed)
+PASS  step3 AC4: first title: 60 coins, 名望 +2 (1 -> 3)  (coins 60)
+PASS  step3 AC4: 门派簿: '比武大会·夺魁（第 1 届）' and the 名望 bar +2  (["打跑山路上的山贼", "解开竹林断碑", "比武大会·夺魁（第 1 届）", "找回了老周的瓦"])
+PASS  step3 AC4: a later title: 40 coins, 名望 +1  (coins 40 fame 3)
+PASS  step3 AC4: 名望 never goes past 10 (9 -> 10 -> still 10, the coins are still paid); the book lists every title  (9 10 ["打跑山路上的山贼", "解开竹林断碑", "梅花桩试炼·铜", "梅花桩试炼·银", "梅花桩试炼·金", "比武大会·夺魁（第 1、2、3、4 届）", "师弟陪练累计 0 胜", "找回了老周的瓦"])
+PASS  step3 AC3: a bot pressing the real keys (move, J, K at the blows - 试玩反馈 v1: GP) wins a whole tournament (monkey, yak, snake)  ([{ "outcome": "champion", "rounds": [{ "round": 1, "win": true, "hp": 100, "opp_hp": 12 }, { "round": 2, "win": true, "hp": 100, "opp_hp": 20 }, { "round": 3, "win": true, "hp": 100, "opp_hp": 18 }] }])
+PASS  step3 AC5: condition = old dorm cleaned AND (名望 >= 5 OR 家业 >= 5): dorm only no, 名望 only no, 家业 only no, dorm + 名望 yes, dorm + 家业 (three repairs) yes  ({ "dorm only": [false, "none"], "fame only": [false, "none", 6], "estate only": [false, "none", 5], "dorm + fame": [true, "coming"], "dorm + estate": [true, "coming", 5] })
+PASS  step3 AC5: condition met at 15:00 -> nobody at 07:57 next morning -> at 08:00 the youngster stands at 山门外  (due true not_yet true gate true)
+PASS  step3 AC5: 老伯 now says '山门外有人想拜师'  (["D-老伯-有人拜师"])
+PASS  step3 AC5: 再想想 leaves him at the gate; talking again asks again; 收下 -> 师弟, 家业 +1 (5 -> 6), 门派簿 '收下第一个弟子'  (["打跑山路上的山贼", "解开竹林断碑", "找回了老周的瓦", "请老周修好了宿舍屋顶", "整理好了旧弟子房", "厨房小食摊开张", "收下第一个弟子"])
+PASS  step3 AC5: by day 师弟 is in the dorm yard; talking to him = the 师弟 talk; 老伯 back to his usual lines
+PASS  step3 AC5: he walks about the dorm yard by day (moved 164 px, never left the yard)
+PASS  step3 AC5: at night he is in the old dorm room
+PASS  step3 AC5: condition met at 06:00 -> he is there at the next 08:00 (two hours later)
+PASS  step3 AC6: 08:00 each day takes 5 (12 -> 7 -> 2); then 2 pays part, 3 become debt with '伙食钱不够了', coins stay at 0  ([[7, 0], [2, 0], [0, 3]])
+PASS  step3 AC6: the debt grows (8) and is paid back as soon as coins come in (10 -> 2 left)  ([0, 8] [2, 0])
+PASS  step3 AC6: three days passed in one jump -> three upkeeps (100 -> 85), not more  (3 85)
+PASS  step3 AC6: the stall's 08:00 income pays the old debt and the day's upkeep (0 -> +15 -> 7)  (coins 7 debt 0)
+PASS  step3 AC7: 派活 offers 帮厨 / 陪练 / 打扫; 帮厨 is greyed (key 1 ignored) while the kitchen is not repaired; 打扫 is chosen but not yet in effect  ([{ "options": ["派活", "随便聊聊"], "disabled": [false, false] }, { "options": ["帮厨", "陪练", "打扫", "算了"], "disabled": [true, false, false, false], "refused": true }, { "options": ["帮厨", "陪练", "打扫", "算了"], "disabled": [true, false, false, false] }])
+PASS  step3 AC7: the 门派簿 shows the job (from tomorrow) and the progress  (["下届比武大会：第 3 天午时（今天第 1 天）", "师弟：还没派活（明天起：打扫）", "陪练胜 0/5 · 打扫 0/5 天", "悬赏 0/3 条（下一条第 2 天辰时） · 委托 0 条（家业进度 0/5）"])
+PASS  step3 AC7: 打扫 in effect from the next 08:00; each finished day counts; 5 days -> 家业 +1 (4 -> 5), book entry  ([1, 2, 3, 4, 5])
+PASS  step3 AC7: 帮厨 (kitchen repaired) chosen at 10:00 -> at the next 08:00 the stall pays 25 instead of 15 ('小食摊今日收入 +25')  (net 20)
+PASS  step3 AC7: 陪练 from the next day: he waits in the 练武场, '切磋一场' is offered, a win pays +3 (spar ends at 20 %, both refilled)  (陪练 · 胜！ coins 18)
+PASS  step3 AC7: only one 陪练 a day (no 切磋 offered again today)  (["派活", "随便聊聊"])
+PASS  step3 AC7: the 5th 陪练 win: 名望 +1 (5 -> 6), book entry, progress back to 0/5  ([["下届比武大会：第 3 天午时（今天第 3 天）", "师弟：陪练", "陪练胜 0/5 · 打扫 0/5 天", "悬赏 0/3 条 · 委托 0 条（家业进度 0/5）"], ["打跑山路上的山贼", "解开竹林断碑", "梅花桩试炼·铜", "梅花桩试炼·银", "师弟陪练累计 5 胜", "找回了老周的瓦", "请老周修好了宿舍屋顶", "整理好了旧弟子房", "收下第一个弟子"], { "fame": 6, "estate": 4 }, [P: (62.0, 121.0), S: (357.0, 238.0)]])
+PASS  step3 AC7: a full 门派簿 (many entries + status lines) puts 名望 / 家业 side by side and fits the 480x270 screen  ([P: (62.0, 121.0), S: (357.0, 238.0)])
+PASS  step3 AC8: every step-3 state (calendar anchor, entries, titles, 名望 given, disciple, job + pending job, debt, progress) saves as the current version (5) and comes back equal
+PASS  step3 AC8: and the game looks the same (ring, board, 师弟 where he should be, bars, next date, talk, income)
+PASS  step3 AC8: after loading, the next 08:00 pays 帮厨 25, takes the old debt 4 and the upkeep 5 - once (16)  (coins 16)
+PASS  step3 AC8: the 08:00 charge is saved at once (the slot holds the paid state: no debt, the day ticked)
+PASS  step3 AC8: loading the save again and crossing 08:00 gives the same single charge (no double charge, none lost)  (coins 16)
+PASS  step3 AC8: a version-2 save with bad step-3 values (negative debt, unknown state, wins not a list, section missing) is refused  ({ "debt": true, "state": true, "wins": true, "missing": true })
+PASS  step3 AC8: a real 第②步 save (version 1, written by the step-2 code) is offered by 继续游戏 and loads (coins 30, roof + old dorm, after the prologue) - not thrown away
+PASS  step3 AC8: upgraded: step 3 starts empty, day 1 = the game's first day (the save is on clock day 1 -> day 2, next tournament day 3), bars unchanged (3 / 3)  (anchor 0 day 2 next 3 fame 3 estate 3)
+PASS  step3 AC8: the upgraded game plays on into step 3 (kitchen -> 家业 5 -> the youngster at the next 08:00) and saves as the current version (5)  (["X-厨娘-修厨房"])
+PASS  step3 AC10: Esc page tips page 3 (→ →) covers the 比武大会, its rules and rewards, 收徒 and the jobs; fits, nothing cut off
+PASS  step3 v1.1: 困难 cards keep the plan's HP / damage / speed; all three have super armour, no stagger, shorter wind-ups and intervals (>= 30 %% shorter); the monkey strikes twice, the yak charges more often, the snake sidesteps 60 %; rewards 120/+3 then 80/+2 in economy.json  ([] [120, 3, 80, 2])
+PASS  step3 v1.1: at the board 报名 asks 普通 / 困难 (key 2 = 困难), fee 10 as well; the monkey uses his 困难 card, the banner says 困难  (比武大会 · 第 1 届：今日午时至酉时报名，报名费 10 文。三轮闯关：灵猴门、铁牛帮、青蛇派。
+点到为止：生命掉到两成就算输。两轮之间回 50 点生命。头一回夺魁赏 60 文，之后每回 40 文。
+交 10 文报名比武大会？
+选哪种难度)
+PASS  step3 v1.1: 困难 monkey: a real J blow in his wind-up hurts but does not interrupt (no stagger); his attacks come in two strikes  (["chase", "windup", "strike", "gap"])
+PASS  step3 v1.1: first 困难 title: 120 coins, 名望 +3, book '比武大会·夺魁·困难（第 1 届）'  (比武大会 · 夺魁！（困难） coins 120)
+PASS  step3 v1.1: the edition's difficulty and the 困难 titles are saved (version 5)
+PASS  step3 v1.1: a later 困难 title: 80 coins, 名望 +2
+PASS  step3 v1.1: 普通 the next edition uses the normal cards again; its first title still pays 60 / +2 (firsts are counted per difficulty); both book lines  (["打跑山路上的山贼", "解开竹林断碑", "比武大会·夺魁（第 3 届）", "比武大会·夺魁·困难（第 1、2 届）", "找回了老周的瓦"])
+PASS  step3 v1.1: 名望 stays capped at 10 with 困难 titles (9 -> 10, the coins are still paid)
+PASS  step3 v1.1: 困难, 10 seeded tournaments each with real keys: attack-masher wins 2/10 (< 30 %), the GP bot (试玩反馈 v1, K as the blow comes) wins 10/10  (masher reached round 3 in 10)
+PASS  step3 试玩反馈 v1: 困难 with a human-like GP bot (K 0.30-0.55 s after the wind-up starts, 25 % of the attacks not guarded, real keys, 10 seeded tournaments) wins 10/10 (>= 8)  (lost after rounds [])
+PASS  step3 v1.1: a version-2 save (no difficulty / 困难 titles / 陪练 count) upgrades to version 5 on 继续游戏: 普通, no 困难 titles, the recorded 陪练 counts once; everything else as saved  (bad step3.arena.hard_wins)
+PASS  step3 v1.1: and it is written back as version 5
+PASS  step3 fix: a 第②步 save made during the prologue upgrades with no day 1 yet; the real prologue end (clock day 2) becomes day 1  (anchor 2 day 1)
+PASS  step3 fix: 陪练 is once per calendar day (a bout at 07:30 means none at 08:30 the same day, one again the next morning); the count comes from economy.json jobs.spar.per_day (2 -> a second bout)  (true true true true true)
+PASS  step4a AC2/AC6: data/jianghu.json = the plan (3 bounties 20/+1, 35/+1, 80/+2 at 山路草丛 / 山路石坎 / 后山竹林深处; 巡山 every 2 days 2 狼山贼 15 文 no 名望; first on day 2 08:00; 1 + 2 at once; 20 %; 委托 2 a day at 08:00, void at 24:00, 12/8/10/10/12/10, 送馒头 needs the kitchen, 3 shoots / 1 jade / 3 gaps, 5 -> 家业 +1, x1.5 at 名望 5; caps 10)  ([])
+PASS  step4a AC2: the rules file has its 中文 _说明
+PASS  step4a AC3: cards/weasel.tres 60 / 8 / 0.6 s / 150 (flees at half HP), cards/tiger.tres 180 / 18 / 0.7 s / 100 (rage at half HP: intervals x0.7, pounces) = the plan table  ([])
+PASS  step4a AC3 (PM ruling): cards/wolf_bounty.tres = 60 HP / 8 damage, every other number as the prologue wolf (wolf.tres keeps 14)  ([])
+PASS  step4a AC3: the bounties use weasel / 3 x wolf_bounty / tiger, 巡山 2 x wolf_bounty  (["weasel", "wolf_bounty", "wolf_bounty", "wolf_bounty", "tiger", "wolf_bounty", "wolf_bounty"])
+PASS  step4a AC9: every new character (lines, board, HUD, book, Esc tips) exists in the UI font
+PASS  step4a: every new line calls the hero 少侠 / 小兔兄弟 (never 她 / 师姐)  ([])
+PASS  step4a AC1: during the prologue there is no 江湖告示榜 (not drawn, not solid, no E), no 委托, no villains
+PASS  step4a AC1: after the prologue the board stands (solid); E asks 看悬赏 / 看委托 / 离开  (江湖告示榜：左边红纸是悬赏，右边黄纸是委托。)
+PASS  step4a AC1: the 江湖告示榜 stands on free grass at the village plaza (no object, collider or person within reach; apart from the ring and the 比武 notice board); its E spot is free  ([])
+PASS  step4a AC1: with the board standing, the road / arch / tea stall / plaza / village / ring board are all still walkable (real keys)  (["arrived", "arrived", "arrived", "arrived", "arrived", "arrived"])
+PASS  step4a AC1: the chick, the glowing spots and the fence gaps are not solid (nothing new blocks a way or a person)
+PASS  step4a AC8: every new place (board, villains, retreat points, chick / glow spots, fence gaps, stall, 茶摊老板, 老伯, 村口) is free and reached on foot from the spawn point (real keys, 35 walks)  ([])
+PASS  step4a AC2: day 1: nothing ('下一条：第 2 天辰时'); day 2 07:59 nothing; 08:00 '偷鸡的黄鼠狼' is posted (toast)  (江湖告示榜：左边红纸是悬赏，右边黄纸是委托。
+悬赏还没贴出来。下一条：第 2 天辰时上榜（今天第 1 天）。)
+PASS  step4a AC2: turned in on day 2 -> nothing more that day nor at 07:59 next morning; day 3 08:00 posts '拦路的山贼'  ([true, true, true, 20, { "type": "main", "index": 1 }])
+PASS  step4a AC2: turned in at 07:00 on day 4 -> not at 08:30 the same day; day 5 08:00 posts '山贼老大「黑虎」'  ([35, true, { "type": "main", "index": 2 }, {  }])
+PASS  step4a AC2: after the 3rd turn-in (day 4) 巡山 is posted day 5 08:00; untaken it stays until day 7 08:00, when the next one replaces it  (江湖告示榜：左边红纸是悬赏，右边黄纸是委托。
+悬赏【巡山】赏金 15 文（不加名望）
+山路上又来了两个狼山贼，去把他们赶走。没人接的话，第 7 天辰时换下一条。)
+PASS  step4a AC2: 巡山 = 2 狼山贼, 15 文, no 名望; the taken edition is not offered again; day 9 08:00 the next one; 门派簿 '巡山 1 回'  ([["下届比武大会：第 9 天午时（今天第 9 天）", "悬赏 3/3 条 · 巡山 1 回 · 委托 0 条（家业进度 0/5）"], ["打跑山路上的山贼", "解开竹林断碑", "揭榜：黄鼠狼、拦路山贼、黑虎 · 巡山 1 回", "找回了老周的瓦"], { "fame": 5, "estate": 1 }, [P: (93.0, 24.0), S: (295.0, 222.0)]])
+PASS  step4a AC2/AC3: 接榜 -> the 黄鼠狼 stands at 山路草丛 (red ring on the ground, red dot on the minimap); the HUD lists '悬赏：偷鸡的黄鼠狼（山路草丛）'  (江湖告示榜：左边红纸是悬赏，右边黄纸是委托。
+悬赏第 1 条【偷鸡的黄鼠狼】山路草丛 · 赏金 20 文 · 名望 +1
+最近村里接连丢鸡，有人在山路边的草丛里看见一只插着鸡毛的黄鼠狼。它跑得快，血掉到一半就逃，逃完还会回头。
+接下悬赏【偷鸡的黄鼠狼】。恶人在山路草丛，小地图上有红点。)
+PASS  step4a AC2: 放弃这条悬赏 (no penalty): the villain leaves, it is back on the board  (江湖告示榜：左边红纸是悬赏，右边黄纸是委托。
+【偷鸡的黄鼠狼】进行中：去山路草丛。
+打不过就先回来，判负不扣钱；放弃也没有惩罚。
+放弃了悬赏【偷鸡的黄鼠狼】。想接的话，它还在榜上。)
+PASS  step4a AC5: winning pays nothing; 交榜 pays 20 文 + 名望 1 once (a second visit pays nothing); 门派簿 '揭榜：黄鼠狼'  ([true, 30, 30, "悬赏：偷鸡的黄鼠狼 · 回榜交榜", 20, 0, 2, 1, ["打跑山路上的山贼", "解开竹林断碑", "揭榜：黄鼠狼", "找回了老周的瓦"], 1])
+PASS  step4a AC5: 名望 stays at 10 (9 + 黑虎's 2 -> 10; the 80 文 are still paid)  ([{ "coins": 20, "fame": 1, "type": "main" }, { "coins": 80, "fame": 1, "type": "main" }])
+PASS  step4a AC5: HP at 20 %% -> lost: HP refilled (100), nothing taken, the 黄鼠狼 back at its place with full HP, the bounty still taken, no knock-out / respawn  ([27, 27])
+PASS  step4a AC5: no regen during a bounty fight (HP never went up)  ([27, 27])
+PASS  step4a AC5: walking back in gives the short line ('又来啦？') and the fight goes on  (["J-告示榜", "J-黄鼠狼-上场", "J-黄鼠狼-败", "J-黄鼠狼-再战"])
+PASS  step4a AC3: the 黄鼠狼 at half HP (24 <= 30) runs away (36 -> 290 px) - '打不过，溜了溜了！' - then turns round and attacks again  (["chase", "flee", "windup"])
+PASS  step4a AC3: it runs away only once
+PASS  step4a AC3: 黑虎 at half HP (72 <= 90) enrages (roar, red sheet, banner '黑虎发怒了！', '吼——！'); his attack intervals become x0.7 (0.30-0.60 s -> 0.21-0.42 s)  (["黑虎发怒了！/出招更快，小心扑击", "", "吼——！你惹恼我了！", true, 0.0, true, "chase", true])
+PASS  step4a AC3: enraged 黑虎 pounces (2 pounces in 15 s standing still)
+PASS  step4a AC3: back at his place he is calm again (rage is per fight)
+PASS  step4a AC4: a real-key GP bot (tests/combat_suite.gd, 试玩反馈 v1) wins the 黄鼠狼 5/5 and the three 狼山贼 5/5 (from walking in to the last knock-out)  ({ "weasel": ["won", "won", "won", "won", "won"], "wolves": ["won", "won", "won", "won", "won"] })
+PASS  step4a AC4 (试玩反馈 v1): 黑虎 is beaten by real-key GP bots: K as the blow comes 10/10; a human-like bot (K 0.30-0.55 s after the wind-up starts, 25 % of the attacks unguarded) 7/10 (>= 7)  ({ "perfect": ["won", "won", "won", "won", "won", "won", "won", "won", "won", "won"], "human": ["won", "won", "won", "lost", "won", "won", "won", "lost", "won", "lost"], "masher": ["lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost"] })
+PASS  step4a AC4: the attack-masher (J only, never guards) beats 黑虎 0/10 (< 30 %)  (["lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost", "lost"])
+PASS  step4a AC6: 2 different 委托 a day from seed + day (the same seed and day always give the same two); 送馒头 is never drawn before the kitchen is repaired, and is after; the grove spots of one day never overlap  (["jade", "fence"] ["shoots", "fence"] ["letter", "chicken", "shoots", "jade", "fence"])
+PASS  step4a AC6: between midnight and 08:00 the board has no 委托; 08:00 draws the day's two once
+      walk stopped at (1317.0, 1045.0) (room '') -> (1596.0, 1036.0)
+      walk stopped at (926.0, 1685.0) (room '') -> (300.0, 1716.0)
+      walk stopped at (926.0, 1686.0) (room '') -> (300.0, 1716.0)
+      walk stopped at (926.0, 1686.0) (room '') -> (300.0, 1716.0)
+PASS  step4a AC6: 委托 送馒头 done with real keys (accept at the board, walk there, E, walk back, 交差: 12 文)  ({ "ok": true, "steps": ["arrived", 1, "arrived", 2], "pay": 12 })
+PASS  step4a AC6: 委托 送信 done with real keys (accept at the board, walk there, E, walk back, 交差: 8 文)  ({ "ok": true, "steps": ["arrived", 1, "arrived", 2], "pay": 8 })
+PASS  step4a AC6: 委托 找鸡 done with real keys (accept at the board, walk there, E, walk back, 交差: 10 文); the chick followed the player's own steps back to 村口 and never stood inside a wall  ({ "ok": true, "steps": ["arrived", "follow", "arrived", "home", 0], "pay": 10 })
+PASS  step4a AC6: 委托 挖竹笋 done with real keys (accept at the board, walk there, E, walk back, 交差: 10 文)  ({ "ok": true, "steps": ["arrived", "arrived", "arrived", 3], "pay": 10 })
+PASS  step4a AC6: 委托 找玉佩 done with real keys (accept at the board, walk there, E, walk back, 交差: 12 文)  ({ "ok": true, "steps": ["arrived", 1], "pay": 12 })
+PASS  step4a AC6: 委托 补篱笆 done with real keys (accept at the board, walk there, E, walk back, 交差: 10 文); each gap broken before E, mended after  ({ "ok": true, "steps": ["arrived", [true, false], "arrived", [true, false], "arrived", [true, false]], "pay": 10 })
+PASS  step4a AC6: a 委托 not turned in by 24:00 is void (even when done; no pay, no penalty); the board says new ones come at 08:00  ([true, true, 1, 30, 30, ""]江湖告示榜：左边红纸是悬赏，右边黄纸是委托。
+今天的委托辰时（8 点）才贴出来。)
+PASS  step4a AC6: 08:00 brings the new day's two
+PASS  step4a AC6: every 5th 委托 turned in gives 家业 +1 (1 -> 2); the 门派簿 shows 'x/5'  ([1, 1, 1, 1, 2, 2]["下届比武大会：第 3 天午时（今天第 3 天）", "悬赏 0/3 条 · 委托 6 条（家业进度 1/5）"])
+PASS  step4a AC6: 名望 4 pays 12 / 8 / 10; 名望 5 pays x1.5 (18 / 12 / 15 / 18) rounded half up (x1.25: 12.5 -> 13, 10 -> 12.5 -> 13 ...); the board says so  ([12, 8, 10] [18, 12, 15, 18] [15, 13, 10] 15)
+PASS  step4a AC6: 家业 never past 10 (the 10th 委托 at 10: the coins are paid, '家业已满')  (江湖告示榜：左边红纸是悬赏，右边黄纸是委托。
+今日委托（子时前回榜交差）：（名望已有 5 格：报酬 ×1.5）
+1. 送信 · 12 文 — 办妥了，可以交差
+2. 挖竹笋 · 15 文 — 可接
+茶摊老板留话：『老伯托人捎话：信收到了，替他谢谢你。』
+报酬 12 文。
+累计完成 10 条委托（家业已满）。)
+PASS  step4a AC6: with 名望 >= 5 the villagers speak differently ('是那位打退山贼的少侠吧！')  (J-村民-名望 J-茶摊-名望)
+PASS  step4a AC6: below 5 they say their usual lines
+      walk stopped at (1317.0, 1045.0) (room '') -> (1596.0, 1036.0)
+PASS  step4a AC7: everything of step 4a (seed, bounty taken, offers + progress - the 馒头 in hand -, totals, chick) saves as the current version (5) and comes back equal
+PASS  step4a AC7: and the game looks the same (villain at his place, HUD list, the 馒头 still in hand -> 茶摊老板 takes it)
+PASS  step4a AC7: after a load the next 08:00 draws once and pays nothing; loading the same save again does the same (no double draw / pay)
+PASS  step4a AC7: a won bounty saved before the turn-in is paid once after loading, and not again after the next load
+      walk stopped at (926.0, 1685.0) (room '') -> (300.0, 1716.0)
+      walk stopped at (926.0, 1686.0) (room '') -> (300.0, 1716.0)
+      walk stopped at (926.0, 1686.0) (room '') -> (300.0, 1716.0)
+PASS  step4a AC7: a chick that was following when saved follows again after loading and gets home (never in a wall)
+PASS  step4a AC7: a version-4 save with bad step-4a values (unknown 委托, negative count, unknown state, section missing) is refused  ({ "kind": true, "main_done": true, "state": true, "missing": true })
+PASS  step4a AC7: version 1 (第②步), 2 and 3 saves load: step 4a starts empty (the first 悬赏 already due, today's 委托 drawn) and they are written back as the current version  ({ "v1": [true, true, 0, 2, 3] }{ "v3": true, "v3_written": true, "v2": true, "v2_written": true })
+PASS  step4a AC9: the HUD lists what is being done (1 悬赏 + 2 委托) under the coin counter; it never touches the toast text, the objective, the clock, the HP bar or the minimap  ([] [P: (146.0, 55.0), S: (291.0, 43.5)] ["悬赏：偷鸡的黄鼠狼（山路草丛）", "委托：送信 · 找茶摊老板拿信", "委托：挖竹笋 · 去竹林挖竹笋 0/3"] coin [P: (146.0, 5.0), S: (61.0, 19.0)] toast a 1.00)
+PASS  step4a AC9: a prompt behind the list makes it fade (the prompt stays readable, drawn above it)
+PASS  step4a AC9: Esc page 4 (→ → →) covers the board, 悬赏, 巡山, 委托 and their rewards (numbers from jianghu.json); fits, nothing cut off  (江湖告示榜：村口小广场。最多 1 条悬赏、2 条委托；放弃不罚。悬赏：第 2 天辰时贴第一条：黄鼠狼（20 文、名望 +)
+PASS  step4a AC6/AC8: the 门派簿 shows the 悬赏 progress (第几条) and the 委托 count x/5; it still fits the screen  (["下届比武大会：第 3 天午时（今天第 2 天）", "悬赏 0/3 条 · 委托 0 条（家业进度 0/5）"]["下届比武大会：第 3 天午时（今天第 2 天）", "悬赏第 1 条【偷鸡的黄鼠狼】进行中 · 委托 0 条（家业进度 0/5）"])
+PASS  补充: every line of every data file (story / sample / step3 / jianghu scenes, step-3 templates with every greeting / chat, the board's built lines: 392 lines -> 396 pages, 4 of them on more than one page) and every choice list (35) fits the dialogue box with the real layout (lines x line height <= 52 px, width <= the text area; choices / pictures on screen, above the box); paging loses no text  ([])
+PASS  补充: every Esc tips page (1-4) fits the screen; no tip is cut  ([])
+PASS  补充 (pages): Chinese-text paging check - skipped in the English run, see i18n_suite
+PASS  修复 v1: layout checks run on the real view - a 1440x810 window shows 480x270 (headless runs used to measure on 480x480)  ((480.0, 270.0))
+PASS  补充 (resize): Chinese-text paging check - skipped in the English run, see i18n_suite
+PASS  修复 v1: at 480x270 (1440x810), 640x360 and 500x280 (1000x560): every Esc page (button included), the full 门派簿, the HUD list with its longest lines, every toast, both boards' prompts and the 序章 · 完 / 指引完成 captions stay on the screen  ([])
+      walk stopped at (926.0, 1685.0) (room '') -> (300.0, 1716.0)
+      walk stopped at (926.0, 1686.0) (room '') -> (300.0, 1716.0)
+      walk stopped at (926.0, 1686.0) (room '') -> (300.0, 1716.0)
+PASS  修复 v1: saved in the kitchen with the chick following -> after loading it waits outside the kitchen door (never inside the room) and is at his heels again when he walks out  (["arrived", "door", true, "kitchen", (1522.0, 947.0), "follow", "door"])
+PASS  guide: data/guide.json = the plan (rewards 10/10/15/5/10, 出师 10, 60 in all; 师父's line; caption 序章 · 完 ~2 s; 6 tabs; the spar hint; 门派簿 新手指引·出师; 试玩反馈 v1: step 1 = 格挡（GP）成功一次，再赢下切磋, the GP key hint)  ([[10, 10, 15, 5, 10], 60])
+PASS  guide: no player-visible Chinese text is written in scripts/guide.gd / quest_board.gd - all of it is in data/guide.json with {placeholders}  ([])
+PASS  guide: every new character is in the UI font
+PASS  guide: no line calls the hero 她 / 师姐
+PASS  guide AC1: the last line goes straight on - no 序章 · 完 page, no 回到启动画面 / 继续逛逛; the caption 「序章 · 完」 fades in and out by itself (1.98 s)
+PASS  guide AC1: everything 继续逛逛 used to open is open: 本钱 30, 老周, the trial board + poles, the coin counter, the 比武 board, the 江湖告示榜, the repair / 两条路 talks
+PASS  guide AC1: 师父 says '先把门里的事摸熟，有不懂的按 Q 看看。'; the objective line shows guide step 1 (never 序章完成); the gold arrow shows  (目标：指引 1/5：找师兄切磋，格挡（GP）成功一次，赢一场)
+PASS  guide AC1: the gold arrow points at 师兄 (step 1 - the 练武场)
+PASS  guide AC1: the save is written at once (version 5: unlocked, the guide started)
+PASS  guide AC3: the prologue ended at 07:00 and the board already has today's 2 委托 (step 5 never waits); 08:00 the same day draws nothing new (and 老周 is up); the next day goes by the normal 08:00 rule
+PASS  guide AC2 step 1 (试玩反馈 v1): a spar won without a GP (dodge + chase bot) does not finish step 1  ([{ "win": true, "hint": true }, 1, true])
+PASS  guide AC2 step 1: a 师兄 spar by real keys (E, 切磋, the bot presses K at his blows) shows the key hint '看到师兄发红…按 K', a GP + a win -> '指引完成：战斗  +10 文' (10 文); the guide moves to step 2  ([{ "win": true, "hint": true }, 1, true, true, 10])
+PASS  guide AC2: the objective line now shows step 2  (目标：指引 2/5：梅花桩试炼拿到一个评价)
+PASS  guide AC2 step 2: a 梅花桩 run by real keys reaches a medal (gold) -> +10 文 on top of the trial's own reward  (30 -> 110)
+PASS  guide AC2 step 3: 老周 by real keys (E, 是): the roof is repaired (-30) -> +15 文 (40 -> 25)  ([["X-老周-修屋顶"], 25])
+PASS  guide AC2 step 4: talking with 厨娘 (real keys; 否 - nothing repaired) about the stall and its daily income -> +5 文  (["X-厨娘-修厨房"])
+      walk stopped at (926.0, 1685.0) (room '') -> (604.0, 1772.0)
+      walk stopped at (926.0, 1686.0) (room '') -> (604.0, 1772.0)
+      walk stopped at (926.0, 1686.0) (room '') -> (604.0, 1772.0)
+PASS  guide AC2 step 5: a 委托 accepted and turned in by real keys (送信 8 文) - not yet done; the arrow moves to the 比武 board; E there -> +10 文  ([true, 8, true, true])
+PASS  guide AC2: all five done -> 出师 +10 文, 门派簿 '新手指引·出师'; (武学与经营 第一批: the guide goes on with 进阶 1/4 - its objective line and the gold arrow, instead of nothing tracked)  (["打跑山路上的山贼", "解开竹林断碑", "新手指引·出师", "找回了老周的瓦", "接委托累计 1 条"])
+PASS  guide AC2: a step done early (the roof first) is not paid out of turn; when steps 1 and 2 are done it is paid right after them (10 + 10 + 15, in order)  ([{ "what": "combat", "coins": 10 }, { "what": "trial", "coins": 10 }, { "what": "repair", "coins": 15 }])
+PASS  guide AC2: 关闭指引 in the 任务面板 (real keys: ↓ to it, E): the objective line and the arrow go; a step finished afterwards (厨娘, step 4, out of order) is still paid at once (+5)  ([true, "", ""])
+PASS  guide: 打开指引 brings the objective line back
+PASS  guide AC2: each step pays once - talking to 厨娘 again, saving and loading pay nothing more  ([])
+PASS  guide AC4: during the prologue Q does nothing; afterwards Q opens the 任务面板 (the game pauses), Q closes it, Esc closes it too (and does not open the Esc page)  ([true, true, true, true, true])
+PASS  guide AC4: Q does not open it during a conversation, the 梅花桩 trial or a spar; with the Esc page open during the trial Q is the page's 放弃 (the trial ends, the board stays shut)  ([true, true, true, true, true])
+PASS  guide AC4: the 6 tabs follow the game: 悬赏 locked -> on the board -> taken; 委托 open / taken / ready / turned in + x/5; 修缮 price + who -> repaired; 比武 next date -> open today; 收徒 what is missing -> 师弟's job; the guide's current step  ({ "bounty_locked": true, "bounty_offer": true, "bounty_taken": true, "com_open": true, "com_taken": true, "com_ready": true, "com_done": true, "repair_open": true, "repair_done": true, "arena_next": true, "arena_open": true, "disciple_need": true, "disciple_joined": true, "guide_marks": true })
+PASS  guide AC4: on the 新手指引 tab only the current step shows 【追踪中】  (["guide", [0], 0])
+PASS  guide AC5: a toast never covers the guide's objective line  ([[P: (180.0, 55.0), S: (165.0, 24.0)], [P: (67.0, 33.0), S: (282.0, 18.5)]])
+PASS  guide AC4: E on 修缮·宿舍屋顶 tracks it: the objective line says '修缮：宿舍屋顶 · 找老周', the gold arrow points at 老周; once the roof is repaired tracking goes back to the guide  ([true, "目标：修缮：宿舍屋顶 · 找老周", true, "guide"])
+PASS  guide AC4: only one item is tracked at a time (【追踪中】 on it only)  (arena)
+PASS  guide AC5: at 480x270, 640x360 and 500x280, with every tab as full as it gets (bounty taken, both 委托 taken, 23 委托 done, all steps listed), every item of every tab - shown page by page, font unchanged - stays inside the panel and the panel on the screen  ([])
+PASS  guide AC5: the window changes size while the board is open -> laid out again, still inside the screen  ([[P: (4.0, 4.0), S: (472.0, 262.0)], [P: (14.0, 4.0), S: (472.0, 272.0)]])
+PASS  guide AC5: the step-1 key hint fits the 480x270 screen  ([[P: (0.0, 244.0), S: (480.0, 16.0)], 301.0])
+PASS  guide AC6: the guide state (steps done / paid, step-1 marks, 厨娘 talked, tracked item) saves as version 5 and comes back equal; no coins move on loading
+PASS  guide AC6: a save with a broken guide section (wrong length, paid but not done, missing) is refused
+PASS  guide AC6: a version-4 save upgrades: the steps it already meets (trial medal, roof, a 委托 done) count as done - and no coins are paid for them  ([[false, true, true, false, true], [false, true, true, false, true], [], 10])
+PASS  guide AC6: after the upgrade only the steps done afterwards pay (战斗 10 + 小食摊 5) and 出师 10  ([{ "what": "combat", "coins": 10 }, { "what": "stall", "coins": 5 }, { "what": "graduate", "coins": 10 }])
+PASS  guide AC6: version 1 (a real 第②步 save with the roof repaired), 2 and 3 saves load: the guide runs, the roof step counts as done without coins; written back as version 5  ({ "v1": true, "v1_written": true, "v3": true, "v2": true })
+PASS  guide AC6: a save made during the prologue plays on to the new ending (caption, guide from step 1, nothing pre-paid)
+PASS  guide: the Esc page lists Q (任务面板); with the extra row every page still fits 480x270 unscaled  ([true, [256.0, 256.0, 256.0, 256.0]])
+PASS  audio: the AudioService autoload runs and Sfx reaches it
+PASS  audio files: 12 + 3 (武学) = 15 sound effects in assets/audio/sfx, each loads and lasts 0.03-1.2 s  (bad [], 15 files)
+PASS  audio files: 4 music loops (day / night / battle / opening), each >= 40 s, looping over every frame  ({ "day": "40.0s 0-882048", "night": "53.3s 0-1176064", "battle": "41.1s 0-907200", "opening": "43.6s 0-962208" })
+PASS  audio files: the generator's manifest came along (12 + 3 sfx, each by name, + 4 music)
+PASS  audio data: four volume levels 关 / 小 / 中 / 大, 关 = silent, rising  ([0.0, 0.3, 0.6, 1.0])
+PASS  audio data: event -> sound table covers the plan's 13 events + the 3 武学 events and uses all 12 + 3 sounds  ({ "gp_success": "gp", "hit": "hit", "hit_heavy": "hit_heavy", "player_hurt": "hurt", "dodge": "dodge", "telegraph": "telegraph", "knockdown": "ko", "dialogue_page": "page", "choice_move": "cursor", "coin": "coin", "guide_complete": "complete", "quest_complete": "complete", "panel_open": "panel", "skill_spin": "skill_spin", "skill_snow_step": "skill_snow", "skill_tuna_learned": "skill_tuna" })
+PASS  audio data: scene -> track table (title / opening -> opening, day, night, battle), 1 s cross-fade  ({ "title": "opening", "opening": "opening", "day": "day", "night": "night", "battle": "battle" })
+PASS  audio data: default volume 中 for both
+PASS  audio headless: no sound device (Dummy driver) - players run, an unknown sound is skipped without an error  (Dummy)
+PASS  audio music: the title screen plays the opening track  (opening / opening)
+PASS  audio events: moving on the title menu (↓) plays the option sound  (["cursor"])
+PASS  audio events: the title's 按键与玩法 page opens with the panel sound
+PASS  audio music: 新游戏 -> the day track (08:00)  (["day"])
+PASS  audio music: the change cross-fades over 1 s (half-way both play, after it only the new one)  (mid [0.51666666666667, 0.48333333333333, true] end [1.0, 0.0, false])
+PASS  audio music: day / night follow the game clock (night from 18:30 to 06:00)  ({ "08:00": "day", "20:00": "night", "03:00": "night", "07:00": "day" })
+PASS  audio music: 切磋 plays the battle track, held 2 s after the fight, then back to day  (battle battle day)
+PASS  audio music: 山贼 / 悬赏 (enemy engaged), 比武 (bout), 试炼 (trial) play the battle track  ({ "bandit": "battle", "bandit_after": "day", "bout": "battle", "bout_after": "day", "trial": "battle", "trial_after": "day" })
+PASS  audio music: Sfx.music forces a track, the same track again changes nothing, "" fades to silence, Sfx.auto hands back  (true true true day)
+PASS  audio music: a new game (after the opening film) hands the music back to the game
+PASS  audio events: Combat.gp_success(F) plays gp.wav  (["gp"])
+PASS  audio events: Combat.player_hit_enemy(F,8,false) plays hit.wav  (["hit"])
+PASS  audio events: Combat.player_hit_enemy(F,12,true) plays hit_heavy.wav  (["hit_heavy"])
+PASS  audio events: Combat.player_hurt(F,5) plays hurt.wav  (["hurt"])
+PASS  audio events: Combat.dodge_started(false) plays dodge.wav  (["dodge"])
+PASS  audio events: Combat.enemy_alert(F) plays telegraph.wav  (["telegraph"])
+PASS  audio events: Combat.enemy_down(F) plays ko.wav  (["ko"])
+PASS  audio events: Combat.player_down() plays ko.wav  (["ko"])
+PASS  audio events: Combat.choice_moved(1) plays cursor.wav  (["cursor"])
+PASS  audio events: a dialogue line plays the page sound, ↓ on its options the option sound  (["cursor"] / ["cursor", "page"])
+PASS  audio events (real fight): 师兄's wind-up rings the 叮, Space dodges with the swoosh  (["telegraph", "dodge", "hit"])
+PASS  audio events (real fight): J landing on 师兄 plays a hit sound  (["telegraph", "dodge", "hit"])
+PASS  audio events: E in a conversation plays the page sound (real key)  (true ["page", "page"])
+PASS  audio events: coins gained play the coin sound, coins paid do not  (["coin"] / [])
+PASS  audio events: a guide step done plays the complete sound (its coins do not ring on top)  (["complete"])
+PASS  audio events: a 委托 / 悬赏 turned in plays the complete sound  (["complete"] / ["complete"])
+PASS  audio events: opening the Esc page (Esc), the 任务面板 and the 门派簿 plays the panel sound  (["panel"] ["panel"] ["panel"])
+PASS  audio volume: the four levels set the music and sound volume from data/audio.json; 关 plays nothing  (["0: music -80.0 dB, sfx off", "1: music -12.4 dB, sfx -10.5 dB", "2: music -6.4 dB, sfx -4.4 dB", "3: music -1.9 dB, sfx 0.0 dB"])
+PASS  audio Esc page: 「音乐：中」「音效：中」 in the bottom row with 继续 and the language  (["Music: Mid", "SFX: Mid"])
+PASS  audio Esc page: clicking a volume button steps through 关 / 小 / 中 / 大 (real mouse clicks)  (["Music: High", "SFX: High", "SFX: Off", "SFX: Low"])
+PASS  audio Esc page: Tab picks 音乐 / 音效 (lit, hint shown), ←→ changes it (stops at 大); with none picked → still turns the page and ↑↓ still switch the language  ([0, 2, 1, 2, 3, -1, 1] lit true lang true)
+PASS  audio Esc page: the volume buttons sit inside the page and every tips page stays unscaled inside 480x270 - also with both at 大 and the 放弃 button - Chinese and English  (zh:  en:  ["Music: Mid", "SFX: High"])
+PASS  audio Esc page: the title's 按键与玩法 page has the same buttons (fits, clickable)
+PASS  audio settings: saved in the settings file [audio] (the language line kept) and read back at start  (stored true lang true read true)
+PASS  audio settings: changing the volume writes no save and the save holds no volume (separate from the game)  (writes 1223->1223, capture same true, in save false)
+PASS  audio web: nothing plays before the first key / click (a mouse move is not enough); the music asked for starts with it  (silent true still true started true)
+PASS  i18n: data/i18n/en*.json have 1081 Chinese -> English lines (255 templates with {0} {1}...), none empty, no Chinese left in the English  ([])
+PASS  i18n: all 1106 Chinese texts of the data files and the Esc / HUD wording translate to English (nothing left Chinese)  ([])
+PASS  i18n: the title screen has 「中文 | English」 in its top-right corner; a click on English shows 'New Game' and the English name under the logo; ← / → switches back  ([[P: (416.0, 3.0), S: (58.0, 14.0)], "en", "New Game", true, "zh", 76.0, ^"/root/Title/LangSwitch/@Control@157784/@HBoxContainer@157785/@Button@157788"])
+PASS  i18n: the title's 按键与玩法 page has no language row, and the corner switch hides while that page is open (it would sit on the page)
+PASS  i18n: on the Esc page ↑ / ↓ switch the language as well (the row says 'Language (↑↓):')  (["zh", "en", "Language (↑↓):"])
+PASS  i18n: the Esc page's 「中文 | English」 switches the whole game at once (Esc page, objective line 'Goal: Tutorial 1/5: Spar with Senior Brother: guard (GP) once, win'); the page still fits; the game state and the save are untouched  ([true, "Paused · Controls & Tips", true, "Goal: Tutorial 1/5: Spar with Senior Brother: guard (GP) once, win"])
+PASS  i18n: a line on screen switches language at once (师父 -> Master, the line in English inside the box) and back  (["One is to make your way in the", "Master", "一条，是去江湖上闯—"])
+PASS  补充: every line of every data file (story / sample / step3 / jianghu scenes, step-3 templates with every greeting / chat, the board's built lines: 392 lines -> 396 pages, 4 of them on more than one page) and every choice list (35) fits the dialogue box with the real layout (lines x line height <= 52 px, width <= the text area; choices / pictures on screen, above the box); paging loses no text  ([])
+PASS  补充: every Esc tips page (1-4) fits the screen; no tip is cut  ([])
+PASS  修复 v1: at 480x270 (1440x810), 640x360 and 500x280 (1000x560): every Esc page (button included), the full 门派簿, the HUD list with its longest lines, every toast, both boards' prompts and the 序章 · 完 / 指引完成 captions stay on the screen  ([])
+PASS  guide AC5: at 480x270, 640x360 and 500x280, with every tab as full as it gets (bounty taken, both 委托 taken, 23 委托 done, all steps listed), every item of every tab - shown page by page, font unchanged - stays inside the panel and the panel on the screen  ([])
+PASS  guide AC5: the window changes size while the board is open -> laid out again, still inside the screen  ([[P: (4.0, 4.0), S: (472.0, 262.0)], [P: (14.0, 4.0), S: (472.0, 272.0)]])
+PASS  guide AC5: the step-1 key hint fits the 480x270 screen  ([[P: (0.0, 244.0), S: (480.0, 16.0)], 301.0])
+PASS  i18n: in English no panel is scaled down - every Esc page and a full 门派簿 keep scale 1 at 480x270, 640x270 and 500x280; the 任务面板 tab names fit their column  ([])
+PASS  i18n: a long speech in English shows in 2 pages, each ending between words, nothing lost  (["So it\'s you? The one who ran off my men on the road and scattered the wolf brothers. Hmph. That run-down sect barely has anyone left, and a little apprentice dares make trouble in my grove? Come on, let Grandpa", "Black Tiger see what you\'re made of! ...Fine skills. I misjudged you. I\'ll take my men off the mountain road. We won\'t come back to these hills."])
+PASS  opening: 7 full-screen HD pictures of 960x540 in assets/opening/ (data/opening.json -> opening_art_hd.json), drawn pixel-aligned
+PASS  opening: the narration is the plan's text word for word, in Chinese and in the plan's 7 English sentences
+PASS  opening: about one minute long (58.2 s), skip = hold Esc 1 s
+PASS  opening: the hint and the 重看序幕 button have English  (E Continue · Hold Esc to Skip / Replay Prologue)
+PASS  opening camera data: only picture 1 (one left-to-right pan) and picture 7 (one push-in from the whole picture to zoom 2 = one picture pixel per game pixel) move, each once over >= 5 s with a sine ease; the other 5 are fixed whole-picture frames  (moving [0, 6])
+PASS  opening camera data: exactly one shake (picture 4's thunder, 0.3 s), both lightning flashes kept  ([[3, 0.3, 3.0]])
+PASS  opening: 新游戏 fades out, then the opening plays (picture 1, hint 'E 继续 · 按住 Esc 跳过' in the corner, the opening music asked for) before the game exists
+PASS  opening: E first shows the whole narration of the picture, E again goes to the next picture  (alpha before 0.00, index 1)
+PASS  opening: E steps through all 7 pictures, then the game starts  ([0, 1, 2, 3, 4, 5, 6])
+PASS  opening: after the opening the existing prologue opening runs (S1-醒来, 滴答 narration on its first page, asleep in bed) - the last E did not leak into it  (S1-醒来 旁白 page 0)
+PASS  opening: the game after the opening starts in exactly the state of a direct start
+PASS  opening: 继续游戏 goes straight into the game, the opening never plays
+PASS  opening: 新游戏 over a save (确定) also plays the opening
+PASS  opening: …and the prologue follows it
+PASS  opening: a short Esc tap (0.2 s) does not skip, the ring empties again
+PASS  opening: holding Esc fills the ring in the corner (half after 0.5 s) and skips the whole opening after 1 s  (progress at 0.5 s 0.48)
+PASS  opening: after the skip the prologue starts (Esc did not open the pause page)
+PASS  opening: left click, Space and Enter work like E (whole narration, then the next picture)  ([true, true, true])
+PASS  opening: 「重看序幕」 is a small button in the bottom-left corner of the title, clear of the menu  ([P: (6.0, 253.0), S: (52.0, 15.0)])
+PASS  opening: 重看序幕 plays the opening
+PASS  opening: after the replay the title screen is back (no game started, the picture faded back in)
+PASS  opening: 新游戏 after a replay still plays the opening and starts the game
+PASS  opening layout (zh): every narration line, the hint and the skip ring stay inside the 480x270 picture and apart; the 重看序幕 button fits
+PASS  opening layout (en): every narration line, the hint and the skip ring stay inside the 480x270 picture and apart; the 重看序幕 button fits
+PASS  opening timeline: unattended, the 7 pictures follow each other and all 13 narration lines fade in one by one at their times  (order 0123456, lines 13)
+PASS  opening timeline: picture 4 flashes white and shakes  (flash 0.85)
+PASS  opening timeline: picture 6 lights its three panels one after another (师父, 师兄, 小兔)  ([0, 1, 2])
+PASS  opening timeline: only picture 1 (pan) and picture 7 (push-in) move - once, then they hold their end framing; the other five never move  (moved [0, 6], framings [73, 1, 1, 1, 1, 1, 361], held true)
+PASS  opening timeline: in every frame the picture sits on whole game pixels and fills the whole 480x270 frame  (whole px true, covers true)
+PASS  opening timeline: the screen shakes exactly once - picture 4 at the thunder, within 0.3 s, dying away (strongest first)  (10 shaking frames, max 3 then 1)
+PASS  opening timeline: it ends by itself after about a minute (57.5 s) and the title is back
+PASS  gp AC1: input 'gp' = K and the right mouse button (J / left button stay attack)
+PASS  gp AC1: K just before 师兄's blow -> guard stance, the blow is caught (GP): no damage  (hp 100 -> 100, { "hitstop": 0.1, "hp": 100, "shake": 0.15 })
+PASS  gp AC1: the enemy (no super armour) is knocked back and staggered 0.6 s (0.60 s measured, the counter's blows do not cut it short)
+PASS  gp AC1: the automatic counter (in place) deals 12 + 18 = 30 to him, gold '反击'  (dmg 30 ["18 反击"])
+PASS  gp AC1: GP feedback - blue ring + blue sparks (drawn in code), 0.1 s hitstop, a small camera shake  ({ "hitstop": 0.1, "hp": 100, "shake": 0.15 })
+PASS  gp AC1: the camera shake is over after a moment (offset back to 0)
+PASS  gp AC1: K too early - the stance ends without a blow: 0.4 s stuck (cannot walk or dodge), and his blow hits  (whiff true (recover 0.40, cooldown 0.30) stuck true hit true hp 88)
+PASS  gp AC1: cooldown - K within 0.3 s after the stance ends does nothing; after 0.3 s it guards again (the stuck time does not block K)  (cd 0.30 blocked true stuck true again true)
+PASS  gp AC1: mashing K for 2.0 s gives only 4 stances (one per stance 0.25 + cooldown 0.3 s: at most 4)
+PASS  gp AC1: 困难猴子's second blow comes during the counter and does not hurt him (invulnerable until the counter ends)  (strikes 2 second during counter true hp 100 -> 100)
+PASS  gp AC1: any direction - a blow from behind (facing right) is caught; during the counter blows from any enemy do nothing  (back true mid-counter true hp 100)
+PASS  gp AC1: super armour (牦牛 charge, 黑虎, 困难猴子) - caught, not staggered, the 30 lands; no armour (师兄, 狼) - staggered  ({ "yak": { "order": ["gp_started", "gp_success"], "caught": true, "stagger": false, "dmg": 30, "hurt": 0, "armour": true }, "tiger": { "order": ["gp_started", "gp_success"], "caught": true, "stagger": false, "dmg": 30, "hurt": 0, "armour": true }, "monkey_hard": { "order": ["gp_started", "gp_success"], "caught": true, "stagger": false, "dmg": 30, "hurt": 0, "armour": true }, "shixiong": { "order": ["gp_started", "gp_success"], "caught": true, "stagger": true, "dmg": 30, "hurt": 0, "armour": false }, "wolf": { "order": ["gp_started", "gp_success"], "caught": true, "stagger": true, "dmg": 30, "hurt": 0, "armour": false } })
+PASS  gp AC1: the right mouse button guards too (a blow caught)
+PASS  gp AC1: 看破反击 removed - after a dodge success J is an ordinary 8, the counter window is gone from the card and the player  (dmg 8)
+PASS  gp signals: gp_started, gp_success(enemy), gp_whiffed, player_hit_enemy(enemy, dmg, heavy), player_hurt, dodge_started, enemy_alert  ({ "enemy_alert": 2, "gp_started": 2, "gp_success": 1, "player_hit_enemy": 3, "dodge_started": 1, "gp_whiffed": 1, "player_hurt": 1 })
+PASS  gp signals: enemy_down(enemy) when a bandit goes down, player_down when he is knocked out
+PASS  gp AC1 chase: J after a dodge with 师兄 inside 3 tiles (96 px) always lands - 25/25 (standing, side-stepping, walking away / towards, knocked back)  ([])
+PASS  gp AC3: the spar invitation by mouse - hovering an option selects it, a click elsewhere does nothing, a click on '切磋' starts the spar (never a swing)  (true true true true)
+PASS  gp AC3: the opening conversation is read with the left mouse button alone (complete -> next line), never a swing  (lines 9 clicks 19 turned 19)
+PASS  gp AC3: Space, Enter and E each complete a typing line and then turn it  ({ 32: true, 4194309: true, 69: true })
+PASS  gp AC3: options - the mouse over one highlights it, a click picks it; a greyed one is never highlighted and ignores clicks; a click elsewhere does nothing  (true true true true true moved [2, 0])
+PASS  gp AC3: right click and K during a conversation never start a guard (not even after it)
+PASS  gp AC2: the rag has a blinking bright edge (49 px) and gold sparkles rising above it  (pulse 0.00 -> 1.00)
+PASS  gp AC2: 擦干地上的水 without the rag - the gold minimap arrow (and the star) point at the rag  ((2859.0, 206.0) (2859.0, 206.0))
+PASS  gp AC2: once the rag is taken it (and its glow) is gone and the gold arrow points at the puddle  (arrived (3106.0, 114.0))
+PASS  schedule AC2: data/schedule.json people = the plan's table (师父 21-6, 师兄 22-7, 厨娘 20-5, 老伯 22-6, 茶摊老板 19-7, 村民 19-7, 老周 18-8)  ([])
+PASS  schedule AC2: 师弟 and the bandits are not in the table (they keep their own day / stay out at night)
+PASS  schedule AC2: 等到天亮 to 08:00, the fade seconds, 0.5 s person fades and 'nobody sleeps before the prologue' are in schedule.json  ({ "to_hour": 8.0, "fade_seconds": 0.5, "text_seconds": 1.5 })
+PASS  schedule AC2: only 师兄 sleeps in sight (his bed); his dream line is the plan's
+PASS  schedule AC2/AC3: the bubble, button, grey text, note and night caption are the plan's words (the button names the hour it jumps to)  ({ "bubble": "呼……", "prompt_sit": "按 E 坐下", "prompt_dream": "按 E 查看", "wait_button": "等到天亮（辰时 08:00）", "wait_key": "Enter", "all_awake": "大家都醒着", "wait_note": "跳过去后，今天没做完的委托会作废。", "night_passes": "一夜过去……", "opt_c_asleep": "%s：对方已睡，明早再来", "commission_asleep": "对方已睡，明早再来" })
+PASS  schedule AC1: data/interiors.json seats = 8 (宿舍 2 坐垫, 正殿 4 蒲团, 厨房 小板凳 + 长凳), the two lines on 师父's 蒲团 and the stool  ([{ "dorm_main:cushion": 2, "hall:futon": 4, "kitchen:stool": 1, "kitchen:bench": 1 }, { "hall_futon_master": "（坐上去软塌塌的，师父坐了几十年。）", "kitchen_stool": "（灶火暖烘烘的，有点想睡。）" }])
+PASS  schedule AC6: every new text has its English (data/i18n/en_schedule.json)  ([])
+PASS  schedule: the new texts / code never call 小兔 她 / 师姐 / she / her
+PASS  schedule AC1 art: 小兔坐姿 is 2 frames of 32x32 (breathing: the frames differ)  ((64, 32))
+PASS  schedule AC2 art: 师兄 asleep under his quilt is exactly the size of his bed (bed_messy)  ((48, 80) vs (48.0, 80.0))
+PASS  schedule AC1 art: the rabbit's frames have the 2-frame sit_down
+PASS  schedule AC1: each seat (7 by day + 师父's at night below): 按 E 坐下 -> he sits in the seat's pose (bench / stool: back view facing up; cushion / 蒲团: cross-legged facing down), breathing, no prompt; J does nothing; E / Space / an arrow / WASD stands him up exactly where he stood (free), and he walks off  ([])
+PASS  schedule AC1: every sitting picture (old front, back view, cross-legged) breathes (2 frames)
+PASS  schedule AC1: 师父 stands on his worn 蒲团 by day -> no 按 E 坐下 there  (0)
+PASS  schedule AC1: at night 师父's 蒲团 is free; the first time there his line is a bubble over 小兔 (no dialogue), the second time none  ([(4414.0, 193.0), true, true, true])
+PASS  schedule AC1: the seat lines never open the dialogue box
+PASS  schedule AC1: the stool's line only the first time  ([true, true])
+PASS  schedule AC1: the other seats have no line
+PASS  schedule AC1: where a thing and a seat are both in reach, the thing keeps its prompt  ([(2973.692, 116.5128), "wardrobe"])
+PASS  schedule AC4: the save has no new field (sitting, the lines, who is asleep are not stored)  (["combat", "dorm", "farm", "guide", "jianghu", "player", "sample", "skills", "step3", "story", "time"])
+PASS  schedule AC2: every person is there / gone exactly by the table, just before and after each time, around 00:00 too (solid only when there)  ([])
+PASS  schedule AC2: the bandits are untouched by the night; only the table's people ever change  ([[[false, 0], [false, 0]], [[false, 0], [false, 0]]])
+PASS  schedule AC2: 21:00 -> '呼……' over 师父's head, his picture fades out in 0.5 s, he is gone (no prompt, not solid) at once  ([true, 0.96666663885117, { "text": "呼……", "pos": (4416.0, 138.0), "who": "crane" }, true, 0.46666663885117, true])
+PASS  schedule AC2: the bubble goes away; at 06:00 he fades in on his own spot (no bubble), then is there and solid  ([true, true, true, 1, false])
+PASS  schedule AC2/AC3: before the prologue is done nobody sleeps at 23:00 (and the board with its button does not open)  ([0, true, false])
+PASS  schedule AC2: the story-less sandbox of the older suites keeps everybody at every hour
+PASS  schedule AC2: talking to 村民 past 19:00 -> he stays until the conversation is over, then goes  ([true, true, true])
+PASS  schedule AC2: during a 梅花桩 trial, a 比武 bout or a fight with an engaged bandit nobody disappears; they go when it ends  ([{ "trial_active": true, "bout_session": true }, true])
+PASS  schedule AC2: a 切磋 with 师兄 going past 22:00 -> he stays through the choice and the whole fight, then goes to his bed  ([true, 295, true, true, true])
+PASS  schedule AC2: by day 师兄's bed is empty (its own 按 E 查看)  ({ "kind": "thing", "id": "senior_bed", "scene": "S10-师兄的床", "action": "", "prompt": "按 E 查看", "prompt_pos": (3159.0, 106.0) })
+PASS  schedule AC2: at night 师兄 is not in the 练武场 but asleep in his own bed (the new picture); E there: '（呼……谁动我萝卜……）' as a bubble  ([false, true, true, true])
+PASS  schedule AC2: the sleeping picture covers the bed exactly and is drawn over it  ([(3136.0, 132.1), (3136.0, 132.0)])
+PASS  schedule AC2: 07:00 -> he is back in the 练武场, the bed is empty again
+PASS  schedule AC2: at night there is no 按 E at anybody's place, and they are not points of interest  ([])
+PASS  schedule AC2: the minimap arrow of a tracked repair does not point at 老周 / 老伯 while they are asleep (it does by day)  ({ "repair:roof": [false, true], "repair:dorm_old": [false, true] })
+PASS  schedule AC2: by day the star / arrow may aim at anybody
+PASS  schedule AC3: by day the 任务面板 shows the note line, the grey '等到天亮（辰时 08:00）' and '大家都醒着' at the bottom (above the keys, under the list); Enter does not skip  ([true, true, true, true, true])
+PASS  schedule AC3: lit as soon as somebody is asleep (18:00 老周; 07:30 still)  ([true, true])
+PASS  schedule AC3: 22:00 + Enter -> the board closes, the screen goes black with '一夜过去……' (~1.5 s), the clock is the next day's 08:00 exactly, everybody is back, 小兔 stays where he was; T / Esc in the dark do nothing  ([true, true, { "black_frames": 60, "label_seen": true, "label_text": "一夜过去……", "max_alpha": 1.0, "started": true }, 90, 8.0, 1, true, (0.0, 0.0)])
+PASS  schedule AC3: after the night he walks again
+PASS  schedule AC3: from 03:00 it is the same day's 08:00  (8.000000 0)
+PASS  schedule AC3: a mouse click on the lit button does the same  ([true, 1])
+PASS  schedule AC3: a click on the grey button does nothing
+PASS  schedule AC3: these nights really have the daily events (the first 悬赏 posted; stall income, upkeep, the taken 委托 void at 24:00, the new draw at 08:00)  ([true, true, "{  }", "{ \"type\": \"main\", \"index\": 0 }", { "hour": 8.0, "total": 56.0, "coins": 60, "paid_day": 2, "incomes": 1, "tick_day": 2, "upkeep_days": 1, "upkeep_paid": 5, "debt": 0, "job": "none", "com_day": 2, "offers": "[{ \"kind\": \"letter\", \"state\": \"open\", \"step\": 0, \"count\": 0, \"spots\": [], \"picked\": [] }, { \"kind\": \"shoots\", \"state\": \"open\", \"step\": 0, \"count\": 0, \"spots\": [3, 5, 6], \"picked\": [] }]", "expired": 1, "draws": 1, "com_total": 0, "bounty_offer": "{ \"type\": \"main\", \"index\": 0 }", "ready_day": -1, "jh_toasts": ["过了子时，没办完的委托作废了"], "s3_toasts": ["过了子时，没办完的委托作废了", "师弟伙食费 -5"], "smp_toasts": ["小食摊今日收入 +15"], "day_no": 3, "absent": [], "fame": 1, "estate": 6 }])
+PASS  schedule AC3: 等到天亮 (day 1 21:00; day 2 21:00, 03:00, 21:30) ends exactly like pressing T hour by hour: same clock, coins, stall days, upkeep / debt, 悬赏, 委托 (void, drawn, offers), toasts, who is asleep  ([])
+PASS  schedule AC4: a save made at 23:00 loads with everybody gone at once (no fades, no '呼……'), 师兄 in his bed  ([true, 23.0002777777778, true, true, true])
+PASS  schedule AC4: and the loaded game's morning brings them back
+PASS  schedule AC6: in Chinese and in English the seat prompt / line, the dream line, the board's button / note / status and '一夜过去……' stay on the screen and nothing is cut  ([])
+PASS  schedule F1: at 18:30 送馒头 and 送信 can be taken as before  ([["bun", "letter"], [0, "送馒头：接下", false], [1, "送信：接下", false]])
+PASS  schedule F1: after 19:00 (茶摊老板 asleep) 送馒头 and 送信 are grey on the board with '对方已睡，明早再来'  ([[0, "送馒头：对方已睡，明早再来", true], [1, "送信：对方已睡，明早再来", true], true])
+PASS  schedule F1: the grey offer cannot be taken - its key and a mouse click do nothing  ([true, true, true])
+PASS  schedule F1: after 22:00 (老伯 asleep as well) 送信 is still grey  ([1, "送信：对方已睡，明早再来", true])
+PASS  schedule F1: the next morning (茶摊老板 up at 07:00) the day's 送馒头 can be taken again  ([0, "送馒头：接下", false])
+PASS  schedule F1: a 送信 taken before 19:00 is not changed at 19:30 (still taken, 放弃 offered, not grey)  ([true, [1, "送信：放弃", false]])
+PASS  schedule F1: in Chinese and English the grey offers' text and the note stay inside the board's page and options  ([])
+PASS  schedule F2: by 师兄's bed at night the 按 E 查看 prompt sits on the bed's lower edge and the dream line just above it - neither covers his face  ([[P: (334.0, 67.00001), S: (20.0, 26.0)], [P: (320.0, 127.0), S: (47.0, 18.5)], [P: (278.0, 107.0), S: (130.0, 20.0)]])
+PASS  schedule R1: 小兔 in the dorm when 22:00 comes - 师兄 and 老伯 go to bed outside without any '呼……' (no bubble clamped to the screen edge)  ([true, [], false])
+PASS  schedule R1: outdoors with 村民 on screen, 19:00 -> '呼……' over him as before  ([{ "text": "呼……", "pos": (1424.0, 1823.0), "who": "duck" }, ["tanuki", "duck"]])
+PASS  schedule R1: outdoors but 老周 off screen (宿舍门口, far away) -> he goes to bed without a bubble  (["呼……", "呼……"])
+PASS  schedule R1: the detail page opened at 18:59, 接下 pressed after 19:00 -> '对方已睡，明早再来' (and nothing is taken)  ([true, true, true])
+PASS  skills cards: 燕回旋 15 / 48 px / 0.15 s / 0.5 s / 推开 24 / 硬直 0.3 / 冷却 4 s; 吐纳功 100 -> 120, 回血 5 s -> 3 s, 3 -> 5 / s; 二段闪 0.3 s, 70 %% (= 方案表)  ([])
+PASS  skills data: data/skills.json - 燕回旋 名望 2 + 同一场格挡 3 次, 吐纳功 名望 3 + 打坐, 二段闪 名望 4 + 梅花桩银  ([2, "spar_gp", 3, 3, "meditate", 4, "trial_silver"])
+PASS  skills keys: U / I are the two move slots, O is registered (no move goes there this batch)  ({ "skill_1": 85, "skill_2": 73, "skill_3": 79 })
+PASS  skills texts: 师父 calls 小兔 兔儿 / 徒儿; no 她 / 师姐 / she / her anywhere in the skills' Chinese or English  ([])
+PASS  skills texts: every line / option / name / description of data/skills.json has its English in data/i18n/en_skills.json  ([])
+PASS  skills spin: the first move learned goes into U; U by key spins in place (walking keys ignored), 师兄 (no super armour) within reach takes 15 and is staggered  (slot true dmg 15 stagger true moved false)
+PASS  skills spin: the blow lands 0.15 s after U (frame 9 of the move), the move lasts 0.5 s (30 frames, hitstop frames not counted)
+PASS  skills spin: pushed 24 px x (1 - knock resist) = 9.6 (moved 9.3), stagger 0.3 s  (0.3)
+PASS  skills spin: cooldown 4 s - U at 2 s does nothing (0.48 of the cooldown left), after 4 s U spins again  (true 1 2 1.00)
+PASS  skills spin: 80 px away nothing is hit (48 px reach); I with an empty slot does nothing
+PASS  skills spin: a dodge (Space) cuts the spin short
+PASS  skills spin: super armour (牦牛 yak_hard, 黑虎 tiger) only loses 15 HP - no stagger, no push; without it (狼) staggered  ({ "yak_hard": [15, 0, 0.0], "tiger": [15, 0, 0.0], "wolf": [15, 1, 23.3] })
+PASS  skills snow: before learning, Space right after a dodge does nothing (the 0.6 s cooldown)  ({ "first": 92.2166748046875, "second": 4.433349609375, "started": false, "iframes": 0.01666666666667, "cd_after": 0.46666666666667, "cd_during": 0.6 })
+PASS  skills snow: learned - Space within 0.3 s of landing dodges again although the cooldown runs, 65 px after 92 px (0.71, plan 70 %)  ({ "first": 92.2166748046875, "second": 65.216552734375, "started": true, "iframes": 0.3, "cd_after": 0.6, "cd_during": 0.6 })
+PASS  skills snow: the second dodge has the same i-frames (0.30 s left 2 frames in); the cooldown (0.6 s) starts only after it  ({ "first": 92.2166748046875, "second": 65.216552734375, "started": true, "iframes": 0.3, "cd_after": 0.6, "cd_during": 0.6 })
+PASS  skills snow: 0.37 s after landing the window (0.3 s) has closed - no second dodge  ({ "first": 92.2166748046875, "second": 4.433349609375, "started": false, "iframes": 0.0, "cd_after": 0.2, "cd_during": 0.6 })
+PASS  skills snow: the second dodge leaves the snow mark where it lands (one per second dodge)
+PASS  skills tuna: 吐纳功 -> max HP 120 (full HP follows); + 药膳 set_max_hp_bonus("yaoshan", 15) -> 135; removed -> 120 (cards/player.tres untouched)  ([100, 120, 120, 135, 135, 120, 120])
+PASS  skills tuna: out of combat HP comes back after 3 s (2.8 s: 60) at 5 / s (5.0 s: 70, plan 70)
+PASS  skills tuna + B 药膳: eaten 120 -> 135 (吐纳功 + 药膳 stack), gone at the next 08:00 -> 120  (["", 135, 135, 120, 120])
+PASS  skills teach: below 名望 2 师父 has no lesson; the 武学 tab says '名望到 2 格后找师父（现在 1 格）'  ([["X-师父-两条路"], { "text": "· 师父传功：燕回旋 · 名望 2 格\n名望到 2 格后找师父（现在 1 格）", "state": "locked", "key": "", "action": "", "obj": "" }])
+PASS  skills teach: at 名望 2 the tab shows '师父传功：燕回旋 · 去正殿找师父'; 师父 gives the trial (同一场格挡 3 次)  (["K-师父-燕回旋-考验"])
+PASS  skills teach: 3 GP in one 师兄 spar (real keys, a bot pressing only K at his blows) passes the trial (1 spars, best 3) - not learned yet
+PASS  skills teach: back at 师父 he teaches it; slot U; the ring caption '学会：燕回旋（U）' shows after the talk; the U / I icons appear  ([["K-师父-燕回旋-传授"], ["学会：燕回旋（U）"]])
+PASS  skills icons: the U / I icons sit in the bottom-left corner inside the 480x270 screen, clear of the objective line, HP bar and minimap  ([[P: (6.0, 248.0), S: (42.0, 18.0)], []])
+PASS  skills teach: 名望 3 -> 吐纳功 trial; sitting on a 正殿 蒲团 shows '按 E 打坐'; E asks first and warns that today's 委托 will be void  ([["K-师父-吐纳功-考验"], true, true, true, ["静坐吐纳，一直坐到明早辰时 08:00。跳过去后，今天没做完的委托会作废。"]])
+PASS  skills teach: 1 = the screen goes dark '静坐吐纳……' and the clock jumps to 08:00 of the next day (10:00 -> +22 h); the trial is passed; he still sits  ([{ "black_frames": 91, "label_seen": true, "label_text": "静坐吐纳……", "max_alpha": 1.0, "started": true }, 8.0, 22.0])
+PASS  skills teach: 师父 teaches 吐纳功 - max HP 120, '学会：吐纳功（内功）', the faint jade air round the rabbit  (["K-师父-吐纳功-传授"])
+PASS  skills teach: 名望 4 -> 二段闪 trial (梅花桩银); a run at 40 s gives 银 and 师父 teaches it  ([["K-师父-二段闪-考验"], true, ["K-师父-二段闪-传授"]])
+PASS  skills board: at 22:00 师父 sleeps - the 任务面板 tab 武学 and the objective line say '师父 06:00 起'  (["目标：师父传功：燕回旋（师父 06:00 起）", { "text": "▶ 师父传功：燕回旋 · 名望 2 格\n去正殿找师父 · 师父 06:00 起", "state": "current", "key": "skill:swallow_spin", "action": "track", "obj": "师父传功：燕回旋（师父 06:00 起）" }])
+PASS  skills board: by day the tracked lesson points the gold arrow at 师父 in the 正殿; the line is '去正殿找师父传功：燕回旋'  ([(4416.0, 170.0), "目标：去正殿找师父传功：燕回旋"])
+PASS  skills same: 打坐 (from 21:00, 03:00, 13:30) ends exactly like 等到天亮 and like T hour by hour: clock, coins, stall, upkeep, 委托 void / drawn, 悬赏, toasts, who sleeps, the farm  ([])
+PASS  skills book: B opens the 门派簿 on 门派; → turns to 武学; nothing learned = three grey silhouettes '？？？' with how to learn ('名望 2 格后，找师父传功'); fits the screen  (["sect", ["sect", "skills", "store"], ["名望 2 格后，找师父传功", "名望 4 格后，找师父传功", "名望 3 格后，找师父传功"], []])
+PASS  skills book: learned = names + '装在 U 格' / '已生效' / '运转中'; E on 燕回旋 moves it U -> I -> U (the book stays open); ↓ selects; fits  ([["燕回旋", "踏雪二段闪", "吐纳功"], ["装在 U 格", "已生效", "运转中"], true, true, []])
+PASS  skills book: in English the 武学 page (long descriptions wrap) stays inside the 480x270 screen, unscaled  ([])
+PASS  skills board: Q -> the last tab is 武学; E tracks '师父传功：燕回旋' (objective '去正殿找师父传功：燕回旋', gold arrow at 师父); every row inside the panel  ([6, 7, true, [], "目标：去正殿找师父传功：燕回旋"])
+PASS  skills board: learned -> '√ 已学会：燕回旋' and the tracking is finished
+PASS  skills board: in English the 武学 tab's rows stay inside the panel  ([])
+PASS  skills save: learned skills, U / I, trials save and load back equal; max HP 120 and HP 117 (above 100) survive loading  ([{ "inner": "tuna", "learned": ["swallow_spin", "tuna"], "slots": { "i": "swallow_spin", "u": "" }, "trials": { "snow_step": { "best": 0, "state": "assigned" }, "swallow_spin": { "best": 0, "state": "passed" }, "tuna": { "best": 0, "state": "passed" } } }, { "inner": "tuna", "learned": ["swallow_spin", "tuna"], "slots": { "i": "swallow_spin", "u": "" }, "trials": { "snow_step": { "best": 0, "state": "assigned" }, "swallow_spin": { "best": 0, "state": "passed" }, "tuna": { "best": 0, "state": "passed" } } }, 117])
+PASS  skills save: an old save without the skills part loads - nothing learned, max HP 100, no U / I icons
+PASS  skills save: a malformed skills part is refused like any other broken save
+PASS  skills audio: 3 new sounds (燕回旋 呼——, 二段闪 嚓, 吐纳功 嗡) are files in assets/audio/sfx with their events in data/audio.json  (["skill_spin", "skill_snow", "skill_tuna"])
+PASS  skills qi: the 气槽 fills on hits (0 -> 4) but nothing shows it this batch
+PASS  skills audio: U plays the 呼—— (skill_spin)  (["skill_spin", "hit_heavy"])
+PASS  skills bots 困难 (10 seeded tournaments each, real keys): the masher using 燕回旋 (U when in reach) is stronger than the plain J masher - damage dealt 2429 vs 2316, wins 1 vs 2 (the GP bot with U: 10/10)  ({ "masher": { "wins": 2, "rounds": 30, "dmg": 2316 }, "masher_u": { "wins": 1, "rounds": 30, "dmg": 2429 }, "spin_spam": { "wins": 0, "rounds": 10, "dmg": 150 }, "gp_u": { "wins": 10, "rounds": 30, "dmg": 2644 } })
+PASS  skills bots 困难: the U-only spammer (never looks at the enemy) wins 0/10 (< 30 %)  ({ "wins": 0, "rounds": 10, "dmg": 150 })
+PASS  skills bots 黑虎 (10 seeded fights each, real keys): the masher using 燕回旋 is stronger than the plain J masher - damage dealt 1565 vs 1452, wins 0 vs 0 (the GP bot with U: 10/10)  ({ "masher": { "wins": 0, "dmg": 1452 }, "masher_u": { "wins": 0, "dmg": 1565 }, "spin_spam": { "wins": 0, "dmg": 300 }, "gp_u": { "wins": 10, "dmg": 1916 } })
+PASS  skills bots 黑虎: the U-only spammer wins 0/10 (< 30 %)  ({ "wins": 0, "dmg": 300 })
+PASS  farm 二.1 / 菜园扩建: 开菜园 40 文 家业 +1 (beside the three repairs) opens 6 plots, 扩建菜园 40 文 家业 +1 the east 6 (x 1792 / 1856, same 64 px pitch) = 12; 青菜 2/1 天/5, 萝卜 3/2/9, 南瓜 6/4/22; a bucket waters 12 times; growth 08:00, 师弟 09:00; buy 1-12  ([[], [[1792.0, 992.0], [1856.0, 992.0], [1792.0, 1056.0], [1856.0, 1056.0], [1792.0, 1120.0], [1856.0, 1120.0]]])
+PASS  farm 二.4: 竹笋 4 处, 草药 4 处, 卖 4 / 6 文, 每天 08:00 长回来  ({ "shoots": 4, "herbs": 4 })
+PASS  farm 二.5: 药膳 = 2 草药 + 1 青菜, 生命上限 +15; 萝卜彩蛋赔 10 文
+PASS  farm 三 / 三点五: 进阶 rewards 15/5/5/10 (35), 第 4 步 needs 名望 2; the transition 1.5 s / 2 s / 1.5 s  ([15, 5, 5, 10])
+PASS  farm 二.4: no gathering spot lies on (or next to) a 委托 spot  ([])
+PASS  farm art: the 9 pictures are in assets/farm (sizes as planned) and byte-equal to pixel2d/farm/output  ([])
+PASS  farm 三点五: after 师父's last line the screen darkens slowly to full black (1.43 s), the whole transition ~5 s (4.98 s)
+PASS  farm 三点五: while it is black the rabbit is already outside the hall (camera back on him) and 「序章 · 完」 shows; no objective line meanwhile (never 序章完成)  ([])
+PASS  farm 三点五: only after it is light again: everything opens, 本钱 +30, the guide's step 1 and the gold arrow  ([596, 596])
+PASS  farm 三点五: no choice box at all; during the transition Esc does not open the page and the rabbit cannot move  ([false, false, false])
+PASS  farm 三点五: lit again he stands at the hall door outside and walks with the real keys  ([(1040.0, 659.0), (1040.0, 659.0)])
+PASS  farm 二.1: before 开菜园 the 6 plots lie under the weed layer (the field is solid, no prompt)
+PASS  farm 二.1: 厨娘 (real keys): 修厨房's 是 / 否 keep their keys, 3 = 菜园和买卖 -> 开菜园（40 文）/ 卖东西 / 做药膳 / 没事了; with 39 文 '还差 1 文', nothing taken  ([["是", "否", "菜园和买卖"], ["开菜园（40 文）", "卖东西", "做药膳", "没事了"]])
+PASS  farm 二.1: 40 文 -> the tilled layer, the plots can be walked between, 家业 +1, 门派簿 '开了菜园'  ([true, 5, 2, 1])
+PASS  farm 二.1 / 三: he walks the farm path (real keys); the 修缮 tab lists 开菜园 (done); after the kitchen repair her talk ends with the menu (买种子 now)  ([true, [{ "text": "修缮：开菜园 · 已修好", "state": "done", "key": "", "action": "", "obj": "修缮：开菜园 · 已修好" }], [{ "options": ["买种子", "卖东西", "做药膳", "扩建菜园（40 文）", "没事了"], "disabled": [false, false, false, false, false] }]])
+PASS  farm 二.1: 买种子 (real keys): pick the seed, then 1-6 颗 (1/2/3, 更多…… 4/5/6, 更多…… on to the third page) at 2 / 3 / 6 文 each; not enough coins -> '还差 N 文', nothing bought  ([["1 颗 · 2 文", "2 颗 · 4 文", "3 颗 · 6 文", "更多……", "算了"], ["4 颗 · 24 文", "5 颗 · 30 文", "6 颗 · 36 文", "更多……", "算了"], { "greens": 3, "radish": 4, "pumpkin": 0 }, 2])
+PASS  farm 二.1: E on an empty plot -> pick a seed you have (南瓜 greyed with none) -> planted  (["按 E 种菜", [{ "options": ["青菜（种子 2 颗）", "萝卜（种子 1 颗）", "南瓜（种子 0 颗）", "算了"], "disabled": [false, false, true, false] }], { "crop": "greens", "days": 0, "wet": true, "note": false }, { "greens": 1, "radish": 0, "pumpkin": 0 }])
+PASS  farm 二.1: without water '桶里没水了'; E at the well fills the bucket (12); E on the plot waters it (dark soil, 11 left)  (["按 E 浇水（桶里 0 次）", 11])
+PASS  farm 二.1: at 08:00 a plot watered the day before grows a day (青菜 ripe); an unwatered one neither grows nor dies (4 days)
+PASS  farm 二.1: E on the ripe crop -> it goes into the 库房  (按 E 收菜)
+PASS  farm 二.1: watered at 07:30 -> grows at 08:00 the same morning, the wet mark clears, the picture moves on a stage
+PASS  farm 二.3: 卖东西 at 厨娘 (real keys): 青菜 5 / 萝卜 9 / 南瓜 22 / 竹笋 4 / 草药 6 文 (an empty kind greyed)  ([["蔬菜 4 棵 · 41 文", "竹笋 3 份 · 12 文", "草药 0 份 · 0 文", "算了"], 53])
+PASS  farm 二.3: nothing to sell -> her line, nothing changes
+PASS  farm 二.4: all 8 spots glow after the prologue and can be stood next to  ([])
+PASS  farm 二.4: E digs a shoot / picks herbs into the 库房 (the glow goes; once a day)  (["按 E 挖竹笋", "按 E 采草药"])
+PASS  farm 二.4: they grow back at 08:00
+PASS  farm 二.4: with 挖竹笋 taken, our shoot does not count for it and its shoot does not go into the 库房  ([true, 0, 0, 1, 2, 2])
+PASS  farm 二.5: 做药膳 (real keys): 2 草药 + 1 青菜 -> 1 药膳, free; without enough her line says what is missing
+PASS  farm 二.2 / 二.5: 库房 page (real keys B, →, ↓, E): eating 药膳 -> 生命上限 +15 (100 -> 115), the page stays open and says so  (["  种子：青菜 0 · 萝卜 0 · 南瓜 0", "  青菜：0", "  萝卜：0", "  南瓜：0", "  竹笋：0", "  草药：1", "▶ 药膳：0", "药膳在身：生命上限 +15（到明早 08:00）", "选中药膳按 E 吃；其他东西只能看。"])
+PASS  farm 二.5: with 吐纳功 learned the two add up: 生命上限 135  (135)
+PASS  farm 二.5: not during a fight  (正在战斗，不能吃东西)
+PASS  farm 二.5: at the next 08:00 the bonus is gone (back to the 吐纳功 value)  (120)
+PASS  farm 二.1 萝卜彩蛋: the first radish ripens; that night 师兄 eats it and leaves a note; the next morning +10 文
+PASS  farm 二.1 萝卜彩蛋: E on the note: '欠你一根萝卜——师兄'  (按 E 看字条)
+PASS  farm 二.1 萝卜彩蛋: only once - the next radish is left alone
+PASS  farm 1.5: the one-time hint when he joins; 派活 offers 种地 only once the farm is open (5th key set: 种地 picked with 4)  ([["帮厨", "陪练", "打扫", "算了"], ["帮厨", "陪练", "打扫", "种地", "算了"], "farm"])
+PASS  farm 1.5: at 09:00 he waters every planted plot not watered yet (not the one already wet, not the ripe one), never sows or harvests
+PASS  farm 1.5: by day he walks the farm with a bucket, at night the old dorm; the plots he watered grow at the next 08:00  (["farm", true, true, true])
+PASS  farm 1.5: changed to 打扫 -> from the next day he does not water any more (upkeep unchanged)  ([true, "sweep"])
+PASS  farm 1.5: the 任务看板 收徒 tab shows '师弟：种地'  (师弟：种地 · 每天伙食费 5 文)
+PASS  farm 五 / 菜园扩建: these 3 nights really have farm events on all 12 plots (growth east too, 师弟's 09:00 watering, spots back, the 药膳 gone)  ({ "plots": "[{ \"crop\": \"greens\", \"days\": 1, \"wet\": false, \"note\": false }, { \"crop\": \"\", \"days\": 0, \"wet\": false, \"note\": true }, { \"crop\": \"pumpkin\", \"days\": 3, \"wet\": false, \"note\": false }, { \"crop\": \"greens\", \"days\": 1, \"wet\": false, \"note\": false }, { \"crop\": \"radish\", \"days\": 2, \"wet\": false, \"note\": false }, { \"crop\": \"pumpkin\", \"days\": 2, \"wet\": false, \"note\": false }, { \"crop\": \"greens\", \"days\": 1, \"wet\": false, \"note\": false }, { \"crop\": \"radish\", \"days\": 2, \"wet\": false, \"note\": false }, { \"crop\": \"pumpkin\", \"days\": 2, \"wet\": false, \"note\": false }, { \"crop\": \"greens\", \"days\": 1, \"wet\": false, \"note\": false }, { \"crop\": \"radish\", \"days\": 2, \"wet\": false, \"note\": false }, { \"crop\": \"pumpkin\", \"days\": 2, \"wet\": false, \"note\": false }]", "store": "{ \"greens\": 0, \"radish\": 0, \"pumpkin\": 0, \"shoots\": 0, \"herbs\": 2, \"meal\": 0 }", "seeds": "{ \"greens\": 0, \"radish\": 0, \"pumpkin\": 0 }", "bucket": 0, "egg": "done", "meal": false, "bonus": 0, "maxhp": 100, "ready": [true, true, true, true, true, true, true, true], "coins": 100, "dwaters": 17, "hour": 8.0, "total": 80.0, "expanded": true, "east": 10 })
+PASS  farm 五: 3 nights by 等到天亮, by 打坐 and by T hour by hour end in the same farm: plots, 库房, spots, 药膳 / 生命上限, coins, clock  ([])
+PASS  farm 三: the 任务看板 新手指引 tab lists the 进阶 steps after 出师, 【追踪中】 on the current one only  ([1, 5])
+PASS  farm 三: 进阶 appears only after 出师: then 'Advanced 进阶 1/4' on the objective line and the gold arrow (厨娘)  (目标：进阶 1/4：开菜园，种下第一颗种子)
+PASS  farm 三: 名望 below 2 -> step 4 says '名望到 2 格后找师父（现在 1 格）', the board adds how to raise it, the arrow points at the trial  (目标：进阶 4/4：名望到 2 格后找师父（现在 1 格）)
+PASS  farm 三: done in any order, each paid when done: 燕回旋 +10, 开菜园 + 种下 +15, 浇水 + 收菜 +5, 采集 + 药膳 +5 (35 in all)  ([[{ "what": "adv_skill", "coins": 10 }, { "what": "adv_farm", "coins": 15 }, { "what": "adv_water", "coins": 5 }, { "what": "adv_gather", "coins": 5 }], 35])
+PASS  farm 三: all four -> '进阶 · 完' fades in and out (~2 s), nothing tracked afterwards  ([["进阶完成：浇水收菜  +5 文", "进阶完成：采集与药膳  +5 文", "进阶 · 完"], "", "", false])
+PASS  farm 三: an older save - steps it already meets count as done, no coins paid  ([[true, true, true, true], [true, true, true, true], []])
+PASS  farm 三 (R1 F1): an older save loaded before 出师 - a 进阶 step done in this session (plant a seed) pays 15 文 once 出师 comes  ([true, [true, false, false, false], [true, false, false, false], 25, [{ "what": "graduate", "coins": 10 }, { "what": "adv_farm", "coins": 15 }]])
+PASS  farm 四: everything of the farm saves and loads (plots, wet, note, bucket, seeds, 库房, picked spots, 药膳 end, egg, hint)  ([{ "bucket": 4, "egg": "eaten", "egg_plot": 5, "expanded": false, "hint_shown": true, "meal_until": 32, "opened": true, "picked": { "shoot_2": 0 }, "plots": [{ "crop": "radish", "days": 1, "note": false, "wet": true }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": true, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }], "seeds": { "greens": 1, "pumpkin": 3, "radish": 2 }, "stats": { "bought": 0, "cooked": 0, "disciple_waters": 0, "eaten": 1, "gathered": 0, "harvested": 0, "planted": 0, "sold": 0, "watered": 0 }, "store": { "greens": 1, "herbs": 4, "meal": 0, "pumpkin": 2, "radish": 0, "shoots": 3 } }, { "bucket": 4, "egg": "eaten", "egg_plot": 5, "expanded": false, "hint_shown": true, "meal_until": 32, "opened": true, "picked": { "shoot_2": 0 }, "plots": [{ "crop": "radish", "days": 1, "note": false, "wet": true }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": true, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }], "seeds": { "greens": 1, "pumpkin": 3, "radish": 2 }, "stats": { "bought": 0, "cooked": 0, "disciple_waters": 0, "eaten": 1, "gathered": 0, "harvested": 0, "planted": 0, "sold": 0, "watered": 0 }, "store": { "greens": 1, "herbs": 4, "meal": 0, "pumpkin": 2, "radish": 0, "shoots": 3 } }])
+PASS  farm 四: a save with the 药膳 on loads with 生命上限 +15 and the same HP (not cut at 100)  ([115, 115, 115])
+PASS  farm 四: a save without the farm section loads: the farm not opened, the 库房 empty
+PASS  farm 四: a broken farm section is refused
+PASS  farm 四 (R1): with 吐纳功 learned and a 药膳 on, a save loads with 生命上限 135 and HP 135 (not cut)  ([135, 135, 135])
+PASS  farm 五: the 库房 page and 厨娘's menus fit the 480x270 screen in Chinese and in English  ([])
+PASS  菜园扩建: before 开菜园 there is no 扩建菜园 - not in 厨娘's menu, not in the 修缮 tab  ([["开菜园（40 文）", "卖东西", "做药膳", "没事了"], []])
+PASS  菜园扩建: after 开菜园 the 修缮 tab lists 扩建菜园 (找厨娘 · 40 文 · 家业 +1, the arrow to 厨娘); the east part still blocks (real keys: stopped at x 1754), its plots are no E target, 6 marks  ([[{ "text": "修缮：扩建菜园 · 找厨娘（厨房） · 40 文 · 家业 +1", "state": "open", "key": "repair:farm_expand", "action": "track", "obj": "修缮：扩建菜园 · 找厨娘" }], {  }, 6])
+PASS  菜园扩建: 厨娘 (real keys): 买种子 / 卖东西 / 做药膳 / 扩建菜园（40 文）/ 没事了; she asks first (家业 +1); with 39 文 '还差 1 文', nothing taken  ([["买种子", "卖东西", "做药膳", "扩建菜园（40 文）", "没事了"], 5])
+PASS  菜园扩建: 40 文 -> 扩建 (铜钱 -40, 家业 +1, 门派簿 '扩建了菜园', 修缮 tab 已修好, her line), and her menu is back to 4 items  ([true, 5, 5, 4, [{ "text": "修缮：扩建菜园 · 已修好", "state": "done", "key": "", "action": "", "obj": "修缮：扩建菜园 · 已修好" }], ["买种子", "卖东西", "做药膳", "没事了"]])
+PASS  菜园扩建: after 扩建 the east part can be walked into (real keys: x 1865), 12 plot marks; 师弟's farm walk covers the east paths too (blocked before)  ([1864.70043945312, 12, [[1700.0, 1000.0, 22.0, 140.0], [1630.0, 1000.0, 26.0, 150.0], [1764.0, 1000.0, 22.0, 140.0], [1828.0, 1000.0, 22.0, 140.0]], true, false])
+PASS  菜园扩建: the east plots (real E): plant, water from the bucket, grow at 08:00, harvest into the 库房  (["按 E 种菜", "按 E 种菜", "按 E 收菜", [{ "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }], { "greens": 2, "radish": 0, "pumpkin": 0, "shoots": 0, "herbs": 0, "meal": 0 }])
+PASS  菜园扩建: 买种子 (real keys) goes up to 12 颗 - the third page 8 / 10 / 12 颗; 12 南瓜 seeds = 72 文  ([["8 颗 · 48 文", "10 颗 · 60 文", "12 颗 · 72 文", "算了"], { "greens": 0, "radish": 0, "pumpkin": 12 }, 28])
+PASS  菜园扩建: one bucket (12) waters all 12 plots with the real E, down to 0  ([12, 0, ["按 E 浇水（桶里 12 次）", "按 E 浇水（桶里 11 次）", "按 E 浇水（桶里 10 次）", "按 E 浇水（桶里 9 次）", "按 E 浇水（桶里 8 次）", "按 E 浇水（桶里 7 次）", "按 E 浇水（桶里 6 次）", "按 E 浇水（桶里 5 次）", "按 E 浇水（桶里 4 次）", "按 E 浇水（桶里 3 次）", "按 E 浇水（桶里 2 次）", "按 E 浇水（桶里 1 次）"]])
+PASS  菜园扩建: the 13th watering: '桶里没水了，去井边打水', the plot stays dry  (["按 E 浇水（桶里 0 次）", 0, 1])
+PASS  菜园扩建 画面: the original striped rows never show - before 开菜园 all weeds, west opened = tilled west + weeds east, expanded = all tilled; every point of the field under an opaque pixel, above the ground, one picture per layer cut at the same place (no seam)  ({ "closed": { "holes": 0, "who": { "FarmWeeds": 2337 }, "aligned": true, "width": 224.0, "top": true }, "west": { "holes": 0, "who": { "FarmTilled": 984, "FarmWeeds": 1353 }, "aligned": true, "width": 224.0, "top": true }, "expanded": { "holes": 0, "who": { "FarmTilled": 2337 }, "aligned": true, "width": 224.0, "top": true } })
+PASS  菜园扩建 存档: after 扩建 all 12 plots save and load (crops, wet), still expanded, the east part walkable, 家业 the same  ([{ "bucket": 0, "egg": "none", "egg_plot": -1, "expanded": true, "hint_shown": false, "meal_until": -1, "opened": true, "picked": {  }, "plots": [{ "crop": "greens", "days": 0, "note": false, "wet": true }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "radish", "days": 1, "note": false, "wet": true }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "pumpkin", "days": 3, "note": false, "wet": false }], "seeds": { "greens": 0, "pumpkin": 0, "radish": 0 }, "stats": { "bought": 0, "cooked": 0, "disciple_waters": 0, "eaten": 0, "gathered": 0, "harvested": 0, "planted": 0, "sold": 0, "watered": 0 }, "store": { "greens": 0, "herbs": 0, "meal": 0, "pumpkin": 0, "radish": 0, "shoots": 0 } }, { "bucket": 0, "egg": "none", "egg_plot": -1, "expanded": true, "hint_shown": false, "meal_until": -1, "opened": true, "picked": {  }, "plots": [{ "crop": "greens", "days": 0, "note": false, "wet": true }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "radish", "days": 1, "note": false, "wet": true }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "", "days": 0, "note": false, "wet": false }, { "crop": "pumpkin", "days": 3, "note": false, "wet": false }], "seeds": { "greens": 0, "pumpkin": 0, "radish": 0 }, "stats": { "bought": 0, "cooked": 0, "disciple_waters": 0, "eaten": 0, "gathered": 0, "harvested": 0, "planted": 0, "sold": 0, "watered": 0 }, "store": { "greens": 0, "herbs": 0, "meal": 0, "pumpkin": 0, "radish": 0, "shoots": 0 } }])
+PASS  菜园扩建 存档: an older save (6 plots, no 扩建) loads: not expanded, its 6 plots' crops and watering kept, the east 6 empty under weeds and blocking, 扩建菜园 on offer  (["", true, false, [{ "crop": "greens", "days": 0, "wet": true, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "radish", "days": 1, "wet": true, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }, { "crop": "", "days": 0, "wet": false, "note": false }]])
+PASS  菜园扩建 存档: a non-bool 'expanded' or more than 12 plots is refused; the old 6-plot shape is fine  (["bad farm.expanded", "bad farm.plots", ""])
+PASS  菜园扩建 R1 F1: the minimap shows the farm's state, never the map's striped rows - weeds / tilled west + weeds east / all tilled (bought with real keys, and after a reload), each of the 28x20 field pixels the average of its 8x8 world block, nothing outside the field touched  ({ "closed": { "bad": 0, "same_as_thumb": 0, "outside": 0, "n": 560, "rect": [P: (304, 220), S: (28, 20)] }, "west": { "bad": 0, "same_as_thumb": 0, "outside": 0, "n": 560, "rect": [P: (304, 220), S: (28, 20)] }, "expanded": { "bad": 0, "same_as_thumb": 0, "outside": 0, "n": 560, "rect": [P: (304, 220), S: (28, 20)] }, "expanded_loaded": { "bad": 0, "same_as_thumb": 0, "outside": 0, "n": 560, "rect": [P: (304, 220), S: (28, 20)] } })
+PASS  菜园扩建 R1 F6: an older save with a 6-slot farm section, never opened: loads unopened - 12 empty plots under weeds, the field solid, 开菜园 on offer, 家业 unchanged  (["", false, false, ["开菜园（40 文）", "卖东西", "做药膳", "没事了"]])
+PASS  菜园扩建 R1 F2: flag 扩建 set but the farm section without it -> loads expanded (east open, no 扩建 to pay again, 家业 +1 counted once)  ([true, ["买种子", "卖东西", "做药膳", "没事了"], 3, 1])
+PASS  菜园扩建 R1 F2: flag 扩建 set but the farm not opened -> the flag is dropped, 家业 not counted  ([<null>, 1, 1])
+PASS  naming 一: data/title.json is 山门小院; the game's logo is the new generator's picture (pixel2d/title/logo/output, its text 山门小院); the old logo kept in logo/old  (["山门小院", "山门小院", true, true])
+PASS  naming 一: window / tab title 山门小院 (project name, the loading page; English: The Mountain Courtyard); no DEMO / 动物武侠 / Animal Wuxia in them  (["山门小院", "The Mountain Courtyard", []])
+PASS  naming 二: the 11 lines that name the hero and 小兔's speaker plate use {name}; the only 小兔 left are the two 小兔子 (a little rabbit, not his name)  ([11, ["opening.json: 还有一只小兔子。", "story.json: 站住！哪来的小兔子？"], "{name}"])
+PASS  naming 二: with the name 阿糯 every 徒儿 / 兔儿 / 师兄 in the lines stays (23 lines), every {name} is filled, the NPC names stay  ([])
+PASS  naming 三: the UI font has the 3755 common hanzi (GB2312 level 1; 3770 hanzi in all), every listed character drawable; 亍 / 龘 (rare) are not  ([3770, "", true, true])
+PASS  naming 二: every random name (阿糯、白小楼、月白、团子、云白、长耳 …) and 小兔 pass the checks in Chinese and in English (Little Rabbit = 12 letters)  ([])
+PASS  naming 一 (zh): the title screen shows the pixel logo 山门小院; nothing on it says DEMO / 动物武侠 / Animal Wuxia  ([true, "山门小院", []])
+PASS  naming 一 (en): the title screen shows the pixel logo 山门小院 and the English line 'The Mountain Courtyard' under it; nothing on it says DEMO / 动物武侠 / Animal Wuxia  ([true, "The Mountain Courtyard", []])
+PASS  naming 二: 新游戏 opens the naming box first (「给这只小兔起个名字吧」, filled with 小兔 and selected, keyboard in the box) - no opening yet  ([true, "小兔", "给这只小兔起个名字吧"])
+PASS  naming 二: the box has 确定 / 随机 and 「最多 5 个汉字或 12 个字母」 (the plan's layout; R1: the rule names both)  (["给这只小兔起个名字吧", "最多 5 个汉字或 12 个字母"])
+PASS  naming 二: 随机 (mouse) fills the box with names from data/naming.json, a different one each time  (["小满", "白小楼", "阿糯", "云白", "团子"])
+PASS  naming 二: typing 阿糯 + Enter takes the name and the game starts  (["阿糯", "阿糯"])
+PASS  naming 二: then the opening plays (after the name, before the game)
+PASS  naming 二: the opening scene in the dorm - his speaker plate says 阿糯 (with his portrait)  (["阿糯"])
+PASS  naming 二: narration, hints and NPC lines that named him say 阿糯 instead (e.g. '哎哟阿糯，饭还没好呢，先去正殿，师父等着你。')  ([])
+PASS  naming 二: 厨娘 says '哎哟阿糯，…' (her own name plate unchanged)  (哎哟阿糯，饭还没好呢，先去正殿，师父等着你。)
+PASS  naming 二: 师父 still says 徒儿 / 兔儿, 师弟 still says 师兄  (["徒儿，打架靠的不只是手脚，还有一口气。", "兔儿，你的身法还差一口气。", "陪练？好！明天起我就在练武场等师兄，一天陪您过一回招。"])
+PASS  naming 二: the 送馒头 thanks say '多谢阿糯兄弟'  (茶摊老板留话：『馒头一上桌就卖光了，多谢阿糯兄弟！』
+报酬 12 文。)
+PASS  naming 二: the 门派簿 says 弟子：阿糯 (on the close-hint line, the page still at scale 1)  (弟子：阿糯)
+PASS  naming 二: 新游戏 + Enter on the untouched box = 小兔 (the name plate says 小兔, as before)  (["小兔", "小兔"])
+PASS  naming 二: an empty name or one of only spaces cannot be confirmed (「名字不能是空的」)  ([true, true, "  　"])
+PASS  naming 二: at most 5 字 - the 6th does not go in (「名字太长了」), the 5 are accepted  (["一二三四五", "too_long"])
+PASS  naming 二: a character the font cannot draw (龘) shows 「这个字显示不了，换一个吧」; Enter / 确定 do nothing  (["这个字显示不了，换一个吧", true])
+PASS  naming 二: E / Q / B / T / H / Space / ↑↓ typed in the box are only letters - the menu, the help page and the language do not react  (["eqbt h", ["start", "naming"]])
+PASS  naming 二: spaces are not counted against the limit  (5)
+PASS  naming 二: Esc in the box goes back to the title menu (no game, the name not changed)
+PASS  naming 二: 新游戏 over a save: after 确定 the box opens; Esc there leaves the old save untouched
+PASS  naming 四: the name is in the save (state.player.name) and comes back with 继续游戏 (plate 白小楼)  (["白小楼", "白小楼"])
+PASS  naming 四: save -> load -> save keeps the name
+PASS  naming 四: an older save without a name loads, the hero is 小兔  (["小兔", "小兔"])
+PASS  naming 四: player.name that is not text -> the save is refused ('bad player.name'); an empty / undrawable name loads as 小兔  (bad player.name)
+PASS  naming R1: the length rule follows the characters in both languages: 5 汉字 yes / 6 no, 12 letters yes / 13 no, 阿糯 Momo yes, 5 汉字 + a letter no  ([[true, false, true, false, true, false, true], true, true])
+PASS  naming R1: a save whose name has 12 汉字 still loads (继续游戏), the name falls back to 小兔  (["小兔", "小兔"])
+PASS  naming Esc 改名: the paused Esc page shows 名字：小兔 and 「改名（R）」; R opens the box (「给他改个名字」, 确定 / 随机 / 取消), the game stays paused  ([true, true])
+PASS  naming Esc 改名: Q / E / B / Space typed in the box are letters - no 任务面板, the Esc page stays, no 门派簿, the clock does not move  (["qe b", true, 0])
+PASS  naming Esc 改名: the same checks (empty refused, 龘 refused, 5 字 at most)  ([true, true, "一二三四五"])
+PASS  naming Esc 改名: Esc in the box closes only the box (the Esc page stays), the name is unchanged
+PASS  naming Esc 改名: 改名 (mouse) -> 团子 takes effect at once: the page says 名字：团子, the line on screen becomes '哎哟团子，…'; free  (["名字：团子", "哎哟团子，饭还没好呢，先去正殿，师父等着你。"])
+PASS  naming Esc 改名: back in the game the plate says 团子 and the name is saved at the next calm moment (the save file says 团子)  (["团子", ["story", "rename+story"], "团子"])
+PASS  naming R1: English mode, 12 汉字 typed -> only 5 go in (the same 5-汉字 limit as in Chinese)  (一二三四五)
+PASS  naming R1: ... and those 5 are what Enter takes  (一二三四五)
+PASS  naming English: the box says 'Name this little rabbit', is filled with 'Little Rabbit', 'Up to 12 letters' (a 13th letter does not go in); 随机 gives English names  (["Little Rabbit", "Name this little rabbit", "Up to 12 letters (5 Chinese characters)", "Abcdefghijkl", "Moonpale"])
+PASS  naming English: name Momo - every line that said Little Rabbit says Momo (e.g. 'Here comes Momo. I've stacked every tile you brought back from the grove.'), the plate says Momo  ([])
+PASS  naming English: with the default name every one of these lines says Little Rabbit (as before) and the plate too  ([])
+PASS  naming R1: Esc 改名 in English mode: 12 汉字 typed -> 5 go in  (一二三四五)
+PASS  naming English: the Esc page says 'Name: Little Rabbit'; renaming to 'Mochi' (阿糯's English) keeps 阿糯  (["Name: Little Rabbit", "阿糯"])
+PASS  hd seats: data/interiors.json gives every seat its pose - 厨房长凳 / 小板凳 back (facing the table), 坐垫 / 蒲团 cross-legged  ([])
+PASS  hd art: the new sitting sheets are there (back view 2 x 32x40, cross-legged 2 x 32x32); the old one stays  ((64, 40) (64, 32) (64, 32))
+PASS  hd art: both new sitting pictures breathe (2 different frames)
+PASS  hd art: the bench / stool picture is his back - no nose, blush or pink inner ears; both ears from behind  (face px 0, ear fur px 22)
+PASS  hd art: on a bench / stool he sits on the seat top - rows 31-33 empty for the seat board, shins + sandal heels hang below (still while breathing)  (gap px 0, leg px 10)
+PASS  hd art: no blue cushion on the wooden seats - the back view has no trouser-blue run wider than 3 px (the old front picture: 20 px)  (back 3)
+PASS  hd art: on a cushion / 蒲团 he sits cross-legged facing the camera - knees out to both sides, sandals in front, paws on the knees (legs, not a pad)  (nose 2 sandals 12 knees 12 paws 8 blue run 6)
+PASS  hd seats: 厨房长凳 and 小板凳 -> the back-view frames facing up (the table / stove); 坐垫 and 蒲团 -> the cross-legged frames facing down; each breathes, E stands him up  ([])
+PASS  hd portraits: every speaker's portrait is the 128x128 HD picture, drawn 64x64 in the unchanged box (HD sampling)  ([])
+PASS  hd portraits: all 16 portraits have a 128x128 HD version (the old 64x64 ones stay)  ([])
+PASS  hd title: the title rabbit is the HD texture (160x208 frames, 2x density) at scale 0.5 on the same feet - the same on-screen box as the old 80x104 standee  ((160.0, 208.0) scale (0.5, 0.5) box [P: (110.0, 133.0), S: (80.0, 104.0)] old [P: (110.0, 133.0), S: (80.0, 104.0)])
+
+RESULT: 1094 passed, 0 failed

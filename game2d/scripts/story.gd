@@ -6,7 +6,7 @@ extends Node
 ## wiping). E at the puddle without the rag shows ui.need_rag. The wardrobe (S1-衣柜) opens a panel with the clothes.
 ## 序章 v1: the prologue of region 1 as a small state machine driven by data/story.json (every line, choice and step)
 ## and data/objectives.json (the objective texts + star targets). Script v3 (室内图进游戏 v1): the opening happens in
-## the dorm room (asleep in bed -> the drip on her forehead -> sitting up -> out of bed), 师父 / 厨娘 are inside the hall /
+## the dorm room (asleep in bed -> the drip on his forehead -> sitting up -> out of bed), 师父 / 厨娘 are inside the hall /
 ## kitchen (scripts/interiors.gd), optional lines of every room (interactables with a "room").
 ##   stage 0      opening conversation (S1-醒来, no objective yet), then "看看桌上的字条" until S1-字条 is read
 ##   stage 1..8   objective N of objectives.json is shown; talking / fighting / the puzzle moves it on
@@ -85,6 +85,12 @@ func setup(m: Node) -> void:
 		m.step3.merge_story_data(data)      # 第③步: opponents, 少年 / 师弟, their scenes (data/step3.json)
 	if m.get("jianghu") != null:
 		m.jianghu.merge_story_data(data)    # 第④步第一批: villains, 委托 scenes (data/jianghu.json)
+	if m.get("guide") != null:
+		m.guide.merge_story_data(data)      # 新手指引 v1: 师父's line after the prologue (data/guide.json)
+	if not sandbox:
+		Skills.merge_story_data(data)       # 武学 (A): 师父传功 / 打坐 scenes (data/skills.json)
+	if m.get("farm") != null:
+		m.farm.merge_story_data(data)       # 经营 (B): 厨娘's menu, 师弟's 种地 (data/farm.json; sample.json / step3.json untouched)
 	dialogue = Dialogue.new()
 	m.add_child(dialogue)
 	dialogue.setup(data)
@@ -266,6 +272,8 @@ func _run_entries(entries: Array, token: int) -> void:
 func _option_ok(o: Dictionary, key: String) -> bool:
 	if not o.has(key):
 		return true
+	if String(o[key]).begins_with("fm_") and main.get("farm") != null:
+		return main.farm.option_ok(String(o[key]))      # 经营 (B): 种地 only once the farm is open
 	if String(o[key]).begins_with("jh_") and main.get("jianghu") != null:
 		return main.jianghu.option_ok(String(o[key]))
 	var s3 = main.get("step3")
@@ -340,6 +348,10 @@ func _do(e: Dictionary, token: int) -> void:
 				await s3.do_action(e, token)      # 第③步: signing up, 收下 / 再想想, jobs, 陪练
 			elif main.get("jianghu") != null and main.jianghu.handles(String(e["do"])):
 				await main.jianghu.do_action(e, token)   # 第④步第一批: the board's menus, 委托 steps, villains engage
+			elif main.get("skills") != null and main.skills.handles(String(e["do"])):
+				main.skills.do_action(e, token)          # 武学 (A): skills_assign / skills_teach / skills_meditate
+			elif main.get("farm") != null and main.farm.handles(String(e["do"])):
+				await main.farm.do_action(e, token)      # 经营 (B): 厨娘's menus, planting, 师弟's 派活 with 种地
 			else:
 				push_warning("Story: unknown action " + String(e["do"]))
 
@@ -366,6 +378,11 @@ func _do_after(a: String) -> void:
 func talk_scene(npc_id: String) -> String:
 	if sandbox:
 		return "spar" if npc_id == main.combat.spar_fighter.id else ""
+	var sk = main.get("skills")
+	if sk != null:
+		var ks: String = sk.talk_scene(npc_id)       # 武学 (A): 师父传功 (only 师父, only when a skill is due)
+		if ks != "":
+			return ks
 	var jh = main.get("jianghu")
 	if jh != null:
 		var js: String = jh.talk_scene(npc_id)       # 第④步第一批: 委托 steps (茶摊老板 / 老伯), villagers after 名望 5
@@ -445,6 +462,8 @@ func poi_points() -> Array:
 	var jh = main.get("jianghu")
 	if jh != null:
 		out.append_array(jh.poi_points())
+	if main.get("farm") != null:
+		out.append_array(main.farm.poi_points())     # 经营 (B): the plots, the glowing gathering spots
 	return out
 
 
@@ -458,6 +477,9 @@ func _hidden(it: Dictionary) -> bool:
 func interaction_target() -> Dictionary:
 	if busy or _modal_open() or main.combat.blocks_interaction() or main.interiors.transitioning:
 		return {}
+	var sch0 = main.get("schedule")
+	if sch0 != null and sch0.blocks_prompts():
+		return {}      # 坐下与人物作息 v1: sitting / the 等到天亮 night
 	var p: Vector2 = main.player.global_position
 	var best: Dictionary = {}
 	var bd := INF
@@ -506,6 +528,18 @@ func interaction_target() -> Dictionary:
 		if not tj.is_empty():
 			bd = float(tj["dist"])
 			best = tj
+	var fm = main.get("farm")
+	if fm != null:
+		var tf: Dictionary = fm.interaction_target(p, bd, best)    # 经营 (B): the well (打水), the plots, gathering spots
+		if not tf.is_empty():
+			bd = float(tf["dist"])
+			best = tf
+	var sch = main.get("schedule")
+	if sch != null:
+		var ts: Dictionary = sch.interaction_target(p, bd, best)    # 坐下与人物作息 v1: 师兄 asleep in his bed
+		if not ts.is_empty():
+			bd = float(ts["dist"])
+			best = ts
 	if stage == 7 and not solved:
 		var pz: Dictionary = data.get("puzzle", {})
 		for id in stones:
@@ -517,6 +551,8 @@ func interaction_target() -> Dictionary:
 				continue
 			bd = d
 			best = {"kind": "stone", "id": id, "prompt": ui("prompt_bow"), "prompt_pos": pos + Vector2(0, -26)}
+	if best.is_empty() and main.get("seats") != null:
+		best = main.seats.interaction_target(p, best)    # 坐下与人物作息 v1: 按 E 坐下 (only when nothing else is in reach)
 	return best
 
 
@@ -558,6 +594,13 @@ func interact() -> bool:
 			main.step3.interact(t)        # 第③步: the 比武大会 notice board
 		"jianghu":
 			main.jianghu.interact(t)      # 第④步第一批: the 江湖告示榜, a glowing spot, a fence gap, the chick
+		"farm":
+			main.farm.interact(t)         # 经营 (B)
+		"schedule":
+			if t.get("id", "") == "seat":
+				main.seats.sit(String(t["seat"]))    # 坐下与人物作息 v1
+			else:
+				main.schedule.interact(t)            # 师兄's dream line
 	return true
 
 
@@ -723,11 +766,18 @@ func _update_bubble(delta: float) -> void:
 
 ## The bubble on screen: {text, pos} or {}.
 func bubble() -> Dictionary:
+	var sch = main.get("schedule")
+	if sch != null:
+		var own: Dictionary = sch.bubble(true)    # 坐下与人物作息 v1: what E just did (a seat's line, the dream line) first
+		if not own.is_empty():
+			return own
 	if _bubble_index < 0:
 		var s3 = main.get("step3")
 		var sb: Dictionary = s3.bubble() if s3 != null else {}
 		if sb.is_empty() and main.get("jianghu") != null:
 			sb = main.jianghu.bubble()
+		if sb.is_empty() and main.get("schedule") != null:
+			sb = main.schedule.bubble()      # 坐下与人物作息 v1: "呼……", the dream line, a seat's line
 		return sb
 	var l: Dictionary = data["bubbles"]["lines"][_bubble_index]
 	var n := _npc(String(l["who"]))
@@ -760,6 +810,14 @@ func star_world() -> Variant:
 		return null
 	var a: Array = spec["pos"]
 	return Vector2(a[0], a[1])
+
+
+## 试玩反馈 v1: the gold minimap arrow during the prologue - only for "擦干地上的水": the rag until it is taken, then
+## the puddle (the same target as the star). null otherwise (after the prologue the guide drives the arrow).
+func prologue_track() -> Variant:
+	if not main.objectives.has_current() or String(main.objectives.current().get("id", "")) != "wipe_floor":
+		return null
+	return star_world()
 
 
 # ------------------------------------------------------------------ 门派簿 and the ending
@@ -796,23 +854,42 @@ func _walk_out() -> void:
 		print("story: walked out")
 
 
-func _prologue_end(token: int) -> void:
+## 新手指引 v1 (client 2026-10-24): no 序章 · 完 page and no 回到启动画面 / 继续逛逛 choice any more - the game goes on
+## exactly as 继续逛逛 did (camera back, the rabbit outside the hall, Sample.unlock: everything after the prologue opens and
+## is saved); a "序章 · 完" caption fades in and out in the middle of the screen (~2 s) and the guide starts.
+## 武学与经营 第一批 (B, 方案 第三点五节): it is a transition now - the objective line goes, the whole screen fades to black
+## (~1.5 s), the rabbit is put outside the hall facing the yard and the camera comes back while it is black, "序章 · 完"
+## fades in and out on the black (~2 s), the screen fades back in (~1.5 s); only then stage 9, Sample.unlock (本钱 +30)
+## and the guide (step 1, the gold arrow, 师父's line). No choice box; nobody moves and Esc does not open meanwhile.
+var prologue_fade: PrologueFade
+
+
+func _prologue_end(_token: int) -> void:
+	var tr: Dictionary = main.guide.data.get("prologue_transition", {}) if main.get("guide") != null else {}
+	if prologue_fade == null:
+		prologue_fade = PrologueFade.new()
+		main.add_child(prologue_fade)
+	prologue_fade.is_open = true
+	main.objectives.set_index(-1)        # no objective line / star while it fades (never 序章完成)
+	await prologue_fade.fade_to(1.0, float(tr.get("fade_out_seconds", 1.5)))
+	main.camera_target = null
+	main.player.sprite.modulate.a = 1.0
+	if main.interiors.room_at(main.player.global_position) != "":
+		main.interiors.place_outside(main.interiors.room_at(main.player.global_position))   # he walked out of the hall
+	main.player.facing = "down"
+	main.player.sprite.play("idle_down")
+	main.indoor_k = 0.0
+	if main.get("guide") != null:
+		main.guide.caption(main.guide.ui("prologue_caption"))
+	await get_tree().create_timer(float(tr.get("caption_seconds", 2.0)), false).timeout
+	await prologue_fade.fade_to(0.0, float(tr.get("fade_in_seconds", 1.5)))
+	prologue_fade.is_open = false
 	set_stage(9)
 	flags["prologue_done"] = true
-	prologue_end.open()
-	var key: String = await prologue_end.chosen
-	if token != _run_id:
-		return
-	if key == "title":
-		return_to_title()
-	else:
-		main.camera_target = null
-		main.player.sprite.modulate.a = 1.0
-		if main.interiors.room_at(main.player.global_position) != "":
-			main.interiors.place_outside(main.interiors.room_at(main.player.global_position))   # she walked out of the hall
-		main.player.facing = "down"
-		if main.get("sample") != null:
-			main.sample.unlock()      # 两条路小样 v1 opens now
+	if main.get("sample") != null:
+		main.sample.unlock()      # 两条路小样 v1 opens now (本钱 +30)
+	if main.get("guide") != null:
+		main.guide.on_prologue_end(false)
 
 
 func return_to_title() -> void:

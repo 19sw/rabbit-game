@@ -1,0 +1,36 @@
+{
+ "_说明": "由 pixel2d/opening/tools/generate_opening.py 生成，不要手改。画面里没有文字；字幕由游戏显示。",
+ "size": [
+  480,
+  270
+ ],
+ "scenes": [
+  "opening_01_jianghu.png",
+  "opening_02_ring.png",
+  "opening_03_sect_glory.png",
+  "opening_04_that_year.png",
+  "opening_05_sect_now.png",
+  "opening_06_three.png",
+  "opening_07_dorm_rain.png"
+ ],
+ "panels_scene6": [
+  [
+   9,
+   9,
+   150,
+   252
+  ],
+  [
+   165,
+   9,
+   150,
+   252
+  ],
+  [
+   321,
+   9,
+   150,
+   252
+  ]
+ ]
+}

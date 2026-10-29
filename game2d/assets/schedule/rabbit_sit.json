@@ -1,0 +1,14 @@
+{
+ "anchor": [
+  16,
+  31
+ ],
+ "direction": "down",
+ "fps": 2,
+ "frame_height": 32,
+ "frame_width": 32,
+ "frames": 2,
+ "id": "rabbit_sit",
+ "loop": true,
+ "note": "小兔坐姿: 2 frames side by side (breathing, frame 1 = body 1 px lower). Same anchor as the walk sheet: the node is between the feet (sprite offset -16, -31)."
+}

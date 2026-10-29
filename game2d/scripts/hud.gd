@@ -248,7 +248,7 @@ func set_toast_top(y: float) -> void:
 ## Where the toast's text is actually drawn on screen (it is centred and may be wider than the label box).
 func toast_text_rect() -> Rect2:
 	var f := toast.get_theme_font("font")
-	var w := f.get_string_size(toast.text, HORIZONTAL_ALIGNMENT_LEFT, -1, toast.get_theme_font_size("font_size")).x
+	var w := f.get_string_size(Lang.t(toast.text), HORIZONTAL_ALIGNMENT_LEFT, -1, toast.get_theme_font_size("font_size")).x
 	var r := toast.get_global_rect()
 	return Rect2(Vector2(r.get_center().x - w * 0.5, r.position.y), Vector2(w, r.size.y))
 
@@ -287,10 +287,14 @@ func hide_prompt() -> void:
 	prompt.visible = false
 
 
+var _bubble_lang := ""
+
+
 func show_bubble(text: String, world_pos: Vector2) -> void:
-	if bubble_label.text != text:
+	if bubble_label.text != text or _bubble_lang != Lang.current():   # (中英文切换 v1: the wrap is decided per language)
+		_bubble_lang = Lang.current()
 		bubble_label.text = text
-		var w := bubble_label.get_theme_font("font").get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10).x
+		var w := bubble_label.get_theme_font("font").get_string_size(Lang.t(text), HORIZONTAL_ALIGNMENT_LEFT, -1, 10).x
 		bubble_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if w > BUBBLE_WRAP else TextServer.AUTOWRAP_OFF
 		bubble_label.custom_minimum_size = Vector2(BUBBLE_WRAP if w > BUBBLE_WRAP else 0.0, 0)
 		bubble.size = Vector2.ZERO

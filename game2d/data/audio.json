@@ -1,0 +1,47 @@
+{
+ "_说明": "音效 + 背景音乐 v1（外部文件层）。声音文件由 audio/tools/generate_audio.py 合成、tools/sync_assets.py 拷到 assets/audio/。events：游戏里的事件 -> 放哪个音效（sfx/<id>.wav）；scenes：场景 -> 放哪首曲子（music/<id>.wav）。volume_levels：Esc 页音量四档（关 / 小 / 中 / 大）的线性音量（0..1，播放时换算成分贝）。音量设置存在 user://settings.cfg（网页版另写 localStorage aw_audio），不进存档。",
+ "volume_levels": [
+  {"name": "关", "linear": 0.0},
+  {"name": "小", "linear": 0.3},
+  {"name": "中", "linear": 0.6},
+  {"name": "大", "linear": 1.0}
+ ],
+ "default_level": {"music": 2, "sfx": 2},
+ "music_trim": 0.8,
+ "sfx_trim": 1.0,
+ "crossfade_seconds": 1.0,
+ "battle_hold_seconds": 2.0,
+ "night_from_hour": 18.5,
+ "night_until_hour": 6.0,
+ "min_repeat_seconds": 0.03,
+ "voices": 8,
+ "events": {
+  "gp_success": "gp",
+  "hit": "hit",
+  "hit_heavy": "hit_heavy",
+  "player_hurt": "hurt",
+  "dodge": "dodge",
+  "telegraph": "telegraph",
+  "knockdown": "ko",
+  "dialogue_page": "page",
+  "choice_move": "cursor",
+  "coin": "coin",
+  "guide_complete": "complete",
+  "quest_complete": "complete",
+  "panel_open": "panel",
+  "skill_spin": "skill_spin",
+  "skill_snow_step": "skill_snow",
+  "skill_tuna_learned": "skill_tuna"
+ },
+ "scenes": {
+  "title": "opening",
+  "opening": "opening",
+  "day": "day",
+  "night": "night",
+  "battle": "battle"
+ },
+ "suppress": {
+  "guide_complete": ["coin"],
+  "quest_complete": ["coin"]
+ }
+}

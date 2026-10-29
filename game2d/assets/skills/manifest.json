@@ -1,0 +1,103 @@
+{
+ "_说明": "武学（武学与经营 第一批）的像素特效和 U/I 图标。pixel2d/skills_fx/tools/generate_skills_fx.py 生成（别手改），tools/sync_assets.py 把每个的 sheet.png / sheet.json 拷到 game2d/assets/skills/<name>.png / .json。横条序列图，每帧大小见 frame_size。",
+ "effects": {
+  "icons": {
+   "animation": {
+    "direction": "forward",
+    "fps": 2,
+    "frames": [
+     "fx0",
+     "fx1"
+    ]
+   },
+   "frame_size": [
+    16,
+    16
+   ],
+   "frames": 2
+  },
+  "snow_mark": {
+   "animation": {
+    "direction": "forward",
+    "durations_ms": [
+     70,
+     90,
+     160,
+     110,
+     90
+    ],
+    "frames": [
+     "fx0",
+     "fx1",
+     "fx2",
+     "fx3",
+     "fx4"
+    ]
+   },
+   "frame_size": [
+    32,
+    32
+   ],
+   "frames": 5
+  },
+  "spin_arc": {
+   "animation": {
+    "direction": "forward",
+    "fps": 12,
+    "frames": [
+     "fx0",
+     "fx1",
+     "fx2",
+     "fx3",
+     "fx4",
+     "fx5"
+    ]
+   },
+   "frame_size": [
+    64,
+    64
+   ],
+   "frames": 6
+  },
+  "spin_ring": {
+   "animation": {
+    "direction": "forward",
+    "fps": 12,
+    "frames": [
+     "fx0",
+     "fx1",
+     "fx2",
+     "fx3",
+     "fx4",
+     "fx5"
+    ]
+   },
+   "frame_size": [
+    64,
+    64
+   ],
+   "frames": 6
+  },
+  "tuna_ring": {
+   "animation": {
+    "direction": "forward",
+    "fps": 10,
+    "frames": [
+     "fx0",
+     "fx1",
+     "fx2",
+     "fx3",
+     "fx4",
+     "fx5",
+     "fx6",
+     "fx7"
+    ]
+   },
+   "frame_size": [
+    64,
+    64
+   ],
+   "frames": 8
+  }
+ }
+}

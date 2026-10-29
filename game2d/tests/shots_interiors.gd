@@ -94,7 +94,7 @@ func _run() -> void:
 		if not (story.dialogue.active and story.dialogue.kind == "旁白"):
 			break
 		await tap(KEY_E)
-	# 打磨 v1 (script v4): no drop on her forehead any more - 02 is the bucket filled to the brim (see shots_polish.gd)
+	# 打磨 v1 (script v4): no drop on his forehead any more - 02 is the bucket filled to the brim (see shots_polish.gd)
 	for i in 400:
 		if main.interiors.water_level >= 0.99:
 			break
@@ -167,7 +167,7 @@ func _run() -> void:
 	main.daynight.set_hour(8.0)
 	# 17 minimap while indoors: step 3 (去厨房找厨娘), the star on the kitchen door
 	story.set_stage(3)
-	await goto("hall", Vector2(470, 250), "down")      # right side: the minimap is not faded over her
+	await goto("hall", Vector2(470, 250), "down")      # right side: the minimap is not faded over him
 	for i in 120:         # the star blinks: take the picture while it is shown
 		await frames(1)
 		if main.hud.minimap.star_shown:

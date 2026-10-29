@@ -117,9 +117,7 @@ func _run() -> void:
 	hold((fox.global_position - player.global_position).normalized())
 	await until(func(): return player.global_position.distance_to(fox.global_position) < 40, 60)
 	hold(Vector2.ZERO)
-	if player.counter_left <= 0.0:
-		print("note: real-time dodge missed the window in this run; opening the counter window for the picture")
-		player.counter_left = 0.8
+	# (试玩反馈 v1: no counter window after a dodge any more - this is now an ordinary hit; GP pictures: tests/shots_gp.gd)
 	await tap(KEY_J)
 	await until(func(): return player.attack_stage > 0 and player.attack_hit_done, 40)
 	await frames(1)

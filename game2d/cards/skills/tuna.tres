@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SkillTunaStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/skill_tuna_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+max_hp_bonus = 20
+regen_delay = 3.0
+regen_per_sec = 5.0

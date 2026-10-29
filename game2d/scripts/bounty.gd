@@ -323,7 +323,10 @@ func _lose() -> void:
 	p.facing = "down"
 	p.sprite.play("idle_down")
 	c.hud.fade_out(jh.ui("toast_lost"), 0.15)
-	get_tree().create_timer(0.5, false).timeout.connect(func(): c.hud.fade_in(0.4))
+	var chud: CombatHud = c.hud
+	get_tree().create_timer(0.5, false).timeout.connect(func():
+		if is_instance_valid(chud):      # (the game may be gone by then)
+			chud.fade_in(0.4))
 	jh.toast(jh.ui("toast_lost"))
 	if OS.has_feature("web"):
 		print("bounty: lost")
